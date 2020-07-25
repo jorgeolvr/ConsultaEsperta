@@ -22,8 +22,8 @@ function Header(props) {
   const [anchorUser, setAnchorUser] = React.useState(null)
   const openUser = Boolean(anchorUser)
 
-  const [anchorNotification, setAnchorNotification] = React.useState(null)
-  const openNotification = Boolean(anchorNotification)
+  //const [anchorNotification, setAnchorNotification] = React.useState(null)
+  //const openNotification = Boolean(anchorNotification)
 
   const handleMenuUser = event => {
     setAnchorUser(event.currentTarget);
@@ -37,9 +37,9 @@ function Header(props) {
        setAnchorNotification(event.currentTarget);
    } */
 
-  const handleCloseNotification = () => {
+  /*const handleCloseNotification = () => {
     setAnchorNotification(null);
-  }
+  } */
 
   async function handleLogout() {
     await firebase.logout()
@@ -84,7 +84,7 @@ function Header(props) {
     <React.Fragment>
       <div>
         <Dialog open={openDialog} onClose={handleClose} keepMounted TransitionComponent={Transition}>
-          <DialogTitle>Antes de continuar</DialogTitle>
+          <DialogTitle>Criação de perfil</DialogTitle>
           <DialogContent>
             <DialogContentText>
               Precisamos que você nos informe o seu tipo de usuário. Selecione abaixo se você é um médico ou um paciente.
@@ -97,7 +97,7 @@ function Header(props) {
         </Dialog>
       </div>
       <Toolbar className={styles.toolbar}>
-        <img src={logo} alt="Consulta Esperta" height="30em" className={styles.img} onClick={handleHome} />
+        <img src={logo} alt="Consulta Esperta" height="25em" className={styles.img} onClick={handleHome} />
         <Grid>
           {/*<IconButton
                         aria-label="account of current user"
@@ -110,7 +110,7 @@ function Header(props) {
                         <Badge color="secondary" variant="dot">
                             <Notifications color='inherit' />
                         </Badge>
-                    </IconButton> */}
+                    </IconButton> 
           <Menu
             id="menu-account"
             anchorEl={anchorNotification}
@@ -128,9 +128,9 @@ function Header(props) {
           >
             <Typography color="textSecondary" className={styles.user}>
               Você tem uma nova consulta
-                        </Typography>
+            </Typography>
             <MenuItem>Confirmar</MenuItem>
-          </Menu>
+          </Menu> */}
           <IconButton
             aria-label="account of current user"
             aria-controls="menu-account"

@@ -92,20 +92,6 @@ export default function Login({ history }) {
 
   return (
     <React.Fragment>
-      {/*<div>
-				<Dialog open={openDialog} onClose={handleClose} keepMounted TransitionComponent={Transition}>
-					<DialogTitle>Antes de começar o seu cadastro precisamos saber</DialogTitle>
-					<DialogContent>
-						<DialogContentText>
-							Você é um médico ou um paciente?
-                    </DialogContentText>
-					</DialogContent>
-					<DialogActions>
-						<Button onClick={handleDoctor} color="primary" autoFocus>Médico</Button>
-						<Button onClick={handlePatient} color="primary" autoFocus>Paciente</Button>
-					</DialogActions>
-			</Dialog> 
-			</div>*/}
       <Grid container className={styles.mainGrid}>
         <Grid container direction="column">
           <CssBaseline />

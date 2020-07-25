@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { UserContext } from '../../UserContext'
+import { Context } from '../../Context'
 
 import Header from '../../components/Header'
 import Footer from '../../components/Footer'
@@ -11,9 +11,9 @@ import firebase from '../../config/Firebase'
 
 import {
   Grid, Container, CssBaseline, Typography, Paper, Stepper, Step, StepLabel, Button,
-  Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Slide
+  Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Slide, Avatar
 } from '@material-ui/core'
-
+import PermContactCalendarIcon from '@material-ui/icons/PermContactCalendar'
 import { makeStyles } from '@material-ui/core/styles'
 
 const steps = ['Dados pessoais', 'Dados de consulta', 'Revisar dados'];
@@ -45,7 +45,7 @@ export default function DoctorProfile({ history }) {
 
   const {
     crm, cpf, phone, description, speciality, city, street, streetNumber, neighbour,
-  } = useContext(UserContext)
+  } = useContext(Context)
 
   function handleMain() {
     history.push('/home')
@@ -98,6 +98,9 @@ export default function DoctorProfile({ history }) {
             <Header />
           </Container>
           <Container maxWidth="sm" component="main" className={styles.mainContainer}>
+            <Avatar className={styles.avatar}>
+              <PermContactCalendarIcon />
+            </Avatar>
             <Typography className={styles.mainTitle} component="h2" variant="h3" align="center" color="textPrimary" gutterBottom>
               Meu perfil
             </Typography>
@@ -166,7 +169,10 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: '#F5FFFA'
   },
   mainContainer: {
-    padding: theme.spacing(8, 0, 6),
+    padding: theme.spacing(6, 0, 6),
+    alignItems: 'center',
+    display: 'flex',
+    flexDirection: 'column',
   },
   layout: {
     width: 'auto',
@@ -199,4 +205,8 @@ const useStyles = makeStyles(theme => ({
     marginTop: theme.spacing(3),
     marginLeft: theme.spacing(1),
   },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.primary.main,
+  }
 }));

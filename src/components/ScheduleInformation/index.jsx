@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react'
-import { UserContext } from '../../UserContext'
+import { Context } from '../../Context'
 
 import axios from 'axios'
 import firebase from '../../config/Firebase'
@@ -11,7 +11,8 @@ export default function ScheduleInformation() {
   const {
     description, setDescription, city, setCity, speciality, setSpeciality,
     street, setStreet, streetNumber, setStreetNumber, neighbour, setNeighbour, selectedUf, setSelectedUf
-  } = useContext(UserContext)
+  } = useContext(Context)
+
   const [ufs, setUfs] = useState([])
   const [cities, setCities] = useState([])
   const [specialities, setSpecialities] = useState([])
@@ -125,6 +126,8 @@ export default function ScheduleInformation() {
         <Grid item xs={12} md={6}>
           <TextField
             label="Número"
+            type="number"
+            InputProps={{ inputProps: { min: 0 } }}
             defaultValue={streetNumber}
             onChange={event => setStreetNumber(event.target.value)}
             inputProps={{ maxLength: 5 }}

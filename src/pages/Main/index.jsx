@@ -36,7 +36,7 @@ export default function Main() {
                 Seu marketplace de consultas médicas
               </Typography>
               <Typography component="h5" variant="h6" color="textSecondary" gutterBottom>
-                Ajudamos as pessoas a encontrar profissionais especializados por meio de recomendações.
+                Ajudamos pessoas a encontrar profissionais especializados por meio de recomendações.
               </Typography>
               <Grid className={styles.information} container>
                 <Grid item xs={12} sm={6}>
@@ -77,7 +77,10 @@ const useStyles = makeStyles(theme => ({
   },
   mainTitle: {
     marginTop: 30,
-    fontWeight: 700
+    fontWeight: 700,
+    color: '#322153',
+    fontFamily: 'Ubuntu',
+    fontSize: 32
   },
   information: {
     marginTop: 50,

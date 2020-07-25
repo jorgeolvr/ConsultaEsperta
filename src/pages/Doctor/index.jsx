@@ -14,7 +14,7 @@ import {
 import { Alert, AlertTitle } from '@material-ui/lab'
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
-import EventAvailable from '@material-ui/icons/EventAvailable';
+import EventAvailable from '@material-ui/icons/EventAvailable'
 import { makeStyles } from '@material-ui/core/styles'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -82,10 +82,6 @@ export default function Doctor({ history }) {
       })
   }, [id, setDoctorSchedules])
 
-  function handleProfile() {
-    history.push('/profile')
-  }
-
   const handleClose = () => {
     setOpenDialog(false)
   };
@@ -118,15 +114,16 @@ export default function Doctor({ history }) {
     <React.Fragment>
       <div>
         <Dialog open={openDialog} onClose={handleClose} keepMounted TransitionComponent={Transition}>
-          <DialogTitle>Antes de agendar...</DialogTitle>
+          <DialogTitle>Agendamento de consultas</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              Você precisa completar seu perfil com dados pessoais e forma de pagamento.
+              Você precisa completar seu perfil com dados pessoais e forma de pagamento
+              antes de marcar uma consulta médica. Clique em perfil no menu principal para
+              continuar.
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose} color="secondary" autoFocus>Deixar para depois</Button>
-            <Button onClick={handleProfile} color="primary" autoFocus>Completar agora</Button>
+            <Button onClick={handleClose} color="secondary" autoFocus>Ok</Button>
           </DialogActions>
         </Dialog>
       </div>
@@ -141,14 +138,13 @@ export default function Doctor({ history }) {
             <Typography className={styles.mainTitle} component="h2" variant="h3" align="center" color="textPrimary" gutterBottom>
               {name}
             </Typography>
+            <Typography variant="h5" align="center" color="textSecondary" component="p">
+              {description}
+            </Typography>
           </Grid>
         </Container>
         <main className={styles.layout}>
           <Paper className={styles.paper} elevation={3}>
-            <Grid container direction="row">
-              <Typography className={styles.typography} gutterBottom>Descrição:</Typography>
-              <Typography gutterBottom>{description}</Typography>
-            </Grid>
             <Grid container direction="row">
               <Typography className={styles.typography} gutterBottom>Endereço:</Typography>
               <Typography gutterBottom>{`${street}, ${number} - ${neighbour}`}</Typography>
@@ -300,7 +296,7 @@ const useStyles = makeStyles(theme => ({
     marginBottom: theme.spacing(3),
   },
   mainContainer: {
-    padding: theme.spacing(5, 0, 1),
+    padding: theme.spacing(6, 0, 6),
   },
   resultContainer: {
     paddingTop: theme.spacing(20)

@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { UserContext } from '../../UserContext'
+import { Context } from '../../Context'
 
 import InputMask from 'react-input-mask'
 
@@ -7,7 +7,7 @@ import { Grid, TextField } from '@material-ui/core';
 
 export default function PaymentInformation() {
   const { cardName, cardNumber, expireDate, securityCode, setCardName,
-    setCardNumber, setExpireDate, setSecurityCode } = useContext(UserContext)
+    setCardNumber, setExpireDate, setSecurityCode } = useContext(Context)
 
   return (
     <React.Fragment>

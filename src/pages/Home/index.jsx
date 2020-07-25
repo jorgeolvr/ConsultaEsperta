@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react'
-import { UserContext } from '../../UserContext'
+import { Context } from '../../Context'
 import axios from 'axios'
 
 import firebase from '../../config/Firebase'
@@ -8,11 +8,12 @@ import Header from '../../components/Header'
 import Footer from '../../components/Footer'
 
 import {
-  Grid, Container, CssBaseline, Typography, Button, TextField,
+  Grid, Container, CssBaseline, Typography, Button, TextField, Avatar,
   Paper, Stepper, Step, StepLabel, StepContent, Dialog, DialogTitle,
   DialogContent, DialogContentText, DialogActions, Slide, CircularProgress
 } from '@material-ui/core'
 import { Autocomplete } from '@material-ui/lab'
+import AssistantIcon from '@material-ui/icons/Assistant'
 import { makeStyles } from '@material-ui/core/styles'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -29,7 +30,7 @@ export default function Home({ history }) {
 
   const {
     globalLocation, setGlobalLocation, globalSpeciality, setGlobalSpeciality
-  } = useContext(UserContext)
+  } = useContext(Context)
 
   const [openDialog, setOpenDialog] = useState(false)
   const [activeStep, setActiveStep] = useState(0)
@@ -148,6 +149,7 @@ export default function Home({ history }) {
               options={cities}
               getOptionLabel={cities => cities}
               value={globalLocation}
+              disabled={selectedUf === ""}
               onChange={(event, newValue) => {
                 setGlobalLocation(newValue)
               }}
@@ -180,6 +182,9 @@ export default function Home({ history }) {
     return (
       <React.Fragment>
         <Container maxWidth="sm" component="main" className={styles.mainContainer}>
+          <Avatar className={styles.avatar}>
+            <AssistantIcon />
+          </Avatar>
           <Typography className={styles.mainTitle} component="h2" variant="h3" align="center" color="textPrimary" gutterBottom>
             Reinvente o seu jeito de agendar consultas
             </Typography>
@@ -246,6 +251,9 @@ export default function Home({ history }) {
     return (
       <React.Fragment>
         <Container maxWidth="sm" component="main" className={styles.mainContainer}>
+          <Avatar className={styles.avatar}>
+            <AssistantIcon />
+          </Avatar>
           <Typography className={styles.mainTitle} component="h2" variant="h3" align="center" color="textPrimary" gutterBottom>
             Reinvente o seu jeito de atender consultas
             </Typography>
@@ -268,7 +276,7 @@ export default function Home({ history }) {
     <React.Fragment>
       <div>
         <Dialog open={openDialog} onClose={handleClose} keepMounted TransitionComponent={Transition}>
-          <DialogTitle>Antes de buscar os médicos...</DialogTitle>
+          <DialogTitle>Atenção</DialogTitle>
           <DialogContent>
             <DialogContentText>
               Você precisa selecionar seu estado, sua cidade e uma especialização médica.
@@ -296,7 +304,7 @@ export default function Home({ history }) {
 const useStyles = makeStyles(theme => ({
   mainGrid: {
     backgroundColor: '#F5FFFA',
-    minHeight: '100vh'
+    minHeight: '100vh',
   },
   mainTitle: {
     fontWeight: 'bold',
@@ -333,10 +341,17 @@ const useStyles = makeStyles(theme => ({
     paddingBottom: theme.spacing(3),
   },
   mainContainer: {
-    padding: theme.spacing(8, 0, 6),
+    padding: theme.spacing(6, 0, 6),
+    alignItems: 'center',
+    display: 'flex',
+    flexDirection: 'column',
   },
   buttons: {
     display: 'flex',
     justifyContent: 'flex-end',
+  },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.primary.main,
   },
 }));

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { UserContext } from '../../UserContext'
+import { Context } from '../../Context'
 import axios from 'axios'
 
 import firebase from '../../config/Firebase'
@@ -8,12 +8,14 @@ import Header from '../../components/Header'
 import Footer from '../../components/Footer'
 
 import {
-  Grid, Chip, Container, CircularProgress, CssBaseline, Card, Typography, Button, CardMedia, Slide, InputLabel,
-  CardContent, CardActions, ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, Select, MenuItem,
-  Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, TextField
+  Grid, Chip, Container, CircularProgress, CssBaseline, Card, Typography, Button,
+  CardMedia, Slide, CardContent, CardActions, ExpansionPanel, ExpansionPanelSummary,
+  ExpansionPanelDetails, Dialog, DialogTitle, DialogContent, DialogContentText,
+  DialogActions, TextField, Avatar
+  //InputLabel, Select, MenuItem
 } from '@material-ui/core'
 import { Autocomplete, Alert, AlertTitle } from '@material-ui/lab'
-
+import ListAltIcon from '@material-ui/icons/ListAlt'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import StarRate from '@material-ui/icons/Star'
 import { makeStyles } from '@material-ui/core/styles'
@@ -37,15 +39,10 @@ export default function Search({ history }) {
   const {
     //price, setPrice,
     rating, setRating, location, setLocation,
-    setSpeciality, speciality, globalLocation, globalSpeciality
+    setSpeciality, speciality, globalLocation, globalSpeciality,
+    setGlobalLocation, setGlobalSpeciality
     //date, setDate
-  } = useContext(UserContext)
-  //localStorage.setItem("price", price)
-
-  //if (parseInt(localStorage.getItem("price")) === 0) {
-  //    alert("Você não pode voltar para essa página novamente. Realize uma nova pesquisa.")
-  //    history.push("/home")
-  // }
+  } = useContext(Context)
 
   const handleClose = () => {
     setOpenDialog(false)
@@ -53,23 +50,45 @@ export default function Search({ history }) {
 
   // Busca os médicos de acordo com a pesquisa na tela inicial
   useEffect(() => {
-    firebase.db.collection('doctors')
-      .where("location", "==", globalLocation)
-      .where("speciality", "==", globalSpeciality)
-      .get().then(snapshot => {
-        if (snapshot) {
-          let doctors = []
-          snapshot.forEach(doctor => {
-            doctors.push({
-              key: doctor.id,
-              ...doctor.data()
+    if (globalLocation !== "" && globalSpeciality !== "") {
+      firebase.db.collection('doctors')
+        .where("location", "==", globalLocation)
+        .where("speciality", "==", globalSpeciality)
+        .get().then(snapshot => {
+          if (snapshot) {
+            let doctors = []
+            snapshot.forEach(doctor => {
+              doctors.push({
+                key: doctor.id,
+                ...doctor.data()
+              })
             })
-          })
-          setDoctors(doctors)
-          setFetchData(true)
-        }
-      })
-  }, [globalLocation, globalSpeciality])
+            setDoctors(doctors)
+            setFetchData(true)
+          }
+        })
+    } else {
+      firebase.db.collection('doctors')
+        .where("location", "==", location)
+        .where("speciality", "==", speciality)
+        //.where("price", "<=", price)
+        //.where("date", "==", date)
+        .where("rating", "==", rating)
+        .get().then(snapshot => {
+          if (snapshot) {
+            let doctors = []
+            snapshot.forEach(doctor => {
+              doctors.push({
+                key: doctor.id,
+                ...doctor.data()
+              })
+            })
+            setDoctors(doctors)
+            setFetchData(true)
+          }
+        })
+    }
+  }, [globalLocation, globalSpeciality, location, rating, speciality])
 
   useEffect(() => {
     axios.get('https://servicodados.ibge.gov.br/api/v1/localidades/estados').then(res => {
@@ -114,6 +133,7 @@ export default function Search({ history }) {
     if (location === "" || speciality === "" || rating === 0) {
       setOpenDialog(true)
     } else {
+      console.log(rating)
       setFetchData(false)
       firebase.db.collection('doctors')
         .where("location", "==", location)
@@ -131,6 +151,8 @@ export default function Search({ history }) {
               })
             })
             setDoctors(doctors)
+            setGlobalLocation("")
+            setGlobalSpeciality("")
             setFetchData(true)
           }
         })
@@ -159,6 +181,9 @@ export default function Search({ history }) {
             <Header />
           </Container>
           <Container maxWidth="sm" component="main" className={styles.mainContainer}>
+            <Avatar className={styles.avatar}>
+              <ListAltIcon />
+            </Avatar>
             <Typography className={styles.mainTitle} component="h2" variant="h3" align="center" color="textPrimary" gutterBottom>
               Lista de médicos
             </Typography>
@@ -196,6 +221,7 @@ export default function Search({ history }) {
                         options={cities}
                         getOptionLabel={cities => cities}
                         value={location}
+                        disabled={selectedUf === ""}
                         onChange={(event, newValue) => {
                           setLocation(newValue)
                         }}
@@ -247,24 +273,14 @@ export default function Search({ history }) {
                                             />
                                             </Grid>*/}
                     <Grid item xs={12} sm={4}>
-                      <InputLabel shrink>
-                        Avaliação
-                      </InputLabel>
-                      <Select
-                        fullWidth
-                        displayEmpty
+                      <TextField
+                        label="Avaliação"
+                        type="number"
+                        InputProps={{ inputProps: { min: 0, max: 5 } }}
                         value={rating}
                         onChange={event => setRating(event.target.value)}
-                      >
-                        <MenuItem value={0} disabled>
-                          <em>Escolha uma opção</em>
-                        </MenuItem>
-                        <MenuItem value={1}>1</MenuItem>
-                        <MenuItem value={2}>2</MenuItem>
-                        <MenuItem value={3}>3</MenuItem>
-                        <MenuItem value={4}>4</MenuItem>
-                        <MenuItem value={5}>5</MenuItem>
-                      </Select>
+                        fullWidth
+                      />
                     </Grid>
                   </Grid>
                 </ExpansionPanelDetails>
@@ -364,7 +380,10 @@ const useStyles = makeStyles(theme => ({
     fontWeight: theme.typography.fontWeightRegular,
   },
   mainContainer: {
-    padding: theme.spacing(8, 0, 6),
+    padding: theme.spacing(6, 0, 6),
+    alignItems: 'center',
+    display: 'flex',
+    flexDirection: 'column',
   },
   resultContainer: {
     paddingTop: theme.spacing(20),
@@ -379,4 +398,8 @@ const useStyles = makeStyles(theme => ({
   mainTitle: {
     fontWeight: 'bold'
   },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.primary.main,
+  }
 }));

@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { UserContext } from '../../UserContext'
+import { Context } from '../../Context'
 
 import { Typography, Grid } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
@@ -8,7 +8,7 @@ import firebase from '../../config/Firebase'
 
 export default function PatientReview() {
   const styles = useStyles();
-  const { cpf, phone, cardName, cardNumber, brand, setBrand, expireDate, securityCode } = useContext(UserContext)
+  const { cpf, phone, cardName, cardNumber, brand, setBrand, expireDate, securityCode } = useContext(Context)
   const lastDigitsCard = cardNumber.split(" ")[3]
 
   if (cardNumber.substring(0, 1) === "3") {

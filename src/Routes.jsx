@@ -17,7 +17,7 @@ import Schedule from './pages/Schedule'
 import Confirmed from './pages/Confirmed'
 import Cancelled from './pages/Cancelled'
 
-import { UserContext } from './UserContext'
+import { Context } from './Context'
 
 export default function Routes() {
   const [name, setName] = useState('')
@@ -42,23 +42,23 @@ export default function Routes() {
   const [globalLocation, setGlobalLocation] = useState('')
   const [globalSpeciality, setGlobalSpeciality] = useState('')
   const [price, setPrice] = useState(0)
-  const [rating, setRating] = useState(0)
-  const [date, setDate] = useState("")
+  const [rating, setRating] = useState('')
+  const [date, setDate] = useState('')
 
-  const user = {
-    cpf, setCpf, crm, setCrm, description, setDescription, city, setCity, streetNumber, setStreetNumber, neighbour, setNeighbour,
-    speciality, setSpeciality, phone, setPhone, type, setType, cardName, setCardName, cardNumber,
-    setCardNumber, brand, setBrand, expireDate, setExpireDate, securityCode,
-    setSecurityCode, location, setLocation, globalLocation,
-    setGlobalLocation, globalSpeciality, setGlobalSpeciality, price, setPrice,
-    rating, setRating, date, setDate, selectedUf, setSelectedUf, street, setStreet,
-    name, setName, email, setEmail
+  const context = {
+    cpf, setCpf, crm, setCrm, description, setDescription, city, setCity, streetNumber,
+    setStreetNumber, neighbour, setNeighbour, speciality, setSpeciality, phone, setPhone,
+    type, setType, cardName, setCardName, cardNumber, setCardNumber, brand, setBrand,
+    expireDate, setExpireDate, securityCode, setSecurityCode, location, setLocation,
+    globalLocation, setGlobalLocation, globalSpeciality, setGlobalSpeciality, price,
+    setPrice, rating, setRating, date, setDate, selectedUf, setSelectedUf, street,
+    setStreet, name, setName, email, setEmail
   }
 
   return (
     <BrowserRouter>
       <Switch>
-        <UserContext.Provider value={user}>
+        <Context.Provider value={context}>
           <Route path="/" exact component={Main} />
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
@@ -74,7 +74,7 @@ export default function Routes() {
           <Route path="/viewprofile" component={ViewProfile} />
           <Route path="/viewpatient" component={ViewPatient} />
           <Route path="/viewdoctor" component={ViewDoctor} />
-        </UserContext.Provider>
+        </Context.Provider>
       </Switch>
     </BrowserRouter>
   )

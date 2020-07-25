@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { UserContext } from '../../UserContext'
+import { Context } from '../../Context'
 
 import firebase from '../../config/Firebase'
 
@@ -8,9 +8,9 @@ import Footer from '../../components/Footer'
 
 import {
   Grid, Container, CssBaseline, Typography, Paper, Button, CircularProgress, Slide,
-  Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions
+  Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Avatar
 } from '@material-ui/core'
-
+import PermContactCalendarIcon from '@material-ui/icons/PermContactCalendar'
 import { makeStyles } from '@material-ui/core/styles'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -21,10 +21,11 @@ export default function ViewDoctor({ history }) {
   const styles = useStyles();
 
   const {
-    name, setName, email, setEmail, cpf, setCpf, phone, setPhone, type, setType, crm, setCrm,
-    street, setStreet, streetNumber, setStreetNumber, neighbour, setNeighbour, speciality, setSpeciality, description,
+    name, setName, email, setEmail, cpf, setCpf, phone, setPhone, type,
+    setType, crm, setCrm, street, setStreet, streetNumber, setStreetNumber,
+    neighbour, setNeighbour, speciality, setSpeciality, description,
     setDescription, selectedUf, setSelectedUf, city, setCity
-  } = useContext(UserContext)
+  } = useContext(Context)
   const [openDialog, setOpenDialog] = useState(false)
   const [fetchData, setFetchData] = useState(false)
 
@@ -81,7 +82,7 @@ export default function ViewDoctor({ history }) {
     <React.Fragment>
       <div>
         <Dialog open={openDialog} onClose={handleClose} keepMounted TransitionComponent={Transition}>
-          <DialogTitle>Antes de continuar</DialogTitle>
+          <DialogTitle>Alteração de perfil</DialogTitle>
           <DialogContent>
             <DialogContentText>
               Precisamos que você nos informe o seu tipo de usuário. Selecione abaixo se você é um médico ou um paciente.
@@ -100,6 +101,9 @@ export default function ViewDoctor({ history }) {
             <Header />
           </Container>
           <Container maxWidth="sm" component="main" className={styles.mainContainer}>
+            <Avatar className={styles.avatar}>
+              <PermContactCalendarIcon />
+            </Avatar>
             <Typography
               className={styles.mainTitle}
               component="h2"
@@ -209,7 +213,10 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: '#F5FFFA'
   },
   mainContainer: {
-    padding: theme.spacing(8, 0, 6),
+    padding: theme.spacing(6, 0, 6),
+    alignItems: 'center',
+    display: 'flex',
+    flexDirection: 'column',
   },
   layout: {
     width: 'auto',
@@ -246,5 +253,9 @@ const useStyles = makeStyles(theme => ({
   typography: {
     fontWeight: 'bold',
     marginRight: 5
+  },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.primary.main,
   }
 }));

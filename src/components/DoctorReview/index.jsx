@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { UserContext } from '../../UserContext'
+import { Context } from '../../Context'
 
 import { Typography, Grid } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
@@ -8,7 +8,7 @@ import firebase from '../../config/Firebase'
 
 export default function DoctorReview() {
   const styles = useStyles();
-  const { crm, cpf, phone, description, speciality, city, street, streetNumber, neighbour } = useContext(UserContext)
+  const { crm, cpf, phone, description, speciality, city, street, streetNumber, neighbour } = useContext(Context)
   //const finalAddress = `${address}, ${addressNumber} - ${neighbour}`
 
   return (

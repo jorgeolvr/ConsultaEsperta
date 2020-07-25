@@ -7,8 +7,9 @@ import Footer from '../../components/Footer'
 
 import {
   Grid, CircularProgress, CssBaseline, Container, Typography, Card,
-  Button, CardContent, CardActions
+  Button, CardContent, CardActions, Avatar
 } from '@material-ui/core'
+import WatchLaterIcon from '@material-ui/icons/WatchLater'
 import { Alert, AlertTitle } from '@material-ui/lab'
 import { makeStyles } from '@material-ui/core/styles'
 
@@ -63,6 +64,9 @@ export default function Schedule({ history }) {
           <Header />
         </Container>
         <Container maxWidth="sm" component="main" className={styles.mainContainer}>
+          <Avatar className={styles.avatar}>
+            <WatchLaterIcon />
+          </Avatar>
           <Typography className={styles.mainTitle} component="h2" variant="h3" align="center" color="textPrimary" gutterBottom>
             Minha agenda
           </Typography>
@@ -73,7 +77,7 @@ export default function Schedule({ history }) {
         <Container className={styles.cardGrid} maxWidth="md">
           <Grid container spacing={4}>
             {appointments.length === 0 && (
-              <Container maxWidth="sm" component="main" className={styles.resultContainer}>
+              <Container maxWidth="md" component="main">
                 <Alert severity="warning" variant="standard" elevation={3}>
                   <AlertTitle>Atenção</AlertTitle>
                   Você não possui nenhuma consulta!
@@ -132,10 +136,10 @@ const useStyles = makeStyles(theme => ({
     minHeight: '100vh'
   },
   mainContainer: {
-    padding: theme.spacing(8, 0, 6),
-  },
-  resultContainer: {
-    paddingTop: theme.spacing(20)
+    padding: theme.spacing(6, 0, 6),
+    alignItems: 'center',
+    display: 'flex',
+    flexDirection: 'column',
   },
   resultTypography: {
     paddingTop: 20,
@@ -157,4 +161,8 @@ const useStyles = makeStyles(theme => ({
   pos: {
     marginBottom: 12,
   },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.primary.main,
+  }
 }))

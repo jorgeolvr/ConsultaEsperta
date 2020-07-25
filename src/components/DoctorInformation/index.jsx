@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { UserContext } from '../../UserContext'
+import { Context } from '../../Context'
 
 import InputMask from 'react-input-mask'
 import firebase from '../../config/Firebase'
@@ -7,7 +7,7 @@ import firebase from '../../config/Firebase'
 import { Grid, TextField } from '@material-ui/core'
 
 export default function DoctorInformation() {
-  const { cpf, setCpf, phone, setPhone, crm, setCrm } = useContext(UserContext)
+  const { cpf, setCpf, phone, setPhone, crm, setCrm } = useContext(Context)
 
   return (
     <React.Fragment>
