@@ -49,7 +49,7 @@ export default function Main() {
               </Grid>
             </Grid>
             <Grid item xs={12} md={6}>
-              <img src={medicine} alt="Imagem" className={styles.img} height="300em" width="100%" />
+              <img src={medicine} alt="Imagem" className={styles.img} height="350em" width="100%" />
             </Grid>
           </Grid>
         </Container>

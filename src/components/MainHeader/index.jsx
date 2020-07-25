@@ -20,11 +20,11 @@ function Header(props) {
   return (
     <React.Fragment>
       <Toolbar className={styles.toolbar}>
-        <img src={logo} alt="Consulta Esperta" height="30em" className={styles.img} onClick={handleMain} />
+        <img src={logo} alt="Consulta Esperta" height="26em" className={styles.img} onClick={handleMain} />
         <Grid>
-          <Button variant="outlined" color="default" onClick={handleLogin}>
+          <Button variant="outlined" color="default" onClick={handleLogin} size="small">
             Entrar
-                    </Button>
+          </Button>
         </Grid>
       </Toolbar>
 
