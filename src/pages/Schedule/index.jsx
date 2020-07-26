@@ -71,16 +71,16 @@ export default function Schedule({ history }) {
             Minha agenda
           </Typography>
           <Typography variant="h5" align="center" color="textSecondary" component="p">
-            Confirme e visualize dados de todas as consultas que você marcou.
+            Visualize e confirme os dados de todas as suas consultas marcadas.
           </Typography>
         </Container>
         <Container className={styles.cardGrid} maxWidth="md">
           <Grid container spacing={4}>
             {appointments.length === 0 && (
               <Container maxWidth="md" component="main">
-                <Alert severity="warning" variant="standard" elevation={3}>
-                  <AlertTitle>Atenção</AlertTitle>
-                  Você não possui nenhuma consulta!
+                <Alert severity="info" variant="standard" elevation={3}>
+                  <AlertTitle>Informação</AlertTitle>
+                  Você ainda não possui nenhuma consulta marcada.
               </Alert>
               </Container>
             )}
@@ -90,7 +90,7 @@ export default function Schedule({ history }) {
                   <CardContent>
                     <Typography className={styles.title} color="textSecondary" gutterBottom>
                       Consulta marcada
-                                        </Typography>
+                    </Typography>
                     <Typography variant="h5" component="h2">
                       {app.doctorName}
                     </Typography>

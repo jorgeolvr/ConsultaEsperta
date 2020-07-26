@@ -14,6 +14,7 @@ import Forgot from './pages/Forgot'
 import Search from './pages/Search'
 import Doctor from './pages/Doctor'
 import Schedule from './pages/Schedule'
+import CreateSchedule from './pages/CreateSchedule'
 import Confirmed from './pages/Confirmed'
 import Cancelled from './pages/Cancelled'
 
@@ -66,6 +67,7 @@ export default function Routes() {
           <Route path="/home" component={Home} />
           <Route path="/search" component={Search} />
           <Route path="/doctor/:id" component={Doctor} />
+          <Route path="/createschedule" component={CreateSchedule} />
           <Route path="/schedule" component={Schedule} />
           <Route path="/confirmed" component={Confirmed} />
           <Route path="/cancelled" component={Cancelled} />

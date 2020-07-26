@@ -8,12 +8,13 @@ import Header from '../../components/Header'
 import Footer from '../../components/Footer'
 
 import {
-  Grid, Container, CssBaseline, Typography, Button, TextField, Avatar,
-  Paper, Stepper, Step, StepLabel, StepContent, Dialog, DialogTitle,
-  DialogContent, DialogContentText, DialogActions, Slide, CircularProgress
+  Grid, Container, CssBaseline, Typography, Button, TextField, Avatar, Divider, IconButton, List,
+  Paper, Stepper, Step, StepLabel, StepContent, Dialog, DialogTitle, ListItem, ListItemText,
+  DialogContent, DialogContentText, DialogActions, Slide, CircularProgress, ListItemSecondaryAction
 } from '@material-ui/core'
-import { Autocomplete } from '@material-ui/lab'
+import { Autocomplete, Alert, AlertTitle } from '@material-ui/lab'
 import AssistantIcon from '@material-ui/icons/Assistant'
+import DeleteIcon from '@material-ui/icons/Delete'
 import { makeStyles } from '@material-ui/core/styles'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -41,6 +42,7 @@ export default function Home({ history }) {
   const [selectedUf, setSelectedUf] = useState('')
   const [cities, setCities] = useState([])
   const [specialities, setSpecialities] = useState([])
+  const [schedules, setSchedules] = useState([])
 
   if (!firebase.getUsername()) {
     alert("Você foi desconectado. Faça login novamente.")
@@ -53,6 +55,10 @@ export default function Home({ history }) {
     } else {
       history.push('/search')
     }
+  }
+
+  function handleCreateSchedule() {
+    history.push('/createschedule')
   }
 
   const handleClose = () => {
@@ -116,13 +122,27 @@ export default function Home({ history }) {
       if (doc.exists) {
         const { type } = doc.data()
         setUserType(type)
-        setFetchData(true)
-      } else {
-        setUserType("New User")
-        setFetchData(true)
       }
     })
-  })
+
+    if (userType === "Médico") {
+      firebase.db.collection("doctors").doc(firebase.getId()).collection("schedules").get().then(snapshot => {
+        if (snapshot) {
+          let schedules = []
+          snapshot.forEach(schedule => {
+            schedules.push({
+              key: schedule.id,
+              ...schedule.data()
+            })
+          })
+          setFetchData(true)
+          setSchedules(schedules)
+        }
+      })
+    } else if (userType === "Paciente") {
+      setFetchData(true)
+    }
+  }, [userType, fetchData])
 
   function getStepContent(step) {
     switch (step) {
@@ -258,14 +278,48 @@ export default function Home({ history }) {
             Reinvente o seu jeito de atender consultas
             </Typography>
           <Typography variant="h5" align="center" color="textSecondary" component="p">
-            Crie seus horários de atendimento informando duração das consultas, preços e a sua especialidade.
-            </Typography>
+            Visualize os dias, horários, preços e duração das consultas que você já cadastrou.
+          </Typography>
         </Container>
+        {schedules.length === 0 && (
+          <Container maxWidth="md" component="main">
+            <Alert severity="info" variant="standard" action={
+              <Button color="inherit" size="small" onClick={handleCreateSchedule}>
+                Cadastrar
+              </Button>
+            } elevation={3}>
+              <AlertTitle>Informação</AlertTitle>
+                  Você ainda não cadastrou os dias de consulta.
+              </Alert>
+          </Container>
+        )}
         <main className={styles.layout}>
           <Paper elevation={3} className={styles.paper}>
-            <Typography component="h5" variant="h5" className={styles.secondaryTitle}>
-              Definição de horários
-            </Typography>
+            <List>
+              {schedules.map((schedule) => (
+                <Container maxWidth="md">
+
+                  <ListItem>
+                    <ListItemText primary="Dia da semana" secondary={schedule.day} />
+                    {schedule.price === "Individual" ? <ListItemText primary="Preço" secondary={schedule.price} /> : ""}
+                    <ListItemText primary="Horário" secondary={schedule.hour} />
+                    <ListItemText primary="Duração" secondary={schedule.duration} />
+                    <ListItemSecondaryAction>
+                      <IconButton variant="contained" color="secondary">
+                        <DeleteIcon />
+                      </IconButton>
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                  <Divider />
+
+                </Container>
+              ))}
+            </List>
+            <div className={styles.buttons}>
+              <Button variant="contained" color="primary" className={styles.button} onClick={handleCreateSchedule}>
+                Cadastrar
+              </Button>
+            </div>
           </Paper>
         </main>
       </React.Fragment>
@@ -349,6 +403,11 @@ const useStyles = makeStyles(theme => ({
   buttons: {
     display: 'flex',
     justifyContent: 'flex-end',
+  },
+  button: {
+    marginTop: theme.spacing(2),
+    marginRight: theme.spacing(2),
+    marginBottom: theme.spacing(2),
   },
   avatar: {
     margin: theme.spacing(1),

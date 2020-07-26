@@ -115,7 +115,7 @@ export default function ViewDoctor({ history }) {
               Meu perfil
             </Typography>
             <Typography variant="h5" align="center" color="textSecondary" component="p">
-              Visualize ou altere os seus dados de autenticação, dados pessoais e forma de pagamento.
+              Visualize ou altere os seus dados de autenticação, dados pessoais e outras informações.
             </Typography>
           </Container>
           <main className={styles.layout}>
