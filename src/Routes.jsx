@@ -6,15 +6,13 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import Home from './pages/Home'
 import Profile from './pages/Profile'
-import DoctorProfile from './pages/DoctorProfile'
-import PatientProfile from './pages/PatientProfile'
-import ViewPatient from './pages/PatientView'
-import ViewDoctor from './pages/DoctorView'
+import Doctor from './pages/Doctor'
+import Patient from './pages/Patient'
 import Forgot from './pages/Forgot'
 import Search from './pages/Search'
-import Doctor from './pages/Doctor'
+import Details from './pages/Details'
 import Schedule from './pages/Schedule'
-import CreateSchedule from './pages/CreateSchedule'
+import Create from './pages/Create'
 
 import { Context } from './Context'
 
@@ -65,14 +63,12 @@ export default function Routes() {
           <Route path="/forgot" component={Forgot} />
           <Route path="/home" component={Home} />
           <Route path="/search" component={Search} />
-          <Route path="/doctor/:id" component={Doctor} />
-          <Route path="/create" component={CreateSchedule} />
+          <Route path="/details/:idDoctor" component={Details} />
+          <Route path="/create" component={Create} />
           <Route path="/schedule" component={Schedule} />
-          <Route path="/doctor/profile" component={DoctorProfile} />
-          <Route path="/patient/profile" component={PatientProfile} />
+          <Route path="/doctor" component={Doctor} />
+          <Route path="/patient" component={Patient} />
           <Route path="/profile" component={Profile} />
-          <Route path="/patient/view" component={ViewPatient} />
-          <Route path="/doctor/view" component={ViewDoctor} />
         </Context.Provider>
       </Switch>
     </BrowserRouter>

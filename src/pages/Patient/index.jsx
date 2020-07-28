@@ -3,9 +3,9 @@ import { Context } from '../../Context'
 
 import Header from '../../components/Header'
 import Footer from '../../components/Footer'
-import DoctorInformation from '../../components/DoctorInformation'
-import ScheduleInformation from '../../components/ScheduleInformation'
-import DoctorReview from '../../components/DoctorReview'
+import PatientInformation from '../../components/PatientInformation'
+import PaymentInformation from '../../components/PaymentInformation'
+import PatientReview from '../../components/PatientReview'
 
 import firebase from '../../config/Firebase'
 
@@ -16,7 +16,7 @@ import {
 import PermContactCalendarIcon from '@material-ui/icons/PermContactCalendar'
 import { makeStyles } from '@material-ui/core/styles'
 
-const steps = ['Dados pessoais', 'Dados de consulta', 'Revisar dados'];
+const steps = ['Dados pessoais', 'Forma de pagamento', 'Revisar dados'];
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -25,17 +25,17 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 function getStepContent(step) {
   switch (step) {
     case 0:
-      return <DoctorInformation />
+      return <PatientInformation />
     case 1:
-      return <ScheduleInformation />
+      return <PaymentInformation />
     case 2:
-      return <DoctorReview />
+      return <PatientReview />
     default:
       throw new Error('Unknown step')
   }
 }
 
-export default function Doctor({ history }) {
+export default function PatientProfile({ history }) {
   const styles = useStyles()
   const [activeStep, setActiveStep] = useState(0)
   const [open, setOpen] = useState(false)
@@ -44,7 +44,7 @@ export default function Doctor({ history }) {
   const email = firebase.getEmail()
 
   const {
-    crm, cpf, phone, description, speciality, city, street, streetNumber, neighbour,
+    cpf, phone, cardName, cardNumber, brand, expireDate, securityCode
   } = useContext(Context)
 
   function handleMain() {
@@ -56,9 +56,9 @@ export default function Doctor({ history }) {
   };
 
   const handleNext = () => {
-    if (activeStep === 0 && (crm === "" || cpf === "" || phone === "")) {
+    if (activeStep === 0 && (cpf === "" || phone === "")) {
       setOpen(true)
-    } else if (activeStep === 1 && (description === "")) {
+    } else if (activeStep === 1 && (cardName === "" || cardNumber === "" || expireDate === "" || securityCode === "")) {
       setOpen(true)
     }
     else {
@@ -72,8 +72,8 @@ export default function Doctor({ history }) {
 
   const handleProfile = () => {
     setActiveStep(activeStep + 1);
-    firebase.userDatabase(name, email, cpf, phone, 'Médico')
-    firebase.doctorDatabase(name, crm, description, city, speciality, street, streetNumber, neighbour)
+    firebase.userDatabase(name, email, cpf, phone, "Paciente")
+    firebase.patientDatabase(cardName, cardNumber, brand, expireDate, securityCode)
   }
 
   return (

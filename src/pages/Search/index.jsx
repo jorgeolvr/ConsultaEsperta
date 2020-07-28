@@ -11,7 +11,7 @@ import {
   Grid, Chip, Container, CircularProgress, CssBaseline, Card, Typography, Button,
   CardMedia, Slide, CardContent, CardActions, ExpansionPanel, ExpansionPanelSummary,
   ExpansionPanelDetails, Dialog, DialogTitle, DialogContent, DialogContentText,
-  DialogActions, TextField, Avatar
+  DialogActions, TextField, Avatar, Divider
   //InputLabel, Select, MenuItem
 } from '@material-ui/core'
 import { Autocomplete, Alert, AlertTitle } from '@material-ui/lab'
@@ -75,7 +75,10 @@ export default function Search({ history }) {
     } else {
       setFetchData(true)
     }
-  }, [globalLocation, globalSpeciality, doctors, setGlobalLocation, setGlobalSpeciality, setDoctors])
+  }, [
+    globalLocation, globalSpeciality, doctors, setGlobalLocation, setGlobalSpeciality,
+    setDoctors, setLocation, setRating, setSelectedUf, setSpeciality
+  ])
 
   useEffect(() => {
     axios.get('https://servicodados.ibge.gov.br/api/v1/localidades/estados').then(res => {
@@ -115,12 +118,28 @@ export default function Search({ history }) {
       })
   }, [])
 
+  const handleShowAll = () => {
+    setFetchData(false)
+    firebase.db.collection('doctors').get().then(snapshot => {
+      if (snapshot) {
+        let doctors = []
+        snapshot.forEach(doctor => {
+          doctors.push({
+            key: doctor.id,
+            ...doctor.data()
+          })
+        })
+        setDoctors(doctors)
+        setFetchData(true)
+      }
+    })
+  }
+
   //Busca os médicos de acordo com a pesquisa avançada na tela de busca
   const handleAdvancedSearch = () => {
     if (location === "" || speciality === "" || rating === 0) {
       setOpenDialog(true)
     } else {
-      console.log(rating)
       setFetchData(false)
       firebase.db.collection('doctors')
         .where("location", "==", location)
@@ -276,6 +295,19 @@ export default function Search({ history }) {
                   </Button>
                   </div>
                 </ExpansionPanel>
+                <Grid container className={styles.bar}>
+                  <Grid xl={6}>
+                    <Typography style={{ fontWeight: 'bold' }}>
+                      Médicos encontrados ({doctors.length})
+                    </Typography>
+                  </Grid>
+                  <Grid xl={6}>
+                    <Button size="small" color="primary" onClick={handleShowAll}>Ver todos</Button>
+                  </Grid>
+                </Grid>
+                <Divider />
+              </Container>
+              <Container maxWidth="md" className={styles.alert}>
                 {doctors.length === 0 && (
                   <Alert severity="warning" variant="standard" elevation={3}>
                     <AlertTitle>Atenção</AlertTitle>
@@ -284,30 +316,38 @@ export default function Search({ history }) {
                 )}
               </Container>
               <Container className={styles.cardGrid} maxWidth="md">
-
                 {doctors.length !== 0 && (
                   <Grid container spacing={4}>
-                    {doctors.map((doc) => (
-                      <Grid item key={doc.key} xs={12} sm={6} md={4}>
+                    {doctors.map((doctor) => (
+                      <Grid item key={doctor.key} xs={12} sm={6} md={4}>
                         <Card className={styles.card} elevation={3}>
                           <CardMedia
                             className={styles.cardMedia}
-                            image={doc.image}
-                            title="Image title"
+                            image={doctor.image}
+                            title="Imagem"
                           />
                           <CardContent className={styles.cardContent}>
                             <Typography gutterBottom variant="h5" component="h2">
-                              {doc.name}
+                              {doctor.name}
                             </Typography>
                             <Typography>
-                              {doc.description}
+                              {doctor.description}
                             </Typography>
                             <Grid className={styles.rating}>
-                              <Chip icon={<StarRate />} label={doc.rating} />
+                              <Chip icon={<StarRate />} label={doctor.rating} />
                             </Grid>
                           </CardContent>
                           <CardActions>
-                            <Button size="small" color="primary" onClick={() => history.push(`/doctor/${doc.key}`)} className={styles.details}>
+                            <Button
+                              size="small"
+                              color="primary"
+                              onClick={() => history.push(`/details/${doctor.key}`)}
+                              /*onClick={() => history.push({
+                                pathname: '/details',
+                                idDoctor: doctor.key
+                              })} */
+                              className={styles.details}
+                            >
                               Ver Detalhes
                             </Button>
                           </CardActions>
@@ -385,8 +425,15 @@ const useStyles = makeStyles(theme => ({
   mainTitle: {
     fontWeight: 'bold'
   },
+  alert: {
+    marginTop: theme.spacing(2)
+  },
   avatar: {
     margin: theme.spacing(1),
     backgroundColor: theme.palette.primary.main,
+  },
+  bar: {
+    justifyContent: 'space-between',
+    marginTop: theme.spacing(5)
   }
-}));
+}))

@@ -69,7 +69,7 @@ export default function ScheduleInformation() {
             label="Descrição"
             defaultValue={description}
             onChange={event => setDescription(event.target.value)}
-            inputProps={{ maxLength: 40 }}
+            inputProps={{ maxLength: 45 }}
             fullWidth
           />
         </Grid>

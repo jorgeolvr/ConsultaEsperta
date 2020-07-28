@@ -13,7 +13,7 @@ import WatchLaterIcon from '@material-ui/icons/WatchLater'
 import { Alert, AlertTitle } from '@material-ui/lab'
 import { makeStyles } from '@material-ui/core/styles'
 
-export default function Schedule({ history }) {
+export default function Schedule() {
   const styles = useStyles()
 
   const [appointments, setAppointments] = useState([])
@@ -104,37 +104,37 @@ export default function Schedule({ history }) {
               </Alert>
                   </Container>
                 )}
-                {appointments.map((app) => (
+                {appointments.map((appointment) => (
                   <Container maxWidth="md" component="main">
-                    <Grid item key={app.key} xs={12} sm={6} md={4}>
+                    <Grid item key={appointment.key} xs={12} sm={6} md={4}>
                       <Card elevation={3}>
                         <CardContent>
                           <Typography className={styles.title} color="textSecondary" gutterBottom>
                             Consulta marcada
                       </Typography>
                           <Typography variant="h5" component="h2">
-                            {app.doctorName}
+                            {appointment.doctorName}
                           </Typography>
                           <Typography className={styles.information} color="textSecondary">
-                            {app.date}
+                            {appointment.day} às {appointment.hour}
                           </Typography>
                           <Typography variant="body1" component="p">
-                            {app.address}
+                            {appointment.address}
                           </Typography>
                         </CardContent>
                         <CardActions>
-                          {app.status === "pending" && (
+                          {appointment.status === "pending" && (
                             <React.Fragment>
-                              <Button size="small" onClick={() => handleConfirm(app.key)} color="primary">Confirmar</Button>
-                              <Button size="small" onClick={() => handleCancel(app.key, app.idDoctor, app.idSchedule)} color="secondary">Cancelar</Button>
+                              <Button size="small" onClick={() => handleConfirm(appointment.key)} color="primary">Confirmar</Button>
+                              <Button size="small" onClick={() => handleCancel(appointment.key, appointment.idDoctor, appointment.idSchedule)} color="secondary">Cancelar</Button>
                             </React.Fragment>
                           )}
-                          {app.status === "confirmed" && (
+                          {appointment.status === "confirmed" && (
                             <React.Fragment>
                               <Button size="small" disabled>Confirmado</Button>
                             </React.Fragment>
                           )}
-                          {app.status === "cancelled" && (
+                          {appointment.status === "cancelled" && (
                             <React.Fragment>
                               <Button size="small" disabled>Cancelado</Button>
                             </React.Fragment>

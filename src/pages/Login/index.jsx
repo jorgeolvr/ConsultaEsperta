@@ -109,7 +109,6 @@ export default function Login({ history }) {
               <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <TextField
-                    autoFocus
                     fullWidth
                     id="email"
                     label="Endereço de e-mail"

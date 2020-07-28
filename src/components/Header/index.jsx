@@ -51,11 +51,11 @@ function Header(props) {
   }
 
   function handlePatient() {
-    props.history.push('/patient/profile')
+    props.history.push('/patient')
   }
 
   function handleDoctor() {
-    props.history.push('/doctor/profile')
+    props.history.push('/doctor')
   }
 
 
