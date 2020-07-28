@@ -296,12 +296,12 @@ export default function Search({ history }) {
                   </div>
                 </ExpansionPanel>
                 <Grid container className={styles.bar}>
-                  <Grid xl={6}>
+                  <Grid lg={6}>
                     <Typography style={{ fontWeight: 'bold' }}>
                       Médicos encontrados ({doctors.length})
                     </Typography>
                   </Grid>
-                  <Grid xl={6}>
+                  <Grid lg={6}>
                     <Button size="small" color="primary" onClick={handleShowAll}>Ver todos</Button>
                   </Grid>
                 </Grid>
@@ -341,7 +341,8 @@ export default function Search({ history }) {
                             <Button
                               size="small"
                               color="primary"
-                              onClick={() => history.push(`/details/${doctor.key}`)}
+                              onClick={() =>
+                                history.push(`/details/${doctor.key}`)}
                               /*onClick={() => history.push({
                                 pathname: '/details',
                                 idDoctor: doctor.key

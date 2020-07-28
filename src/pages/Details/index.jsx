@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-
 import firebase from '../../config/Firebase'
 
 import Header from '../../components/Header'

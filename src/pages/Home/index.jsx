@@ -122,9 +122,13 @@ export default function Home({ history }) {
       if (doc.exists) {
         const { type } = doc.data()
         setUserType(type)
+      } else {
+        setUserType("New")
       }
     })
+  })
 
+  useEffect(() => {
     if (userType === "Médico") {
       firebase.db.collection("doctors").doc(firebase.getId()).collection("schedules").get().then(snapshot => {
         if (snapshot) {
@@ -135,11 +139,11 @@ export default function Home({ history }) {
               ...schedule.data()
             })
           })
-          setFetchData(true)
           setSchedules(schedules)
+          setFetchData(true)
         }
       })
-    } else if (userType === "Paciente") {
+    } else if (userType === "Paciente" || userType === "New") {
       setFetchData(true)
     }
   }, [userType, fetchData])
