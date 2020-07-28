@@ -5,7 +5,7 @@ import logo from '../../assets/simbolo-consulta.png'
 import firebase from '../../config/Firebase'
 
 import {
-  Toolbar, Grid, IconButton, Typography, Link, Menu, MenuItem, Slide,
+  Toolbar, Grid, IconButton, Typography, Link, Menu, MenuItem, Slide, Container,
   Dialog, DialogTitle, DialogContent, DialogContentText, Button, DialogActions
 } from '@material-ui/core'
 import { AccountCircle, /*Notifications*/ } from '@material-ui/icons'
@@ -25,7 +25,7 @@ function Header(props) {
   //const [anchorNotification, setAnchorNotification] = React.useState(null)
   //const openNotification = Boolean(anchorNotification)
 
-  const handleMenuUser = event => {
+  const handleUser = event => {
     setAnchorUser(event.currentTarget);
   }
 
@@ -51,11 +51,11 @@ function Header(props) {
   }
 
   function handlePatient() {
-    props.history.push('/patientprofile')
+    props.history.push('/patient/profile')
   }
 
   function handleDoctor() {
-    props.history.push('/doctorprofile')
+    props.history.push('/doctor/profile')
   }
 
 
@@ -69,7 +69,7 @@ function Header(props) {
     var docRef = firebase.db.collection("users").doc(userId)
     docRef.get().then(doc => {
       if (doc.exists) {
-        props.history.push('/viewprofile')
+        props.history.push('/profile')
       } else {
         setOpenDialog(true)
       }
@@ -135,7 +135,7 @@ function Header(props) {
             aria-label="account of current user"
             aria-controls="menu-account"
             aria-haspopup="true"
-            onClick={handleMenuUser}
+            onClick={handleUser}
             color="inherit"
             size="medium"
           >
@@ -161,24 +161,57 @@ function Header(props) {
           </Menu>
         </Grid>
       </Toolbar>
-      <Toolbar component="nav" variant="dense" className={styles.toolbarSecondary}>
-        <Grid spacing={1}>
-          <Link color="inherit" noWrap variant="body2" onClick={handleHome} className={styles.toolbarLink}>
+      <Container maxWidth="sm">
+        <Toolbar component="nav" variant="dense" className={styles.toolbarSecondary}>
+          <Link
+            color="inherit"
+            noWrap
+            variant="body2"
+            onClick={handleHome}
+            className={styles.toolbarLink}
+          >
             Início
-                    </Link>
-          <Link color="inherit" noWrap variant="body2" onClick={handleProfile} className={styles.toolbarLink}>
+            </Link>
+          <Link
+            color="inherit"
+            noWrap
+            variant="body2"
+            onClick={handleProfile}
+            className={styles.toolbarLink}
+          >
             Perfil
-                    </Link>
-          <Link color="inherit" noWrap variant="body2" onClick={handleSchedule} className={styles.toolbarLink}>
+            </Link>
+          <Link
+            color="inherit"
+            noWrap
+            variant="body2"
+            onClick={handleSchedule}
+            className={styles.toolbarLink}
+          >
             Agenda
-                    </Link>
-          {/*<Link color="inherit" noWrap variant="body2" onClick={handleProfile} className={styles.toolbarLink}>
-                        Sugestões
-                    </Link> */}
-        </Grid>
-      </Toolbar>
+            </Link>
+          <Link
+            color="inherit"
+            noWrap
+            variant="body2"
+            onClick={handleSchedule}
+            className={styles.toolbarLink}
+          >
+            Sugestões
+            </Link>
+          <Link
+            color="inherit"
+            noWrap
+            variant="body2"
+            onClick={handleSchedule}
+            className={styles.toolbarLink}
+          >
+            Avaliações
+            </Link>
+        </Toolbar>
+      </Container>
     </React.Fragment>
-  );
+  )
 }
 
 const useStyles = makeStyles(theme => ({
@@ -197,11 +230,14 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'flex-end'
   },
   toolbarSecondary: {
-    justifyContent: 'center',
+    justifyContent: 'space-between',
+    overflowX: 'auto',
   },
   toolbarLink: {
-    padding: theme.spacing(0, 4, 0, 4),
+    padding: theme.spacing(0, 2, 0, 2),
+    flexShrink: 0,
     cursor: 'pointer'
+
   },
   user: {
     padding: theme.spacing(1, 2, 1, 2)

@@ -33,11 +33,11 @@ export default function HowToUse() {
       <Container maxWidth="sm" component="main" className={styles.container}>
         <Typography className={styles.mainTitle} component="h2" variant="h3" align="center" color="textPrimary" gutterBottom>
           Como funciona?
-                </Typography>
+        </Typography>
         <Typography variant="h5" align="center" color="textSecondary" component="p">
-          Consulta Esperta é um marketplace na área de saúde, provendo um ambiente
+          Consulta Esperta é um marketplace na área da saúde, provendo um ambiente
           para que profissionais possam difundir e cobrar por seus serviços.
-                </Typography>
+        </Typography>
       </Container>
       <Container className={styles.instructions} maxWidth="md" component="main">
         <Grid container spacing={2} alignItems="flex-end">

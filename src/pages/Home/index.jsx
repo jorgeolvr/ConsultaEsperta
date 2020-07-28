@@ -58,7 +58,7 @@ export default function Home({ history }) {
   }
 
   function handleCreateSchedule() {
-    history.push('/createschedule')
+    history.push('/create')
   }
 
   const handleClose = () => {
@@ -347,7 +347,9 @@ export default function Home({ history }) {
           <Container component="main" maxWidth="lg">
             <Header />
           </Container>
-          {userType === "Médico" ? doctorComponent() : patientComponent()}
+          <Container>
+            {userType === "Médico" ? doctorComponent() : patientComponent()}
+          </Container>
         </Grid>
       </Grid >
       <Footer />

@@ -92,71 +92,73 @@ export default function DoctorProfile({ history }) {
         </Dialog>
       </div>
       <Grid container className={styles.mainGrid}>
-        <Grid container direction="column">
-          <CssBaseline />
-          <Container component="main" maxWidth="lg">
-            <Header />
-          </Container>
-          <Container maxWidth="sm" component="main" className={styles.mainContainer}>
-            <Avatar className={styles.avatar}>
-              <PermContactCalendarIcon />
-            </Avatar>
-            <Typography className={styles.mainTitle} component="h2" variant="h3" align="center" color="textPrimary" gutterBottom>
-              Meu perfil
+        <Container>
+          <Grid container direction="column">
+            <CssBaseline />
+            <Container component="main" maxWidth="lg">
+              <Header />
+            </Container>
+            <Container maxWidth="sm" component="main" className={styles.mainContainer}>
+              <Avatar className={styles.avatar}>
+                <PermContactCalendarIcon />
+              </Avatar>
+              <Typography className={styles.mainTitle} component="h2" variant="h3" align="center" color="textPrimary" gutterBottom>
+                Meu perfil
             </Typography>
-            <Typography variant="h5" align="center" color="textSecondary" component="p">
-              Preencha os campos com seus dados pessoais e forma de pagamento para manter o perfil atualizado.
+              <Typography variant="h5" align="center" color="textSecondary" component="p">
+                Preencha os campos com seus dados pessoais e forma de pagamento para manter o perfil atualizado.
             </Typography>
-          </Container>
-          <main className={styles.layout}>
-            <Paper elevation={3} className={styles.paper}>
-              <Stepper activeStep={activeStep} className={styles.stepper}>
-                {steps.map((label) => (
-                  <Step key={label}>
-                    <StepLabel>{label}</StepLabel>
-                  </Step>
-                ))}
-              </Stepper>
-              <React.Fragment>
-                {activeStep === steps.length ? (
-                  <React.Fragment>
-                    <Typography variant="h5" gutterBottom>
-                      Obrigado por completar seu perfil.
-                    </Typography>
-                    <Typography variant="subtitle1">
-                      Volte para a tela principal e comece a usar.
-                      Se quiser mudar seu perfil, volte aqui e conclua esse processo novamente.
-                    </Typography>
-                    <div className={styles.buttons}>
-                      <Button variant="contained" color="primary" onClick={handleMain} className={styles.button}>
-                        Ok
-                      </Button>
-                    </div>
-                  </React.Fragment>
-                ) : (
+            </Container>
+            <main className={styles.layout}>
+              <Paper elevation={3} className={styles.paper}>
+                <Stepper activeStep={activeStep} className={styles.stepper}>
+                  {steps.map((label) => (
+                    <Step key={label}>
+                      <StepLabel>{label}</StepLabel>
+                    </Step>
+                  ))}
+                </Stepper>
+                <React.Fragment>
+                  {activeStep === steps.length ? (
                     <React.Fragment>
-                      {getStepContent(activeStep)}
+                      <Typography variant="h5" gutterBottom>
+                        Obrigado por completar seu perfil.
+                    </Typography>
+                      <Typography variant="subtitle1">
+                        Volte para a tela principal e comece a usar.
+                        Se quiser mudar seu perfil, volte aqui e conclua esse processo novamente.
+                    </Typography>
                       <div className={styles.buttons}>
-                        {activeStep !== 0 && (
-                          <Button onClick={handleBack} className={styles.button}>
-                            Voltar
-                          </Button>
-                        )}
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          onClick={activeStep === steps.length - 1 ? handleProfile : handleNext}
-                          className={styles.button}
-                        >
-                          {activeStep === steps.length - 1 ? 'Salvar Dados' : 'Avançar'}
-                        </Button>
+                        <Button variant="contained" color="primary" onClick={handleMain} className={styles.button}>
+                          Ok
+                      </Button>
                       </div>
                     </React.Fragment>
-                  )}
-              </React.Fragment>
-            </Paper>
-          </main>
-        </Grid>
+                  ) : (
+                      <React.Fragment>
+                        {getStepContent(activeStep)}
+                        <div className={styles.buttons}>
+                          {activeStep !== 0 && (
+                            <Button onClick={handleBack} className={styles.button}>
+                              Voltar
+                            </Button>
+                          )}
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={activeStep === steps.length - 1 ? handleProfile : handleNext}
+                            className={styles.button}
+                          >
+                            {activeStep === steps.length - 1 ? 'Salvar Dados' : 'Avançar'}
+                          </Button>
+                        </div>
+                      </React.Fragment>
+                    )}
+                </React.Fragment>
+              </Paper>
+            </main>
+          </Grid>
+        </Container>
       </Grid>
       <Footer />
     </React.Fragment>

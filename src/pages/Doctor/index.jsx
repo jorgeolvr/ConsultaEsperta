@@ -128,94 +128,96 @@ export default function Doctor({ history }) {
         </Dialog>
       </div>
       <Grid container className={styles.mainGrid} direction="column">
-        <CssBaseline />
-        <Container component="main" maxWidth="lg">
-          <Header />
-        </Container>
-        <Container maxWidth="sm" component="main" className={styles.mainContainer}>
-          <Grid direction="row" className={styles.avatar}>
-            <Avatar src={image} className={styles.large} />
-            <Typography className={styles.mainTitle} component="h2" variant="h3" align="center" color="textPrimary" gutterBottom>
-              {name}
-            </Typography>
-            <Typography variant="h5" align="center" color="textSecondary" component="p">
-              {description}
-            </Typography>
-          </Grid>
-        </Container>
-        <main className={styles.layout}>
-          <Paper className={styles.paper} elevation={3}>
-            <Grid container direction="row">
-              <Typography className={styles.typography} gutterBottom>Endereço:</Typography>
-              <Typography gutterBottom>{`${street}, ${number} - ${neighbour}`}</Typography>
-            </Grid>
-            <Grid container spacing={2} className={styles.information}>
-              <Grid item container direction="column" xs={12} sm={6}>
-                <Grid container direction="row">
-                  <Typography className={styles.typography} gutterBottom>Cidade:</Typography>
-                  <Typography gutterBottom>{location}</Typography>
-                </Grid>
-                <Grid container direction="row">
-                  <Typography className={styles.typography} gutterBottom>Especialidade:</Typography>
-                  <Typography gutterBottom>{speciality}</Typography>
-                </Grid>
+        <Container>
+          <Grid container direction="column">
+            <CssBaseline />
+            <Container component="main" maxWidth="lg">
+              <Header />
+            </Container>
+            <Container maxWidth="sm" component="main" className={styles.mainContainer}>
+              <Grid direction="row" className={styles.avatar}>
+                <Avatar src={image} className={styles.large} />
+                <Typography className={styles.mainTitle} component="h2" variant="h3" align="center" color="textPrimary" gutterBottom>
+                  {name}
+                </Typography>
+                <Typography variant="h5" align="center" color="textSecondary" component="p">
+                  {description}
+                </Typography>
               </Grid>
-              <Grid item container direction="column" xs={12} sm={6}>
-
+            </Container>
+            <main className={styles.layout}>
+              <Paper className={styles.paper} elevation={3}>
                 <Grid container direction="row">
-                  <Typography className={styles.typography} gutterBottom>Preço das consultas:</Typography>
-                  <Typography gutterBottom>{price}</Typography>
+                  <Typography className={styles.typography} gutterBottom>Endereço:</Typography>
+                  <Typography gutterBottom>{`${street}, ${number} - ${neighbour}`}</Typography>
                 </Grid>
-                <Grid container direction="row">
-                  <Typography className={styles.typography} gutterBottom>Avaliação:</Typography>
-                  <Typography gutterBottom>{rating} estrelas</Typography>
+                <Grid container spacing={2} className={styles.information}>
+                  <Grid item container direction="column" xs={12} sm={6}>
+                    <Grid container direction="row">
+                      <Typography className={styles.typography} gutterBottom>Cidade:</Typography>
+                      <Typography gutterBottom>{location}</Typography>
+                    </Grid>
+                    <Grid container direction="row">
+                      <Typography className={styles.typography} gutterBottom>Especialidade:</Typography>
+                      <Typography gutterBottom>{speciality}</Typography>
+                    </Grid>
+                  </Grid>
+                  <Grid item container direction="column" xs={12} sm={6}>
+
+                    <Grid container direction="row">
+                      <Typography className={styles.typography} gutterBottom>Preço das consultas:</Typography>
+                      <Typography gutterBottom>{price}</Typography>
+                    </Grid>
+                    <Grid container direction="row">
+                      <Typography className={styles.typography} gutterBottom>Avaliação:</Typography>
+                      <Typography gutterBottom>{rating} estrelas</Typography>
+                    </Grid>
+                  </Grid>
                 </Grid>
-              </Grid>
-
-
-            </Grid>
-          </Paper>
-          <Grid className={styles.expansionPanel}>
-            {doctorSchedules.length === 0 ? (
-              <Alert severity="warning" variant="standard" elevation={3}>
-                <AlertTitle>Atenção</AlertTitle>
+              </Paper>
+              <Grid className={styles.expansionPanel}>
+                {doctorSchedules.length === 0 ? (
+                  <Alert severity="warning" variant="standard" elevation={3}>
+                    <AlertTitle>Atenção</AlertTitle>
                   Esse médico não possui horários disponíveis.
-              </Alert>
-            ) : (
-                <ExpansionPanel fullWidth elevation={3} >
-                  <ExpansionPanelSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel1a-content"
-                    id="panel1a-header"
-                  >
-                    <Typography className={styles.heading}>Consultas disponíveis</Typography>
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
-                    <Container maxWidth="md">
-                      <List>
-                        {doctorSchedules.map((doctorSchedule) => (
-                          <React.Fragment>
-                            <ListItem>
-                              <ListItemText primary="Consulta para" secondary={doctorSchedule.day} />
-                              {price === "Individual" ? <ListItemText primary="Preço" secondary={doctorSchedule.price} /> : ""}
-                              <ListItemText primary="Horário" secondary={doctorSchedule.hour} />
-                              <ListItemText primary="Duração" secondary={doctorSchedule.duration} />
-                              <ListItemSecondaryAction>
-                                <IconButton variant="contained" color="primary" onClick={() => handleAppointment(doctorSchedule.key, doctorSchedule.day)}>
-                                  <EventAvailable />
-                                </IconButton>
-                              </ListItemSecondaryAction>
-                            </ListItem>
-                            <Divider />
-                          </React.Fragment>
-                        ))}
-                      </List>
-                    </Container>
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
-              )}
+                  </Alert>
+                ) : (
+                    <ExpansionPanel fullWidth elevation={3} >
+                      <ExpansionPanelSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls="panel1a-content"
+                        id="panel1a-header"
+                      >
+                        <Typography className={styles.heading}>Consultas disponíveis</Typography>
+                      </ExpansionPanelSummary>
+                      <ExpansionPanelDetails>
+                        <Container maxWidth="md">
+                          <List>
+                            {doctorSchedules.map((doctorSchedule) => (
+                              <React.Fragment>
+                                <ListItem>
+                                  <ListItemText primary="Consulta para" secondary={doctorSchedule.day} />
+                                  {price === "Individual" ? <ListItemText primary="Preço" secondary={doctorSchedule.price} /> : ""}
+                                  <ListItemText primary="Horário" secondary={doctorSchedule.hour} />
+                                  <ListItemText primary="Duração" secondary={doctorSchedule.duration} />
+                                  <ListItemSecondaryAction>
+                                    <IconButton variant="contained" color="primary" onClick={() => handleAppointment(doctorSchedule.key, doctorSchedule.day)}>
+                                      <EventAvailable />
+                                    </IconButton>
+                                  </ListItemSecondaryAction>
+                                </ListItem>
+                                <Divider />
+                              </React.Fragment>
+                            ))}
+                          </List>
+                        </Container>
+                      </ExpansionPanelDetails>
+                    </ExpansionPanel>
+                  )}
+              </Grid>
+            </main>
           </Grid>
-        </main>
+        </Container>
       </Grid>
       <Footer />
     </React.Fragment >

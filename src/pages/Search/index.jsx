@@ -28,9 +28,8 @@ export default function Search({ history }) {
   const styles = useStyles()
 
   const [fetchData, setFetchData] = useState(false)
-  const [doctors, setDoctors] = useState([])
+
   const [ufs, setUfs] = useState([])
-  const [selectedUf, setSelectedUf] = useState('')
   const [cities, setCities] = useState([])
   const [specialities, setSpecialities] = useState([])
 
@@ -38,9 +37,9 @@ export default function Search({ history }) {
 
   const {
     //price, setPrice,
-    rating, setRating, location, setLocation,
+    rating, setRating, location, setLocation, doctors, setDoctors,
     setSpeciality, speciality, globalLocation, globalSpeciality,
-    setGlobalLocation, setGlobalSpeciality
+    setGlobalLocation, setGlobalSpeciality, selectedUf, setSelectedUf
     //date, setDate
   } = useContext(Context)
 
@@ -63,32 +62,20 @@ export default function Search({ history }) {
                 ...doctor.data()
               })
             })
+            setGlobalLocation("")
+            setGlobalSpeciality("")
+            setSelectedUf("")
+            setLocation("")
+            setSpeciality("")
+            setRating("")
             setDoctors(doctors)
             setFetchData(true)
           }
         })
     } else {
-      firebase.db.collection('doctors')
-        .where("location", "==", location)
-        .where("speciality", "==", speciality)
-        //.where("price", "<=", price)
-        //.where("date", "==", date)
-        .where("rating", "==", rating)
-        .get().then(snapshot => {
-          if (snapshot) {
-            let doctors = []
-            snapshot.forEach(doctor => {
-              doctors.push({
-                key: doctor.id,
-                ...doctor.data()
-              })
-            })
-            setDoctors(doctors)
-            setFetchData(true)
-          }
-        })
+      setFetchData(true)
     }
-  }, [globalLocation, globalSpeciality, location, rating, speciality])
+  }, [globalLocation, globalSpeciality, doctors, setGlobalLocation, setGlobalSpeciality, setDoctors])
 
   useEffect(() => {
     axios.get('https://servicodados.ibge.gov.br/api/v1/localidades/estados').then(res => {
@@ -96,7 +83,7 @@ export default function Search({ history }) {
       const states = res.data.map(uf => uf.sigla)
       setUfs(states)
     })
-  }, [])
+  }, [setUfs])
 
   useEffect(() => {
     // Carregar as cidades sempre que a UF mudar
@@ -128,7 +115,7 @@ export default function Search({ history }) {
       })
   }, [])
 
-  // Busca os médicos de acordo com a pesquisa avançada na tela de busca
+  //Busca os médicos de acordo com a pesquisa avançada na tela de busca
   const handleAdvancedSearch = () => {
     if (location === "" || speciality === "" || rating === 0) {
       setOpenDialog(true)
@@ -151,8 +138,6 @@ export default function Search({ history }) {
               })
             })
             setDoctors(doctors)
-            setGlobalLocation("")
-            setGlobalSpeciality("")
             setFetchData(true)
           }
         })
@@ -175,72 +160,73 @@ export default function Search({ history }) {
         </Dialog>
       </div>
       <Grid container className={styles.mainGrid}>
-        <Grid container direction="column">
-          <CssBaseline />
-          <Container component="main" maxWidth="lg">
-            <Header />
-          </Container>
-          <Container maxWidth="sm" component="main" className={styles.mainContainer}>
-            <Avatar className={styles.avatar}>
-              <ListAltIcon />
-            </Avatar>
-            <Typography className={styles.mainTitle} component="h2" variant="h3" align="center" color="textPrimary" gutterBottom>
-              Lista de médicos
+        <Container>
+          <Grid container direction="column">
+            <CssBaseline />
+            <Container component="main" maxWidth="lg">
+              <Header />
+            </Container>
+            <Container maxWidth="sm" component="main" className={styles.mainContainer}>
+              <Avatar className={styles.avatar}>
+                <ListAltIcon />
+              </Avatar>
+              <Typography className={styles.mainTitle} component="h2" variant="h3" align="center" color="textPrimary" gutterBottom>
+                Lista de médicos
             </Typography>
-            <Typography variant="h5" align="center" color="textSecondary" component="p">
-              Aqui você pode encontrar todos os profissionais de acordo com a sua pesquisa.
+              <Typography variant="h5" align="center" color="textSecondary" component="p">
+                Aqui você pode encontrar todos os profissionais de acordo com a sua pesquisa.
             </Typography>
-          </Container>
-          <Grid container>
-            <Container className={styles.expansionGrid} maxWidth="md">
-              <ExpansionPanel elevation={3} style={{ marginBottom: 20 }}>
-                <ExpansionPanelSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls="panel1a-content"
-                  id="panel1a-header"
-                >
-                  <Typography className={styles.heading}>Busca avançada</Typography>
-                </ExpansionPanelSummary>
-                <ExpansionPanelDetails>
-                  <Grid container spacing={2} >
-                    <Grid item xs={12} sm={4}>
-                      <Autocomplete
-                        fullWidth
-                        options={ufs}
-                        getOptionLabel={uf => uf}
-                        value={selectedUf}
-                        onChange={(event, newValue) => {
-                          setSelectedUf(newValue)
-                        }}
-                        renderInput={(params) => <TextField {...params} label="Estados" variant="standard" />}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={4}>
-                      <Autocomplete
-                        fullWidth
-                        options={cities}
-                        getOptionLabel={cities => cities}
-                        value={location}
-                        disabled={selectedUf === ""}
-                        onChange={(event, newValue) => {
-                          setLocation(newValue)
-                        }}
-                        renderInput={(params) => <TextField {...params} label="Cidades" variant="standard" />}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={4}>
-                      <Autocomplete
-                        fullWidth
-                        options={specialities}
-                        getOptionLabel={specialities => specialities}
-                        value={speciality}
-                        onChange={(event, newValue) => {
-                          setSpeciality(newValue)
-                        }}
-                        renderInput={(params) => <TextField {...params} label="Especialidades" variant="standard" />}
-                      />
-                    </Grid>
-                    {/*<Grid item xs={12} sm={4}>
+            </Container>
+            <Grid container>
+              <Container className={styles.expansionGrid} maxWidth="md">
+                <ExpansionPanel elevation={3} style={{ marginBottom: 20 }}>
+                  <ExpansionPanelSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
+                  >
+                    <Typography className={styles.heading}>Busca avançada</Typography>
+                  </ExpansionPanelSummary>
+                  <ExpansionPanelDetails>
+                    <Grid container spacing={2} >
+                      <Grid item xs={12} sm={4}>
+                        <Autocomplete
+                          fullWidth
+                          options={ufs}
+                          getOptionLabel={ufs => ufs}
+                          value={selectedUf}
+                          onChange={(event, newValue) => {
+                            setSelectedUf(newValue)
+                          }}
+                          renderInput={(params) => <TextField {...params} label="Estados" variant="standard" />}
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={4}>
+                        <Autocomplete
+                          fullWidth
+                          options={cities}
+                          getOptionLabel={cities => cities}
+                          value={location}
+                          disabled={selectedUf === ""}
+                          onChange={(event, newValue) => {
+                            setLocation(newValue)
+                          }}
+                          renderInput={(params) => <TextField {...params} label="Cidades" variant="standard" />}
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={4}>
+                        <Autocomplete
+                          fullWidth
+                          options={specialities}
+                          getOptionLabel={specialities => specialities}
+                          value={speciality}
+                          onChange={(event, newValue) => {
+                            setSpeciality(newValue)
+                          }}
+                          renderInput={(params) => <TextField {...params} label="Especialidades" variant="standard" />}
+                        />
+                      </Grid>
+                      {/*<Grid item xs={12} sm={4}>
                       <InputLabel shrink>
                         Faixa de preço
                                             </InputLabel>
@@ -272,66 +258,67 @@ export default function Search({ history }) {
                                                 }}
                                             />
                                             </Grid>*/}
-                    <Grid item xs={12} sm={4}>
-                      <TextField
-                        label="Avaliação"
-                        type="number"
-                        InputProps={{ inputProps: { min: 0, max: 5 } }}
-                        value={rating}
-                        onChange={event => setRating(event.target.value)}
-                        fullWidth
-                      />
-                    </Grid>
-                  </Grid>
-                </ExpansionPanelDetails>
-                <div className={styles.buttons}>
-                  <Button variant="contained" color="primary" onClick={handleAdvancedSearch} className={styles.button}>
-                    Buscar
-                  </Button>
-                </div>
-              </ExpansionPanel>
-              {doctors.length === 0 && (
-                <Alert severity="warning" variant="standard" elevation={3}>
-                  <AlertTitle>Atenção</AlertTitle>
-                  Essa pesquisa não retornou nenhum resultado!
-                </Alert>
-              )}
-            </Container>
-            <Container className={styles.cardGrid} maxWidth="md">
-
-              {doctors.length !== 0 && (
-                <Grid container spacing={4}>
-                  {doctors.map((doc) => (
-                    <Grid item key={doc.key} xs={12} sm={6} md={4}>
-                      <Card className={styles.card} elevation={3}>
-                        <CardMedia
-                          className={styles.cardMedia}
-                          image={doc.image}
-                          title="Image title"
+                      <Grid item xs={12} sm={4}>
+                        <TextField
+                          label="Avaliação"
+                          type="number"
+                          InputProps={{ inputProps: { min: 0, max: 5 } }}
+                          value={rating}
+                          onChange={event => setRating(event.target.value)}
+                          fullWidth
                         />
-                        <CardContent className={styles.cardContent}>
-                          <Typography gutterBottom variant="h5" component="h2">
-                            {doc.name}
-                          </Typography>
-                          <Typography>
-                            {doc.description}
-                          </Typography>
-                          <Grid className={styles.rating}>
-                            <Chip icon={<StarRate />} label={doc.rating} />
-                          </Grid>
-                        </CardContent>
-                        <CardActions>
-                          <Button size="small" color="primary" onClick={() => history.push(`/doctor/${doc.key}`)} className={styles.details}>
-                            Ver Detalhes
-                                                    </Button>
-                        </CardActions>
-                      </Card>
+                      </Grid>
                     </Grid>
-                  ))}
-                </Grid>)}
-            </Container>
+                  </ExpansionPanelDetails>
+                  <div className={styles.buttons}>
+                    <Button variant="contained" color="primary" onClick={handleAdvancedSearch} className={styles.button}>
+                      Buscar
+                  </Button>
+                  </div>
+                </ExpansionPanel>
+                {doctors.length === 0 && (
+                  <Alert severity="warning" variant="standard" elevation={3}>
+                    <AlertTitle>Atenção</AlertTitle>
+                  Essa pesquisa não retornou nenhum resultado!
+                  </Alert>
+                )}
+              </Container>
+              <Container className={styles.cardGrid} maxWidth="md">
+
+                {doctors.length !== 0 && (
+                  <Grid container spacing={4}>
+                    {doctors.map((doc) => (
+                      <Grid item key={doc.key} xs={12} sm={6} md={4}>
+                        <Card className={styles.card} elevation={3}>
+                          <CardMedia
+                            className={styles.cardMedia}
+                            image={doc.image}
+                            title="Image title"
+                          />
+                          <CardContent className={styles.cardContent}>
+                            <Typography gutterBottom variant="h5" component="h2">
+                              {doc.name}
+                            </Typography>
+                            <Typography>
+                              {doc.description}
+                            </Typography>
+                            <Grid className={styles.rating}>
+                              <Chip icon={<StarRate />} label={doc.rating} />
+                            </Grid>
+                          </CardContent>
+                          <CardActions>
+                            <Button size="small" color="primary" onClick={() => history.push(`/doctor/${doc.key}`)} className={styles.details}>
+                              Ver Detalhes
+                            </Button>
+                          </CardActions>
+                        </Card>
+                      </Grid>
+                    ))}
+                  </Grid>)}
+              </Container>
+            </Grid>
           </Grid>
-        </Grid>
+        </Container>
       </Grid >
       <Footer />
     </React.Fragment>

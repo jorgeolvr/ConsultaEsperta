@@ -5,18 +5,16 @@ import Main from './pages/Main'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Home from './pages/Home'
-import ViewProfile from './pages/ViewProfile'
+import Profile from './pages/Profile'
 import DoctorProfile from './pages/DoctorProfile'
 import PatientProfile from './pages/PatientProfile'
-import ViewPatient from './pages/ViewPatient'
-import ViewDoctor from './pages/ViewDoctor'
+import ViewPatient from './pages/PatientView'
+import ViewDoctor from './pages/DoctorView'
 import Forgot from './pages/Forgot'
 import Search from './pages/Search'
 import Doctor from './pages/Doctor'
 import Schedule from './pages/Schedule'
 import CreateSchedule from './pages/CreateSchedule'
-import Confirmed from './pages/Confirmed'
-import Cancelled from './pages/Cancelled'
 
 import { Context } from './Context'
 
@@ -42,6 +40,7 @@ export default function Routes() {
   const [location, setLocation] = useState('')
   const [globalLocation, setGlobalLocation] = useState('')
   const [globalSpeciality, setGlobalSpeciality] = useState('')
+  const [doctors, setDoctors] = useState([])
   const [price, setPrice] = useState(0)
   const [rating, setRating] = useState('')
   const [date, setDate] = useState('')
@@ -53,7 +52,7 @@ export default function Routes() {
     expireDate, setExpireDate, securityCode, setSecurityCode, location, setLocation,
     globalLocation, setGlobalLocation, globalSpeciality, setGlobalSpeciality, price,
     setPrice, rating, setRating, date, setDate, selectedUf, setSelectedUf, street,
-    setStreet, name, setName, email, setEmail
+    setStreet, name, setName, email, setEmail, doctors, setDoctors
   }
 
   return (
@@ -67,15 +66,13 @@ export default function Routes() {
           <Route path="/home" component={Home} />
           <Route path="/search" component={Search} />
           <Route path="/doctor/:id" component={Doctor} />
-          <Route path="/createschedule" component={CreateSchedule} />
+          <Route path="/create" component={CreateSchedule} />
           <Route path="/schedule" component={Schedule} />
-          <Route path="/confirmed" component={Confirmed} />
-          <Route path="/cancelled" component={Cancelled} />
-          <Route path="/doctorprofile" component={DoctorProfile} />
-          <Route path="/patientprofile" component={PatientProfile} />
-          <Route path="/viewprofile" component={ViewProfile} />
-          <Route path="/viewpatient" component={ViewPatient} />
-          <Route path="/viewdoctor" component={ViewDoctor} />
+          <Route path="/doctor/profile" component={DoctorProfile} />
+          <Route path="/patient/profile" component={PatientProfile} />
+          <Route path="/profile" component={Profile} />
+          <Route path="/patient/view" component={ViewPatient} />
+          <Route path="/doctor/view" component={ViewDoctor} />
         </Context.Provider>
       </Switch>
     </BrowserRouter>
