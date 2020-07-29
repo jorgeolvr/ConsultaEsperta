@@ -63,21 +63,21 @@ export default function Home({ history }) {
 
   const handleClose = () => {
     setOpenDialog(false)
-  };
+  }
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
+  }
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
+  }
 
   const handleReset = () => {
     setGlobalLocation("")
     setGlobalSpeciality("")
     setActiveStep(0);
-  };
+  }
 
   useEffect(() => {
     axios.get('https://servicodados.ibge.gov.br/api/v1/localidades/estados').then(res => {
@@ -121,32 +121,33 @@ export default function Home({ history }) {
     firebase.db.collection("users").doc(firebase.getId()).get().then(doc => {
       if (doc.exists) {
         const { type } = doc.data()
-        setUserType(type)
+        if (type === "Médico") {
+          firebase.db.collection("doctors")
+            .doc(firebase.getId())
+            .collection("schedules")
+            .get().then(snapshot => {
+              if (snapshot) {
+                let schedules = []
+                snapshot.forEach(schedule => {
+                  schedules.push({
+                    key: schedule.id,
+                    ...schedule.data()
+                  })
+                })
+                setUserType(type)
+                setSchedules(schedules)
+                setFetchData(true)
+              }
+            })
+        } else if (type === "Paciente") {
+          setUserType(type)
+          setFetchData(true)
+        }
       } else {
-        setUserType("New")
+        setFetchData(true)
       }
     })
   })
-
-  useEffect(() => {
-    if (userType === "Médico") {
-      firebase.db.collection("doctors").doc(firebase.getId()).collection("schedules").get().then(snapshot => {
-        if (snapshot) {
-          let schedules = []
-          snapshot.forEach(schedule => {
-            schedules.push({
-              key: schedule.id,
-              ...schedule.data()
-            })
-          })
-          setSchedules(schedules)
-          setFetchData(true)
-        }
-      })
-    } else if (userType === "Paciente" || userType === "New") {
-      setFetchData(true)
-    }
-  }, [userType, fetchData])
 
   function getStepContent(step) {
     switch (step) {
@@ -302,7 +303,6 @@ export default function Home({ history }) {
             <List>
               {schedules.map((schedule) => (
                 <Container maxWidth="md">
-
                   <ListItem>
                     <ListItemText primary="Dia da semana" secondary={schedule.day} />
                     {schedule.price === "Individual" ? <ListItemText primary="Preço" secondary={schedule.price} /> : ""}
@@ -315,7 +315,6 @@ export default function Home({ history }) {
                     </ListItemSecondaryAction>
                   </ListItem>
                   <Divider />
-
                 </Container>
               ))}
             </List>
@@ -419,4 +418,4 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(1),
     backgroundColor: theme.palette.primary.main,
   },
-}));
+}))

@@ -296,13 +296,15 @@ export default function Search({ history }) {
                   </div>
                 </ExpansionPanel>
                 <Grid container className={styles.bar}>
-                  <Grid lg={6}>
-                    <Typography style={{ fontWeight: 'bold' }}>
+                  <Grid>
+                    <Typography variant="subtitle1" component="p" gutterBottom>
                       Médicos encontrados ({doctors.length})
                     </Typography>
                   </Grid>
-                  <Grid lg={6}>
-                    <Button size="small" color="primary" onClick={handleShowAll}>Ver todos</Button>
+                  <Grid>
+                    <Button size="small" color="primary" onClick={handleShowAll}>
+                      Ver todos
+                    </Button>
                   </Grid>
                 </Grid>
                 <Divider />
@@ -435,6 +437,8 @@ const useStyles = makeStyles(theme => ({
   },
   bar: {
     justifyContent: 'space-between',
-    marginTop: theme.spacing(5)
+    marginTop: theme.spacing(3),
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2)
   }
 }))
