@@ -136,10 +136,10 @@ export default function Details({ history }) {
             <Container maxWidth="sm" component="main" className={styles.mainContainer}>
               <Grid direction="row" className={styles.avatar}>
                 <Avatar src={image} className={styles.large} />
-                <Typography className={styles.mainTitle} component="h2" variant="h3" align="center" color="textPrimary" gutterBottom>
+                <Typography className={styles.mainTitle} component="h2" variant="h3" align="center" gutterBottom>
                   {name}
                 </Typography>
-                <Typography variant="h5" align="center" color="textSecondary" component="p">
+                <Typography component="h5" variant="h6" align="center" color="textSecondary" gutterBottom>
                   {description}
                 </Typography>
               </Grid>
@@ -304,6 +304,8 @@ const useStyles = makeStyles(theme => ({
   },
   mainTitle: {
     fontWeight: 'bold',
-    marginTop: theme.spacing(2)
+    marginTop: theme.spacing(2),
+    color: '#322153',
+    fontFamily: 'Ubuntu',
   },
 }));

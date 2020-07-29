@@ -71,10 +71,10 @@ export default function Schedule() {
               <Avatar className={styles.avatar}>
                 <WatchLaterIcon />
               </Avatar>
-              <Typography className={styles.mainTitle} component="h2" variant="h3" align="center" color="textPrimary" gutterBottom>
+              <Typography className={styles.mainTitle} component="h2" variant="h3" align="center" gutterBottom>
                 Minha agenda
           </Typography>
-              <Typography variant="h5" align="center" color="textSecondary" component="p">
+              <Typography component="h5" variant="h6" align="center" color="textSecondary" gutterBottom>
                 Visualize e confirme os dados de todas as suas consultas marcadas.
           </Typography>
             </Container>
@@ -173,7 +173,9 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 'bold'
   },
   mainTitle: {
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    color: '#322153',
+    fontFamily: 'Ubuntu',
   },
   cardGrid: {
     paddingTop: theme.spacing(1),

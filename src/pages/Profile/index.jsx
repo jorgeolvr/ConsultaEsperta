@@ -134,7 +134,7 @@ export default function Profile({ history }) {
                   >
                     Meu perfil
             </Typography>
-                  <Typography variant="h5" align="center" color="textSecondary" component="p">
+                  <Typography component="h5" variant="h6" align="center" color="textSecondary" gutterBottom>
                     Visualize ou altere os seus dados de autenticação, dados pessoais e forma de pagamento.
             </Typography>
                 </Container>
@@ -238,12 +238,11 @@ export default function Profile({ history }) {
                       component="h2"
                       variant="h3"
                       align="center"
-                      color="textPrimary"
                       gutterBottom
                     >
                       Meu perfil
                  </Typography>
-                    <Typography variant="h5" align="center" color="textSecondary" component="p">
+                    <Typography component="h5" variant="h6" align="center" color="textSecondary" gutterBottom>
                       Visualize ou altere os seus dados de autenticação, dados pessoais e outras informações.
                  </Typography>
                   </Container>
@@ -362,7 +361,9 @@ const useStyles = makeStyles(theme => ({
     },
   },
   mainTitle: {
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    color: '#322153',
+    fontFamily: 'Ubuntu',
   },
   paper: {
     marginBottom: theme.spacing(8),

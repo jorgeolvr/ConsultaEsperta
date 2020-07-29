@@ -127,7 +127,7 @@ export default function Create() {
             <Avatar className={styles.avatar}>
               <EventAvailableIcon />
             </Avatar>
-            <Typography className={styles.mainTitle} component="h2" variant="h3" align="center" color="textPrimary" gutterBottom>
+            <Typography className={styles.mainTitle} component="h2" variant="h3" align="center" gutterBottom>
               Criar consultas
             </Typography>
             <Typography variant="h5" align="center" color="textSecondary" component="p">
@@ -199,6 +199,8 @@ const useStyles = makeStyles(theme => ({
   },
   mainTitle: {
     fontWeight: 'bold',
+    color: '#322153',
+    fontFamily: 'Ubuntu',
   },
   secondaryTitle: {
     paddingTop: theme.spacing(3),

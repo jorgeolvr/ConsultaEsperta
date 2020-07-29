@@ -210,10 +210,10 @@ export default function Home({ history }) {
           <Avatar className={styles.avatar}>
             <AssistantIcon />
           </Avatar>
-          <Typography className={styles.mainTitle} component="h2" variant="h3" align="center" color="textPrimary" gutterBottom>
+          <Typography className={styles.mainTitle} component="h2" variant="h3" align="center" gutterBottom>
             Reinvente o seu jeito de agendar consultas
             </Typography>
-          <Typography variant="h5" align="center" color="textSecondary" component="p">
+          <Typography component="h5" variant="h6" align="center" color="textSecondary" gutterBottom>
             Busque profissionais por especialidade, localização,
             preço e qualidade de atendimento.
             </Typography>
@@ -367,6 +367,8 @@ const useStyles = makeStyles(theme => ({
   },
   mainTitle: {
     fontWeight: 'bold',
+    color: '#322153',
+    fontFamily: 'Ubuntu',
   },
   secondaryTitle: {
     paddingTop: theme.spacing(3),

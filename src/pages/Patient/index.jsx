@@ -102,10 +102,10 @@ export default function PatientProfile({ history }) {
               <Avatar className={styles.avatar}>
                 <PermContactCalendarIcon />
               </Avatar>
-              <Typography className={styles.mainTitle} component="h2" variant="h3" align="center" color="textPrimary" gutterBottom>
+              <Typography className={styles.mainTitle} component="h2" variant="h3" align="center" gutterBottom>
                 Meu perfil
             </Typography>
-              <Typography variant="h5" align="center" color="textSecondary" component="p">
+              <Typography component="h5" variant="h6" align="center" color="textSecondary" gutterBottom>
                 Preencha os campos com seus dados pessoais e forma de pagamento para manter o perfil atualizado.
             </Typography>
             </Container>
@@ -187,7 +187,9 @@ const useStyles = makeStyles(theme => ({
     },
   },
   mainTitle: {
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    color: '#322153',
+    fontFamily: 'Ubuntu',
   },
   paper: {
     marginBottom: theme.spacing(8),

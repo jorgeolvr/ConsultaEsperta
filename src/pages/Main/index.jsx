@@ -32,7 +32,7 @@ export default function Main() {
           <Grid container >
             <Grid item xs={12} md={6} className={styles.grid}>
               <img src={logo} alt="Consulta Esperta" height="80em" />
-              <Typography className={styles.mainTitle} component="h3" variant="h4" color="textPrimary" gutterBottom>
+              <Typography className={styles.mainTitle} component="h3" variant="h4" gutterBottom>
                 Seu marketplace de consultas médicas
               </Typography>
               <Typography component="h5" variant="h6" color="textSecondary" gutterBottom>

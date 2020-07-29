@@ -189,10 +189,10 @@ export default function Search({ history }) {
               <Avatar className={styles.avatar}>
                 <ListAltIcon />
               </Avatar>
-              <Typography className={styles.mainTitle} component="h2" variant="h3" align="center" color="textPrimary" gutterBottom>
+              <Typography className={styles.mainTitle} component="h2" variant="h3" align="center" gutterBottom>
                 Lista de médicos
             </Typography>
-              <Typography variant="h5" align="center" color="textSecondary" component="p">
+              <Typography component="h5" variant="h6" align="center" color="textSecondary" gutterBottom>
                 Aqui você pode encontrar todos os profissionais de acordo com a sua pesquisa.
             </Typography>
             </Container>
@@ -426,7 +426,9 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 'bold'
   },
   mainTitle: {
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    color: '#322153',
+    fontFamily: 'Ubuntu',
   },
   alert: {
     marginTop: theme.spacing(2)
@@ -438,7 +440,5 @@ const useStyles = makeStyles(theme => ({
   bar: {
     justifyContent: 'space-between',
     marginTop: theme.spacing(3),
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(2)
   }
 }))
