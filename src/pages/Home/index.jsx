@@ -282,7 +282,7 @@ export default function Home({ history }) {
           <Typography className={styles.mainTitle} component="h2" variant="h3" align="center" color="textPrimary" gutterBottom>
             Reinvente o seu jeito de atender consultas
             </Typography>
-          <Typography variant="h5" align="center" color="textSecondary" component="p">
+          <Typography component="h5" variant="h6" align="center" color="textSecondary">
             Visualize os dias, horários, preços e duração das consultas que você já cadastrou.
           </Typography>
         </Container>

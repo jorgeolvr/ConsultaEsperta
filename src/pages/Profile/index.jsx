@@ -151,7 +151,7 @@ export default function Profile({ history }) {
                       <Grid item xs={12} sm={6}>
                         <Typography variant="h6" gutterBottom className={styles.title}>
                           Dados Pessoais
-                         </Typography>
+                        </Typography>
                         <Grid container direction="row">
                           <Typography className={styles.typography} gutterBottom>Nome:</Typography>
                           <Typography gutterBottom>{name}</Typography>
@@ -172,7 +172,7 @@ export default function Profile({ history }) {
                       <Grid item container direction="column" xs={12} sm={6}>
                         <Typography variant="h6" gutterBottom className={styles.title}>
                           Forma de Pagamento
-                  </Typography>
+                        </Typography>
                         <Grid container direction="row">
                           <Typography className={styles.typography} gutterBottom>Bandeira:</Typography>
                           <Typography gutterBottom>{brand}</Typography>

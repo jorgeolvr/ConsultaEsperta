@@ -15,10 +15,6 @@ class Firebase {
     })
   }
 
-  async isUserCreated() {
-
-  }
-
   getId() {
     return this.auth.currentUser && this.auth.currentUser.uid
   }

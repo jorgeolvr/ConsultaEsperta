@@ -15,10 +15,9 @@ export default function DoctorReview() {
     <React.Fragment>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <Typography variant="h6" gutterBottom className={styles.title}>
+          <Typography variant="h6" className={styles.title} gutterBottom>
             Informações do atendimento
-        </Typography>
-
+          </Typography>
           <Grid container direction="row">
             <Typography className={styles.typography} gutterBottom>Descrição:</Typography>
             <Typography gutterBottom>{description}</Typography>

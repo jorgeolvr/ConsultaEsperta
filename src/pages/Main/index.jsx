@@ -1,5 +1,5 @@
-import React, { createRef } from 'react'
-import Header from '../../components/MainHeader'
+import React, { useEffect } from 'react'
+import Header from '../../components/Header'
 import HowToUse from '../../components/HowToUse'
 import Footer from '../../components/Footer'
 
@@ -7,16 +7,24 @@ import { Grid, Container, CssBaseline, Typography, Button, Divider } from '@mate
 import { ArrowDownward } from '@material-ui/icons'
 import { makeStyles } from '@material-ui/core/styles'
 
+import firebase from '../../config/Firebase'
 import logo from '../../assets/logo-cropped.png'
 import medicine from '../../assets/medicine.svg'
 
-export default function Main() {
+export default function Main({ history }) {
   const styles = useStyles();
-  const ref = createRef();
+  const ref = React.createRef();
 
   const handleScroll = () => ref.current.scrollIntoView({
     behavior: 'smooth',
     block: 'start'
+  })
+
+  useEffect(() => {
+    // Se o usuário já estiver logado, redireciona para a tela inicial
+    if (firebase.getId() !== null) {
+      history.push('/home')
+    }
   })
 
   return (
@@ -31,11 +39,11 @@ export default function Main() {
         <Container className={styles.mainContainer} maxWidth="md" component="main">
           <Grid container >
             <Grid item xs={12} md={6} className={styles.grid}>
-              <img src={logo} alt="Consulta Esperta" height="80em" />
-              <Typography className={styles.mainTitle} component="h3" variant="h4" gutterBottom>
+              <img src={logo} alt="Consulta Esperta" height="70em" />
+              <Typography className={styles.mainTitle} component="h2" variant="h3" gutterBottom>
                 Seu marketplace de consultas médicas
               </Typography>
-              <Typography component="h5" variant="h6" color="textSecondary" gutterBottom>
+              <Typography className={styles.mainSubtitle} component="h6" color="textSecondary" gutterBottom>
                 Ajudamos pessoas a encontrar profissionais especializados por meio de recomendações.
               </Typography>
               <Grid className={styles.information} container>
@@ -77,10 +85,14 @@ const useStyles = makeStyles(theme => ({
   },
   mainTitle: {
     marginTop: 30,
+    maxWidth: 320,
     fontWeight: 700,
     color: '#322153',
     fontFamily: 'Ubuntu',
     fontSize: 32
+  },
+  mainSubtitle: {
+    maxWidth: 380,
   },
   information: {
     marginTop: 50,

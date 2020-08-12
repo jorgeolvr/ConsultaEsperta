@@ -19,7 +19,7 @@ function Header(props) {
   const styles = useStyles();
 
   const [openDialog, setOpenDialog] = useState(false)
-  const [anchorUser, setAnchorUser] = React.useState(null)
+  const [anchorUser, setAnchorUser] = useState(null)
   const openUser = Boolean(anchorUser)
 
   //const [anchorNotification, setAnchorNotification] = React.useState(null)
@@ -47,7 +47,11 @@ function Header(props) {
   }
 
   function handleHome() {
-    props.history.push('/home')
+    if (firebase.getId() !== null) {
+      props.history.push('/home')
+    } else {
+      props.history.push('/')
+    }
   }
 
   function handlePatient() {
@@ -79,6 +83,11 @@ function Header(props) {
   function handleSchedule() {
     props.history.push('/schedule')
   }
+
+  function handleLogin() {
+    props.history.push('/login')
+  }
+
 
   return (
     <React.Fragment>
@@ -131,84 +140,94 @@ function Header(props) {
             </Typography>
             <MenuItem>Confirmar</MenuItem>
           </Menu> */}
-          <IconButton
-            aria-label="account of current user"
-            aria-controls="menu-account"
-            aria-haspopup="true"
-            onClick={handleUser}
-            color="inherit"
-            size="medium"
-          >
-            <AccountCircle color='inherit' />
-          </IconButton>
-          <Menu
-            id="menu-account"
-            anchorEl={anchorUser}
-            anchorOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            keepMounted
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            open={openUser}
-            onClose={handleCloseUser}
-          >
-            <Typography color="textSecondary" className={styles.user}>{firebase.getUsername()}</Typography>
-            <MenuItem onClick={handleLogout}>Sair</MenuItem>
-          </Menu>
+          {firebase.getId() !== null ? (
+            <React.Fragment>
+              <IconButton
+                aria-label="account of current user"
+                aria-controls="menu-account"
+                aria-haspopup="true"
+                onClick={handleUser}
+                color="inherit"
+                size="medium"
+              >
+                <AccountCircle color='inherit' />
+              </IconButton>
+              <Menu
+                id="menu-account"
+                anchorEl={anchorUser}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={openUser}
+                onClose={handleCloseUser}
+              >
+                <Typography color="textSecondary" className={styles.user}>{firebase.getUsername()}</Typography>
+                <MenuItem onClick={handleLogout}>Sair</MenuItem>
+              </Menu>
+            </React.Fragment>
+          ) : (
+              <Button variant="outlined" color="default" onClick={handleLogin} size="small">
+                Entrar
+              </Button>
+            )}
         </Grid>
       </Toolbar>
       <Container maxWidth="sm">
-        <Toolbar component="nav" variant="dense" className={styles.toolbarSecondary}>
-          <Link
-            color="inherit"
-            noWrap
-            variant="body2"
-            onClick={handleHome}
-            className={styles.toolbarLink}
-          >
-            Início
+        {firebase.getId() !== null && (
+          <Toolbar component="nav" variant="dense" className={styles.toolbarSecondary}>
+            <Link
+              color="inherit"
+              noWrap
+              variant="body2"
+              onClick={handleHome}
+              className={styles.toolbarLink}
+            >
+              Início
             </Link>
-          <Link
-            color="inherit"
-            noWrap
-            variant="body2"
-            onClick={handleProfile}
-            className={styles.toolbarLink}
-          >
-            Perfil
+            <Link
+              color="inherit"
+              noWrap
+              variant="body2"
+              onClick={handleProfile}
+              className={styles.toolbarLink}
+            >
+              Perfil
             </Link>
-          <Link
-            color="inherit"
-            noWrap
-            variant="body2"
-            onClick={handleSchedule}
-            className={styles.toolbarLink}
-          >
-            Agenda
+            <Link
+              color="inherit"
+              noWrap
+              variant="body2"
+              onClick={handleSchedule}
+              className={styles.toolbarLink}
+            >
+              Agenda
             </Link>
-          <Link
-            color="inherit"
-            noWrap
-            variant="body2"
-            onClick={handleSchedule}
-            className={styles.toolbarLink}
-          >
-            Sugestões
+            <Link
+              color="inherit"
+              noWrap
+              variant="body2"
+              onClick={handleSchedule}
+              className={styles.toolbarLink}
+            >
+              Sugestões
             </Link>
-          <Link
-            color="inherit"
-            noWrap
-            variant="body2"
-            onClick={handleSchedule}
-            className={styles.toolbarLink}
-          >
-            Avaliações
+            <Link
+              color="inherit"
+              noWrap
+              variant="body2"
+              onClick={handleSchedule}
+              className={styles.toolbarLink}
+            >
+              Avaliações
             </Link>
-        </Toolbar>
+          </Toolbar>
+        )}
       </Container>
     </React.Fragment>
   )

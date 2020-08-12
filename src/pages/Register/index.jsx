@@ -1,21 +1,26 @@
 import React, { useState } from 'react'
 
-import Header from '../../components/MainHeader'
+import Header from '../../components/Header'
 import Footer from '../../components/Footer'
 
 import {
   TextField, IconButton, InputAdornment, Button, Paper, Container,
-  Link, Grid, CssBaseline, Divider
+  Link, Grid, CssBaseline, Divider,
+  Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Slide
 } from '@material-ui/core'
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles'
 
-
 import firebase from '../../config/Firebase'
 import logo from '../../assets/logo-consulta.png'
 
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+})
+
 export default function Register({ history }) {
   const styles = useStyles();
+  const [openDialog, setOpenDialog] = useState(false)
 
   const [name, setName] = useState('')
   const [lastName, setLastName] = useState('')
@@ -26,26 +31,31 @@ export default function Register({ history }) {
     showPassword: false,
     showConfirmPassword: false
   })
+  const [error, setError] = useState('')
 
   const handleChange = prop => event => {
-    setValues({ ...values, [prop]: event.target.value });
-  };
+    setValues({ ...values, [prop]: event.target.value })
+  }
 
   const handleClickShowPassword = () => {
-    setValues({ ...values, showPassword: !values.showPassword });
-  };
+    setValues({ ...values, showPassword: !values.showPassword })
+  }
 
   const handleMouseDownPassword = event => {
-    event.preventDefault();
-  };
+    event.preventDefault()
+  }
 
   const handleClickShowConfirmPassword = () => {
-    setValues({ ...values, showConfirmPassword: !values.showConfirmPassword });
-  };
+    setValues({ ...values, showConfirmPassword: !values.showConfirmPassword })
+  }
 
   const handleMouseDownConfirmPassword = event => {
     event.preventDefault();
-  };
+  }
+
+  const handleClose = () => {
+    setOpenDialog(false)
+  }
 
   function handleLogin() {
     history.push('/login')
@@ -57,15 +67,32 @@ export default function Register({ history }) {
         await firebase.register(name, lastName, email, values.password)
         history.push('/home')
       } else {
-        alert('As senhas digitadas nos campos se diferem, por favor digite novamente.')
+        setError('As senhas digitadas nos campos se diferem. Por favor digite novamente.')
+        setOpenDialog(true)
       }
     } catch (error) {
-      alert(error.message)
+      if (error.message === 'The email address is badly formatted.') {
+        setError('Esse endereço de e-mail está mal formatado.')
+      } else if (error.message === 'Password should be at least 6 characters') {
+        setError('A senha deve ter pelo menos 6 caracteres.')
+      }
+      setOpenDialog(true)
     }
   }
 
   return (
     <React.Fragment>
+      <div>
+        <Dialog open={openDialog} onClose={handleClose} keepMounted TransitionComponent={Transition}>
+          <DialogTitle>Erro de Cadastro</DialogTitle>
+          <DialogContent>
+            <DialogContentText>{error}</DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="primary" autoFocus>Ok</Button>
+          </DialogActions>
+        </Dialog>
+      </div>
       <Grid container className={styles.mainGrid}>
         <Grid container direction="column">
           <CssBaseline />

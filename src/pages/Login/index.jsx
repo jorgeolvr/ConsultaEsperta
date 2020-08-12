@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 
-import Header from '../../components/MainHeader'
+import Header from '../../components/Header'
 import Footer from '../../components/Footer'
 
 import {
   TextField, IconButton, InputAdornment, Button, Paper, Container, Link, Grid,
-  CssBaseline, Divider
-  //Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Slide
+  CssBaseline, Divider, Dialog, DialogTitle, DialogContent, DialogContentText,
+  DialogActions, Slide
 } from '@material-ui/core'
 
 import { makeStyles } from '@material-ui/core/styles'
@@ -17,19 +17,20 @@ import firebase from '../../config/Firebase'
 import logo from '../../assets/logo-consulta.png'
 
 
-/*const Transition = React.forwardRef(function Transition(props, ref) {
-	return <Slide direction="up" ref={ref} {...props} />;
-}) */
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+})
 
 export default function Login({ history }) {
   const styles = useStyles();
-  //const [openDialog, setOpenDialog] = useState(false)
+  const [openDialog, setOpenDialog] = useState(false)
 
   const [email, setEmail] = useState('')
   const [values, setValues] = useState({
     password: '',
     showPassword: false
   })
+  const [error, setError] = useState('')
 
 	/*function handlePatient() {
 		history.push('/register')
@@ -37,22 +38,22 @@ export default function Login({ history }) {
 
 	function handleDoctor() {
 		history.push('/register')
-	} 
-	const handleClose = () => {
-		setOpenDialog(false)
-	}; */
+	} */
+  const handleClose = () => {
+    setOpenDialog(false)
+  }
 
   const handleChange = prop => event => {
-    setValues({ ...values, [prop]: event.target.value });
-  };
+    setValues({ ...values, [prop]: event.target.value })
+  }
 
   const handleClickShowPassword = () => {
-    setValues({ ...values, showPassword: !values.showPassword });
-  };
+    setValues({ ...values, showPassword: !values.showPassword })
+  }
 
   const handleMouseDownPassword = event => {
-    event.preventDefault();
-  };
+    event.preventDefault()
+  }
 
   function handleRegister() {
     //setOpenDialog(true)
@@ -68,7 +69,16 @@ export default function Login({ history }) {
       await firebase.login(email, values.password)
       history.push('/home')
     } catch (error) {
-      alert(error.message)
+      if (error.message === 'The email address is badly formatted.') {
+        setError('Esse endereço de e-mail está mal formatado.')
+      } else if (error.message === 'The password is invalid or the user does not have a password.') {
+        setError('A senha é invalida ou esse usuário não possui uma senha.')
+      } else if (error.message === 'There is no user record corresponding to this identifier. The user may have been deleted.') {
+        setError('Não há um registro de usuário correspondente a essa identificação. O usuário pode ter sido deletado.')
+      } else {
+        setError(error.message)
+      }
+      setOpenDialog(true)
     }
   }
 
@@ -77,7 +87,7 @@ export default function Login({ history }) {
       await firebase.loginFacebook()
       history.push('/home')
     } catch (error) {
-      alert(error.message)
+      setError(error.message)
     }
   }
 
@@ -86,12 +96,23 @@ export default function Login({ history }) {
       await firebase.loginGoogle()
       history.push('/home')
     } catch (error) {
-      alert(error.message)
+      setError(error.message)
     }
   }
 
   return (
     <React.Fragment>
+      <div>
+        <Dialog open={openDialog} onClose={handleClose} keepMounted TransitionComponent={Transition}>
+          <DialogTitle>Erro de login</DialogTitle>
+          <DialogContent>
+            <DialogContentText>{error}</DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="primary" autoFocus>Ok</Button>
+          </DialogActions>
+        </Dialog>
+      </div>
       <Grid container className={styles.mainGrid}>
         <Grid container direction="column">
           <CssBaseline />

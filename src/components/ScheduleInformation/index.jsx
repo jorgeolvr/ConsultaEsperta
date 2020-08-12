@@ -59,8 +59,8 @@ export default function ScheduleInformation() {
   return (
     <React.Fragment>
       <Grid container spacing={3}>
-        <Grid item xs={12} >
-          <Typography variant="h6" gutterBottom>
+        <Grid item xs={12} direction="row" >
+          <Typography variant="h6" color="textSecondary" gutterBottom>
             Informações de atendimento
           </Typography>
         </Grid>
@@ -86,7 +86,7 @@ export default function ScheduleInformation() {
           />
         </Grid>
         <Grid item xs={12}>
-          <Typography variant="h6" gutterBottom>
+          <Typography variant="h6" color="textSecondary" gutterBottom>
             Informações do local
           </Typography>
         </Grid>

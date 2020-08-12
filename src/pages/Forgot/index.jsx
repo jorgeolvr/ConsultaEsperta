@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import Header from '../../components/MainHeader'
+import Header from '../../components/Header'
 import Footer from '../../components/Footer'
 
 import {
@@ -50,8 +50,9 @@ export default function Forgot({ history }) {
           <Paper elevation={3} className={styles.paper}>
             <img src={logo} alt="Consulta Esperta" height="90em" />
             <form className={styles.form} onSubmit={e => e.preventDefault() && false} noValidate>
-              <Typography variant="h6" gutterBottom>
-                Ao solicitar a mudança, você receberá um email para realizar troca da senha
+              <Typography component="h6" color="textSecondary" gutterBottom>
+                Ao solicitar essa mudança, você receberá um email para a realização da troca de senha.
+                Por favor, preencha os campos abaixo:
             </Typography>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
