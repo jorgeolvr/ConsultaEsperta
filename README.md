@@ -4,7 +4,7 @@
 
 # Descrição do projeto  
 
-O aplicativo Consulta Esperta é um *Market Place* na área de saúde, provendo um ambiente para que profissionais de saúde possam difundir e cobrar por seus serviços, gerenciar suas agendas de atendimento e prontuários de pacientes e para que pacientes possam encontrar profissionais de saúde de acordo com sua demanda de especialidade, localização, horário, preço e qualidade de atendimento. Abaixo a descrição dos principais requisitos do aplicativo:
+O aplicativo Consulta Esperta é um *Marketplace* na área de saúde, provendo um ambiente para que profissionais de saúde possam difundir e cobrar por seus serviços, gerenciar suas agendas de atendimento e prontuários de pacientes e para que pacientes possam encontrar profissionais de saúde de acordo com sua demanda de especialidade, localização, horário, preço e qualidade de atendimento. Abaixo a descrição dos principais requisitos do aplicativo:
 
 
 ## Requisitos não funcionais
