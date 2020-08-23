@@ -106,7 +106,7 @@ function Header(props) {
         </Dialog>
       </div>
       <Toolbar className={styles.toolbar}>
-        <img src={logo} alt="Consulta Esperta" height="26em" className={styles.img} onClick={handleHome} />
+        <img src={logo} alt="Consulta Esperta" height="28em" className={styles.img} onClick={handleHome} />
         <Grid>
           {/*<IconButton
                         aria-label="account of current user"

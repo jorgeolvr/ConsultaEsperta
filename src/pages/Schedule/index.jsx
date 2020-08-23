@@ -20,24 +20,144 @@ export default function Schedule() {
   const [fetchData, setFetchData] = useState(false)
   const [alertConfirm, setAlertConfirm] = useState(false)
   const [alertCancel, setAlertCancel] = useState(false)
+  const [userType, setUserType] = useState('')
 
   useEffect(() => {
-    firebase.db.collection('appointments')
-      .where("idPatient", "==", firebase.getId())
-      .get().then(snapshot => {
-        if (snapshot) {
-          let appointments = []
-          snapshot.forEach(appointment => {
-            appointments.push({
-              key: appointment.id,
-              ...appointment.data()
+    firebase.db.collection("users").doc(firebase.getId()).get().then(doc => {
+      if (doc.exists) {
+        const { type } = doc.data()
+        if (type === "Paciente") {
+          firebase.db.collection('appointments')
+            .where("idPatient", "==", firebase.getId())
+            .get().then(snapshot => {
+              if (snapshot) {
+                let appointments = []
+                snapshot.forEach(appointment => {
+                  appointments.push({
+                    key: appointment.id,
+                    ...appointment.data()
+                  })
+                })
+                setAppointments(appointments)
+                setUserType(type)
+                setFetchData(true)
+              }
             })
-          })
-          setAppointments(appointments)
-          setFetchData(true)
+        } else if (type === "Médico") {
+          firebase.db.collection('appointments')
+            .where("idDoctor", "==", firebase.getId())
+            .get().then(snapshot => {
+              if (snapshot) {
+                let appointments = []
+                snapshot.forEach(appointment => {
+                  appointments.push({
+                    key: appointment.id,
+                    ...appointment.data()
+                  })
+                })
+                setAppointments(appointments)
+                setUserType(type)
+                setFetchData(true)
+              }
+            })
         }
-      })
-  }, [appointments])
+      }
+    })
+  })
+
+  function doctorComponent() {
+    return (
+      <React.Fragment>
+        {appointments.map((appointment) => (
+          <React.Fragment>
+            <Grid item key={appointment.key} xs={12} sm={6} md={4}>
+              <Card elevation={3}>
+                <CardContent>
+                  <Typography className={styles.title} color="textSecondary" gutterBottom>
+                    Consulta marcada
+                  </Typography>
+                  <Typography variant="h5" component="h2">
+                    {appointment.patientName}
+                  </Typography>
+                  <Typography className={styles.information} color="textSecondary">
+                    {appointment.date} às {appointment.hour}
+                  </Typography>
+                  <Typography variant="body1" component="p">
+                    {appointment.address}
+                  </Typography>
+                </CardContent>
+                <CardActions>
+                  {appointment.status === "pending" && (
+                    <React.Fragment>
+                      <Button size="small" disabled>Pendente</Button>
+                    </React.Fragment>
+                  )}
+                  {appointment.status === "confirmed" && (
+                    <React.Fragment>
+                      <Button size="small" disabled>Confirmado</Button>
+                    </React.Fragment>
+                  )}
+                  {appointment.status === "cancelled" && (
+                    <React.Fragment>
+                      <Button size="small" disabled>Cancelado</Button>
+                    </React.Fragment>
+                  )}
+                </CardActions>
+              </Card>
+            </Grid>
+          </React.Fragment>
+        ))}
+      </React.Fragment>
+    )
+  }
+
+
+  function patientComponent() {
+    return (
+      <React.Fragment>
+        {appointments.map((appointment) => (
+          <React.Fragment>
+            <Grid item key={appointment.key} xs={12} sm={6} md={4}>
+              <Card elevation={3}>
+                <CardContent>
+                  <Typography className={styles.title} color="textSecondary" gutterBottom>
+                    Consulta marcada
+                  </Typography>
+                  <Typography variant="h5" component="h2">
+                    {appointment.doctorName}
+                  </Typography>
+                  <Typography className={styles.information} color="textSecondary">
+                    {appointment.date} às {appointment.hour}
+                  </Typography>
+                  <Typography variant="body1" component="p">
+                    {appointment.address}
+                  </Typography>
+                </CardContent>
+                <CardActions>
+                  {appointment.status === "pending" && (
+                    <React.Fragment>
+                      <Button size="small" onClick={() => handleConfirm(appointment.key)} color="primary">Confirmar</Button>
+                      <Button size="small" onClick={() => handleCancel(appointment.key, appointment.idDoctor, appointment.idSchedule)} color="secondary">Cancelar</Button>
+                    </React.Fragment>
+                  )}
+                  {appointment.status === "confirmed" && (
+                    <React.Fragment>
+                      <Button size="small" disabled>Confirmado</Button>
+                    </React.Fragment>
+                  )}
+                  {appointment.status === "cancelled" && (
+                    <React.Fragment>
+                      <Button size="small" disabled>Cancelado</Button>
+                    </React.Fragment>
+                  )}
+                </CardActions>
+              </Card>
+            </Grid>
+          </React.Fragment>
+        ))}
+      </React.Fragment>
+    )
+  }
 
   function handleConfirm(key) {
     firebase.db.collection('appointments').doc(key).update({
@@ -47,7 +167,7 @@ export default function Schedule() {
   }
 
   function handleCancel(key, idDoctor, idSchedule) {
-    console.log(idSchedule)
+    //console.log(idSchedule)
     firebase.db.collection('appointments').doc(key).update({
       status: "cancelled"
     })
@@ -104,46 +224,7 @@ export default function Schedule() {
               </Alert>
                   </Container>
                 )}
-                {appointments.map((appointment) => (
-                  <Container maxWidth="md" component="main">
-                    <Grid item key={appointment.key} xs={12} sm={6} md={4}>
-                      <Card elevation={3}>
-                        <CardContent>
-                          <Typography className={styles.title} color="textSecondary" gutterBottom>
-                            Consulta marcada
-                      </Typography>
-                          <Typography variant="h5" component="h2">
-                            {appointment.doctorName}
-                          </Typography>
-                          <Typography className={styles.information} color="textSecondary">
-                            {appointment.day} às {appointment.hour}
-                          </Typography>
-                          <Typography variant="body1" component="p">
-                            {appointment.address}
-                          </Typography>
-                        </CardContent>
-                        <CardActions>
-                          {appointment.status === "pending" && (
-                            <React.Fragment>
-                              <Button size="small" onClick={() => handleConfirm(appointment.key)} color="primary">Confirmar</Button>
-                              <Button size="small" onClick={() => handleCancel(appointment.key, appointment.idDoctor, appointment.idSchedule)} color="secondary">Cancelar</Button>
-                            </React.Fragment>
-                          )}
-                          {appointment.status === "confirmed" && (
-                            <React.Fragment>
-                              <Button size="small" disabled>Confirmado</Button>
-                            </React.Fragment>
-                          )}
-                          {appointment.status === "cancelled" && (
-                            <React.Fragment>
-                              <Button size="small" disabled>Cancelado</Button>
-                            </React.Fragment>
-                          )}
-                        </CardActions>
-                      </Card>
-                    </Grid>
-                  </Container>
-                ))}
+                {userType === "Médico" ? doctorComponent() : patientComponent()}
               </Grid>
             </Container>
           </Grid>

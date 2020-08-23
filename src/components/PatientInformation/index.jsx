@@ -28,24 +28,6 @@ export default function PatientInformation() {
             defaultValue={firebase.getEmail()}
           />
         </Grid>
-        {/*<Grid item xs={12} sm={6}>
-          <InputLabel shrink>
-            Tipo de usuário
-                    </InputLabel>
-          <Select
-            fullWidth
-            displayEmpty
-            value={type}
-            label='Tipo de usuário'
-            onChange={event => setType(event.target.value)}
-          >
-            <MenuItem value="" disabled>
-              <em>Escolha uma opção</em>
-            </MenuItem>
-            <MenuItem value="Paciente">Paciente</MenuItem>
-            <MenuItem value="Médico">Médico</MenuItem>
-          </Select>
-  </Grid> */}
         <Grid item xs={12} sm={6}>
           <InputMask mask="999.999.999-99" defaultValue={cpf} onChange={event => setCpf(event.target.value)}  >
             {() => <TextField label='CPF' fullWidth />}

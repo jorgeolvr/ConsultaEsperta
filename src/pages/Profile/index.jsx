@@ -257,7 +257,7 @@ export default function Profile({ history }) {
                       </Grid>
 
                       <Typography variant="h6" gutterBottom className={styles.title}>
-                        Informações de atendimento
+                        Informações médicas
                    </Typography>
                       <Grid container direction="row">
                         <Typography className={styles.typography} gutterBottom>Descrição:</Typography>

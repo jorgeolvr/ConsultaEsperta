@@ -61,7 +61,7 @@ export default function ScheduleInformation() {
       <Grid container spacing={3}>
         <Grid item xs={12} direction="row" >
           <Typography variant="h6" color="textSecondary" gutterBottom>
-            Informações de atendimento
+            Informações médicas
           </Typography>
         </Grid>
         <Grid item xs={12} md={6}>

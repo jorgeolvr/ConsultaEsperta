@@ -6,15 +6,20 @@ import Header from '../../components/Header'
 import Footer from '../../components/Footer'
 
 import {
-  Grid, CircularProgress, CssBaseline, Container, Typography, ListItemSecondaryAction, List, ListItem,
-  ListItemText, Paper, Button, Avatar, ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails,
-  Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Slide, IconButton, Divider
+  Grid, CircularProgress, CssBaseline, Container, Typography, Paper, Button, Avatar,
+  ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, Dialog, DialogTitle,
+  DialogContent, DialogContentText, DialogActions, Slide, Divider
 } from '@material-ui/core'
+
+import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
 import { Alert, AlertTitle } from '@material-ui/lab'
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
-import EventAvailable from '@material-ui/icons/EventAvailable'
 import { makeStyles } from '@material-ui/core/styles'
+
+import MomentUtils from '@date-io/moment'
+import moment from 'moment'
+import 'moment/locale/pt-br'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -37,6 +42,8 @@ export default function Details({ history }) {
   const [rating, setRating] = useState('')
   const [image, setImage] = useState('')
   const [doctorSchedules, setDoctorSchedules] = useState([])
+  const [selectedDate, handleDateChange] = useState(moment())
+  const [hoursFiltered, setHoursFiltered] = useState([])
 
   const [openDialog, setOpenDialog] = useState(false)
 
@@ -57,56 +64,92 @@ export default function Details({ history }) {
         setSpeciality(speciality)
         setRating(rating)
         setImage(image)
+        setFetchData(true)
       }
     })
   }, [idDoctor, setName, setStreet, setNumber, setNeighbour, setPrice, setImage])
 
-  useEffect(() => {
+  const handleClose = () => {
+    setOpenDialog(false)
+  }
+
+  const handleAppointment = (idSchedule, daySchedule, hourSchedule) => {
+    firebase.db.collection('users')
+      .doc(firebase.getId())
+      .get()
+      .then(function (doc) {
+        if (!doc.exists) {
+          setOpenDialog(true)
+        } else {
+          firebase.db.collection('appointments').doc().set({
+            idPatient: firebase.getId(),
+            patientName: firebase.getUsername(),
+            idDoctor: idDoctor,
+            idSchedule: idSchedule,
+            doctorName: name,
+            address: `${street}, ${number} - ${neighbour}`,
+            day: daySchedule,
+            date: selectedDate.format("DD/MM/YYYY").toString(),
+            hour: hourSchedule,
+            status: "pending"
+          })
+
+          history.push('/schedule')
+        }
+      })
+  }
+
+  const handleDate = () => {
+    var selectedDay = ''
+    var hours = []
+
+    if (selectedDate.day() === 0) {
+      selectedDay = "Domingo"
+    } else if (selectedDate.day() === 1) {
+      selectedDay = "Segunda-feira"
+    } else if (selectedDate.day() === 2) {
+      selectedDay = "Terça-feira"
+    } else if (selectedDate.day() === 3) {
+      selectedDay = "Quarta-feira"
+    } else if (selectedDate.day() === 4) {
+      selectedDay = "Quinta-feira"
+    } else if (selectedDate.day() === 5) {
+      selectedDay = "Sexta-feira"
+    } else if (selectedDate.day() === 6) {
+      selectedDay = "Sábado"
+    }
+
     firebase.db.collection('doctors').doc(idDoctor)
-      .collection('schedules').get().then(snapshot => {
+      .collection('schedules').where("day", "==", selectedDay)
+      .get()
+      .then(snapshot => {
         if (snapshot) {
           let doctorSchedules = []
           snapshot.forEach(doctorSchedule => {
-            if (doctorSchedule.data().status === "available") {
-              doctorSchedules.push({
-                key: doctorSchedule.id,
-                ...doctorSchedule.data()
-              })
-            }
+            doctorSchedules.push({
+              key: doctorSchedule.id,
+              ...doctorSchedule.data()
+            })
           })
           setDoctorSchedules(doctorSchedules)
-          setFetchData(true)
+
+          doctorSchedules.map(schedule => {
+            return hours = schedule.times
+          })
+
+          firebase.db.collection('appointments')
+            .where("date", "==", selectedDate.format("DD/MM/YYYY").toString())
+            .get()
+            .then(snapshot => {
+              if (snapshot) {
+                snapshot.forEach(appointment => {
+                  hours = hours.filter(hour => hour !== appointment.data().hour)
+                })
+                setHoursFiltered(hours)
+              }
+            })
         }
       })
-  }, [idDoctor, setDoctorSchedules])
-
-  const handleClose = () => {
-    setOpenDialog(false)
-  };
-
-  const handleAppointment = (idSchedule, daySchedule, hourSchedule) => {
-    firebase.db.collection('users').doc(firebase.getId()).get().then(function (doc) {
-      if (!doc.exists) {
-        setOpenDialog(true)
-      } else {
-        firebase.db.collection('appointments').doc().set({
-          idPatient: firebase.getId(),
-          idDoctor: idDoctor,
-          idSchedule: idSchedule,
-          doctorName: name,
-          address: `${street}, ${number} - ${neighbour}`,
-          day: daySchedule,
-          hour: hourSchedule,
-          status: "pending"
-        })
-
-        firebase.db.collection('doctors').doc(idDoctor).collection('schedules').doc(idSchedule).update({
-          status: "unavailable"
-        })
-
-        history.push('/schedule')
-      }
-    })
   }
 
   return fetchData === true ? (
@@ -162,11 +205,12 @@ export default function Details({ history }) {
                     </Grid>
                   </Grid>
                   <Grid item container direction="column" xs={12} sm={6}>
-
-                    <Grid container direction="row">
-                      <Typography className={styles.typography} gutterBottom>Preço das consultas:</Typography>
-                      <Typography gutterBottom>{price}</Typography>
-                    </Grid>
+                    {price !== "Individual" && (
+                      <Grid container direction="row">
+                        <Typography className={styles.typography} gutterBottom>Preço das consultas:</Typography>
+                        <Typography gutterBottom>R$ {price}</Typography>
+                      </Grid>
+                    )}
                     <Grid container direction="row">
                       <Typography className={styles.typography} gutterBottom>Avaliação:</Typography>
                       <Typography gutterBottom>{rating} estrelas</Typography>
@@ -175,44 +219,81 @@ export default function Details({ history }) {
                 </Grid>
               </Paper>
               <Grid className={styles.expansionPanel}>
-                {doctorSchedules.length === 0 ? (
-                  <Alert severity="warning" variant="standard" elevation={3}>
-                    <AlertTitle>Atenção</AlertTitle>
-                  Esse médico não possui horários disponíveis.
-                  </Alert>
-                ) : (
-                    <ExpansionPanel fullWidth elevation={3} >
-                      <ExpansionPanelSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel1a-content"
-                        id="panel1a-header"
-                      >
-                        <Typography className={styles.heading}>Consultas disponíveis</Typography>
-                      </ExpansionPanelSummary>
-                      <ExpansionPanelDetails>
-                        <Container maxWidth="md">
-                          <List>
-                            {doctorSchedules.map((doctorSchedule) => (
-                              <React.Fragment>
-                                <ListItem>
-                                  <ListItemText primary="Consulta para" secondary={doctorSchedule.day} />
-                                  {price === "Individual" ? <ListItemText primary="Preço" secondary={doctorSchedule.price} /> : ""}
-                                  <ListItemText primary="Horário" secondary={doctorSchedule.hour} />
-                                  <ListItemText primary="Duração" secondary={doctorSchedule.duration} />
-                                  <ListItemSecondaryAction>
-                                    <IconButton variant="contained" color="primary" onClick={() => handleAppointment(doctorSchedule.key, doctorSchedule.day, doctorSchedule.hour)}>
-                                      <EventAvailable />
-                                    </IconButton>
-                                  </ListItemSecondaryAction>
-                                </ListItem>
-                                <Divider />
-                              </React.Fragment>
-                            ))}
-                          </List>
-                        </Container>
-                      </ExpansionPanelDetails>
-                    </ExpansionPanel>
-                  )}
+                <ExpansionPanel fullWidth elevation={3} >
+                  <ExpansionPanelSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
+                  >
+                    <Typography className={styles.heading}>Consultas disponíveis</Typography>
+                  </ExpansionPanelSummary>
+                  <ExpansionPanelDetails>
+                    <Container maxWidth="md">
+                      <MuiPickersUtilsProvider utils={MomentUtils} locale="pt-br">
+                        <DatePicker
+                          format="DD/MM/yyyy"
+                          value={selectedDate}
+                          onChange={handleDateChange}
+                          label="Selecione uma data"
+                          fullWidth
+                        />
+                      </MuiPickersUtilsProvider>
+                      <Grid style={{
+                        display: 'flex',
+                        justifyContent: 'flex-end',
+                        marginTop: 8
+                      }}>
+                        <Button onClick={handleDate} color="primary" variant="contained" >
+                          Buscar horários
+                        </Button>
+                      </Grid>
+                      <Grid className={styles.hourGrid}>
+                        {doctorSchedules.length === 0 && (
+                          <Alert severity="warning" variant="standard">
+                            <AlertTitle>Atenção</AlertTitle>
+                          O médico não possui horários disponíveis no dia selecionado.
+                          </Alert>
+                        )}
+                        {hoursFiltered.length !== 0 && doctorSchedules.map((doctorSchedule) => (
+                          <React.Fragment>
+                            <Grid container style={{ marginBottom: 5 }}>
+                              <Grid item container direction="column" xs={12} sm={6}>
+                                <Grid container direction="row">
+                                  <Typography className={styles.typography} gutterBottom>Dia da semana:</Typography>
+                                  <Typography gutterBottom>{doctorSchedule.day}</Typography>
+                                </Grid>
+                                <Grid container direction="row">
+                                  <Typography className={styles.typography} gutterBottom>Preço da consulta:</Typography>
+                                  <Typography gutterBottom>R$ {doctorSchedule.price}</Typography>
+                                </Grid>
+                              </Grid>
+                              <Grid item container direction="column" xs={12} sm={6}>
+                                <Grid container direction="row">
+                                  <Typography className={styles.typography} gutterBottom>Duração da consulta:</Typography>
+                                  <Typography gutterBottom>{doctorSchedule.duration} minutos</Typography>
+                                </Grid>
+                              </Grid>
+                            </Grid>
+                            <Divider />
+                            <Grid style={{ marginTop: 10 }}>
+                              {hoursFiltered.map((time) => (
+                                <Button
+                                  className={styles.buttonHour}
+                                  color="primary"
+                                  variant="outlined"
+                                  onClick={() =>
+                                    handleAppointment(doctorSchedule.key, doctorSchedule.day, time)
+                                  }>
+                                  {time}
+                                </Button>
+                              ))}
+                            </Grid>
+                          </React.Fragment>
+                        ))}
+                      </Grid>
+                    </Container>
+                  </ExpansionPanelDetails>
+                </ExpansionPanel>
               </Grid>
             </main>
           </Grid>
@@ -237,9 +318,7 @@ const useStyles = makeStyles(theme => ({
     marginTop: 20
   },
   rating: {
-
     fontSize: 40,
-
   },
   expansionGrid: {
     paddingBottom: theme.spacing(2),
@@ -308,4 +387,13 @@ const useStyles = makeStyles(theme => ({
     color: '#322153',
     fontFamily: 'Ubuntu',
   },
+  hourGrid: {
+    marginTop: 20
+  },
+  buttonHour: {
+    marginTop: 2,
+    marginBottom: 2,
+    marginLeft: 2,
+    marginRight: 2
+  }
 }));

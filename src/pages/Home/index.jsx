@@ -7,10 +7,15 @@ import firebase from '../../config/Firebase'
 import Header from '../../components/Header'
 import Footer from '../../components/Footer'
 
+//import DatePicker from "react-datepicker";
+//import { registerLocale, setDefaultLocale } from "react-datepicker"
+//import "react-datepicker/dist/react-datepicker.css"
+//import { ptBR } from 'date-fns/locale'
+
 import {
   Grid, Container, CssBaseline, Typography, Button, TextField, Avatar, Divider, IconButton, List,
   Paper, Stepper, Step, StepLabel, StepContent, Dialog, DialogTitle, ListItem, ListItemText,
-  DialogContent, DialogContentText, DialogActions, Slide, CircularProgress, ListItemSecondaryAction
+  DialogContent, DialogContentText, DialogActions, Slide, CircularProgress, ListItemSecondaryAction,
 } from '@material-ui/core'
 import { Autocomplete, Alert, AlertTitle } from '@material-ui/lab'
 import AssistantIcon from '@material-ui/icons/Assistant'
@@ -43,11 +48,13 @@ export default function Home({ history }) {
   const [cities, setCities] = useState([])
   const [specialities, setSpecialities] = useState([])
   const [schedules, setSchedules] = useState([])
+  const [doctorPrice, setDoctorPrice] = useState('')
 
-  if (!firebase.getUsername()) {
-    alert("Você foi desconectado. Faça login novamente.")
-    history.push('/')
-  }
+  /*const [selectedDate, setSelectedDate] = useState(new Date())
+
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+  }; */
 
   function handleSearch() {
     if (globalLocation === "" || globalSpeciality === "") {
@@ -57,8 +64,22 @@ export default function Home({ history }) {
     }
   }
 
-  function handleCreateSchedule() {
-    history.push('/create')
+  function handleService() {
+    history.push('/service')
+  }
+
+  function handleDelete(key) {
+    if (schedules.length === 1) {
+      firebase.db.collection('doctors').doc(firebase.getId()).update({
+        price: "Individual"
+      })
+
+      firebase.db.collection('doctors').doc(firebase.getId())
+        .collection('schedules').doc(key).delete()
+    } else {
+      firebase.db.collection('doctors').doc(firebase.getId())
+        .collection('schedules').doc(key).delete()
+    }
   }
 
   const handleClose = () => {
@@ -118,35 +139,48 @@ export default function Home({ history }) {
   }, [])
 
   useEffect(() => {
-    firebase.db.collection("users").doc(firebase.getId()).get().then(doc => {
-      if (doc.exists) {
-        const { type } = doc.data()
-        if (type === "Médico") {
-          firebase.db.collection("doctors")
-            .doc(firebase.getId())
-            .collection("schedules")
-            .get().then(snapshot => {
-              if (snapshot) {
-                let schedules = []
-                snapshot.forEach(schedule => {
-                  schedules.push({
-                    key: schedule.id,
-                    ...schedule.data()
-                  })
-                })
-                setUserType(type)
-                setSchedules(schedules)
-                setFetchData(true)
+    if (firebase.getId() !== null) {
+      firebase.db.collection("users").doc(firebase.getId()).get().then(doc => {
+        if (doc.exists) {
+          const { type } = doc.data()
+          if (type === "Médico") {
+            firebase.db.collection("doctors").doc(firebase.getId()).get().then(doc => {
+              if (doc.exists) {
+                const data = doc.data()
+                setDoctorPrice(data.price)
               }
             })
-        } else if (type === "Paciente") {
-          setUserType(type)
+
+            firebase.db.collection("doctors")
+              .doc(firebase.getId())
+              .collection("schedules")
+              .orderBy("ordenation")
+              .get().then(snapshot => {
+                if (snapshot) {
+                  let schedules = []
+                  snapshot.forEach(schedule => {
+                    schedules.push({
+                      key: schedule.id,
+                      ...schedule.data()
+                    })
+                  })
+                  setUserType(type)
+                  setSchedules(schedules)
+                  setFetchData(true)
+                }
+              })
+          } else if (type === "Paciente") {
+            setUserType(type)
+            setFetchData(true)
+          }
+        } else {
           setFetchData(true)
         }
-      } else {
-        setFetchData(true)
-      }
-    })
+      })
+    } else {
+      alert("Você foi desconectado. Faça login novamente.")
+      history.push('/')
+    }
   })
 
   function getStepContent(step) {
@@ -283,13 +317,14 @@ export default function Home({ history }) {
             Reinvente o seu jeito de atender consultas
             </Typography>
           <Typography component="h5" variant="h6" align="center" color="textSecondary">
-            Visualize os dias, horários, preços e duração das consultas que você já cadastrou.
+            Visualize e cadastre seus dias de atendimento com horário, preço, duração e intervalo entre consultas.
           </Typography>
+
         </Container>
         {schedules.length === 0 && (
           <Container maxWidth="md" component="main">
             <Alert severity="info" variant="standard" action={
-              <Button color="inherit" size="small" onClick={handleCreateSchedule}>
+              <Button color="inherit" size="small" onClick={handleService}>
                 Cadastrar
               </Button>
             } elevation={3}>
@@ -298,33 +333,60 @@ export default function Home({ history }) {
               </Alert>
           </Container>
         )}
-        <main className={styles.layout}>
-          <Paper elevation={3} className={styles.paper}>
-            <List>
-              {schedules.map((schedule) => (
+        {schedules.length > 0 && (
+          <main className={styles.layout}>
+            <Paper elevation={3} className={styles.paper}>
+              <List>
                 <Container maxWidth="md">
-                  <ListItem>
-                    <ListItemText primary="Dia da semana" secondary={schedule.day} />
-                    {schedule.price === "Individual" ? <ListItemText primary="Preço" secondary={schedule.price} /> : ""}
-                    <ListItemText primary="Horário" secondary={schedule.hour} />
-                    <ListItemText primary="Duração" secondary={schedule.duration} />
-                    <ListItemSecondaryAction>
-                      <IconButton variant="contained" color="secondary">
-                        <DeleteIcon />
-                      </IconButton>
-                    </ListItemSecondaryAction>
-                  </ListItem>
-                  <Divider />
+                  {doctorPrice !== "Individual" && (
+                    <React.Fragment>
+                      <Typography variant="h6" gutterBottom className={styles.title}>
+                        Dado das consultas
+                      </Typography>
+                      <Grid container direction="row">
+                        <Typography className={styles.typography} gutterBottom>Preço:</Typography>
+                        <Typography gutterBottom>{doctorPrice}</Typography>
+                      </Grid>
+                    </React.Fragment>
+                  )}
                 </Container>
-              ))}
-            </List>
-            <div className={styles.buttons}>
-              <Button variant="contained" color="primary" className={styles.button} onClick={handleCreateSchedule}>
-                Cadastrar
+                {schedules.map((schedule) => (
+                  <Container maxWidth="md">
+                    <Typography variant="h6" gutterBottom className={styles.title}>
+                      {schedule.day}
+                    </Typography>
+                    <ListItem key={schedule.key}>
+                      {schedule.price === "Individual" ? <ListItemText primary="Preço" secondary={schedule.price} /> : ""}
+                      <ListItemText primary="Atendimento" secondary={`${schedule.begin} às ${schedule.end}`} />
+                      <ListItemText primary="Duração" secondary={`${schedule.duration} minutos`} />
+                      <ListItemText primary="Intervalo" secondary={`${schedule.interval} minutos`} />
+                      {doctorPrice === "Individual" && (
+                        <ListItemText primary="Preço" secondary={`R$ ${schedule.price}`} />
+                      )}
+                      <ListItemSecondaryAction>
+                        <IconButton variant="contained" color="secondary">
+                          <DeleteIcon onClick={() => handleDelete(schedule.key)} />
+                        </IconButton>
+                      </ListItemSecondaryAction>
+                    </ListItem>
+                    <Divider />
+                  </Container>
+                ))}
+              </List>
+              <div className={styles.buttons}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={styles.button}
+                  onClick={handleService}
+                  disabled={schedules.length === 5}
+                >
+                  Cadastrar
               </Button>
-            </div>
-          </Paper>
-        </main>
+              </div>
+            </Paper>
+          </main>
+        )}
       </React.Fragment>
     )
   }
@@ -419,5 +481,13 @@ const useStyles = makeStyles(theme => ({
   avatar: {
     margin: theme.spacing(1),
     backgroundColor: theme.palette.primary.main,
+  },
+  typography: {
+    fontWeight: 'bold',
+    marginRight: 5
+  },
+  title: {
+    marginTop: theme.spacing(2),
+    fontWeight: 'bold'
   },
 }))
