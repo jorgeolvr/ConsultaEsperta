@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { withRouter } from 'react-router-dom'
+import { withRouter, useLocation } from 'react-router-dom'
 
 import logo from '../../assets/simbolo-consulta.png'
 import firebase from '../../config/Firebase'
@@ -16,7 +16,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 })
 
 function Header(props) {
-  const styles = useStyles();
+  const styles = useStyles()
+  let location = useLocation()
 
   const [openDialog, setOpenDialog] = useState(false)
   const [anchorUser, setAnchorUser] = useState(null)
@@ -65,8 +66,23 @@ function Header(props) {
 
   const handleClose = () => {
     setOpenDialog(false)
-  };
+  }
 
+  function renderMainButton() {
+    if (location.pathname === '/') {
+      return (
+        <Button variant="outlined" color="default" onClick={handleLogin} size="small">
+          Entrar
+        </Button>
+      )
+    } else if (location.pathname === '/login') {
+      return (
+        <Button variant="outlined" color="default" onClick={handleBack} size="small">
+          Voltar
+        </Button>
+      )
+    }
+  }
 
   function handleProfile() {
     const userId = firebase.getId()
@@ -86,6 +102,10 @@ function Header(props) {
 
   function handleLogin() {
     props.history.push('/login')
+  }
+
+  function handleBack() {
+    props.history.push('/')
   }
 
 
@@ -140,7 +160,7 @@ function Header(props) {
             </Typography>
             <MenuItem>Confirmar</MenuItem>
           </Menu> */}
-          {firebase.getId() !== null ? (
+          {firebase.getId() !== null && (
             <React.Fragment>
               <IconButton
                 aria-label="account of current user"
@@ -171,11 +191,8 @@ function Header(props) {
                 <MenuItem onClick={handleLogout}>Sair</MenuItem>
               </Menu>
             </React.Fragment>
-          ) : (
-              <Button variant="outlined" color="default" onClick={handleLogin} size="small">
-                Entrar
-              </Button>
-            )}
+          )}
+          {renderMainButton()}
         </Grid>
       </Toolbar>
       <Container maxWidth="sm">

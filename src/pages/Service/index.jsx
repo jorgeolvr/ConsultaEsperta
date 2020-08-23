@@ -90,7 +90,7 @@ export default function Service({ history }) {
     var incrementer = 0 //Incrementador de minutos
     var j = 0; //Contador de posição do array
     var ordenation = ''
-    console.log(begin)
+
     //Loop para incrementar o tempo e colocar o resultado no array
     for (var i = begin;incrementer < end * 60;i++) {
       var hour = Math.floor(incrementer / 60); // Gerar horas no formato 0-24

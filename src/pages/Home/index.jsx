@@ -44,7 +44,7 @@ export default function Home({ history }) {
 
   const [userType, setUserType] = useState('')
   const [ufs, setUfs] = useState([])
-  const [selectedUf, setSelectedUf] = useState('')
+  const [selectedUf, setSelectedUf] = useState([])
   const [cities, setCities] = useState([])
   const [specialities, setSpecialities] = useState([])
   const [schedules, setSchedules] = useState([])
@@ -102,24 +102,26 @@ export default function Home({ history }) {
 
   useEffect(() => {
     axios.get('https://servicodados.ibge.gov.br/api/v1/localidades/estados').then(res => {
-      //const states = res.data.map(uf => new Object({ 'initial': `${uf.sigla}`, 'name': `${uf.nome}` }))
-      const states = res.data.map(uf => uf.sigla)
+      const states = res.data.map(uf => new Object({ 'initial': `${uf.sigla}`, 'name': `${uf.nome}` }))
+      //const states = res.data.map(uf => uf.sigla)
       setUfs(states)
     })
   }, [])
 
   useEffect(() => {
-    // Carregar as cidades sempre que a UF mudar
-    if (selectedUf === '0') {
+    /* Carregar as cidades sempre que a UF mudar
+    if (selectedUf === null) {
       return
+    } */
+
+    if (selectedUf !== null) {
+      axios.get(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${selectedUf.initial}/municipios`).then(res => {
+        const cityNames = res.data.map(city => city.nome)
+        setCities(cityNames)
+      })
+    } else {
+      setCities([])
     }
-
-    axios.get(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${selectedUf}/municipios`).then(res => {
-      const cityNames = res.data.map(city => city.nome)
-
-      setCities(cityNames)
-    })
-
   }, [selectedUf])
 
   useEffect(() => {
@@ -191,10 +193,16 @@ export default function Home({ history }) {
             <Autocomplete
               fullWidth
               options={ufs}
-              getOptionLabel={uf => uf}
+              getOptionLabel={uf => uf.name}
+              renderOption={(option) => (
+                <React.Fragment>
+                  {option.name}
+                </React.Fragment>
+              )}
               value={selectedUf}
               onChange={(event, newValue) => {
                 setSelectedUf(newValue)
+                setGlobalLocation("")
               }}
               renderInput={(params) => <TextField {...params} label="Estados" variant="standard" />}
             />
@@ -208,7 +216,7 @@ export default function Home({ history }) {
               options={cities}
               getOptionLabel={cities => cities}
               value={globalLocation}
-              disabled={selectedUf === ""}
+              disabled={selectedUf === null || selectedUf.length === 0}
               onChange={(event, newValue) => {
                 setGlobalLocation(newValue)
               }}

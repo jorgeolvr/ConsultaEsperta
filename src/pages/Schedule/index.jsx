@@ -167,7 +167,6 @@ export default function Schedule() {
   }
 
   function handleCancel(key, idDoctor, idSchedule) {
-    //console.log(idSchedule)
     firebase.db.collection('appointments').doc(key).update({
       status: "cancelled"
     })

@@ -84,7 +84,7 @@ export default function Profile({ history }) {
           setStreet(street)
           setStreetNumber(number)
           setNeighbour(neighbour)
-          setSelectedUf(state)
+          setSelectedUf({ name: state })
           setCrm(crm)
           setCity(location)
           setSpeciality(speciality)
@@ -300,7 +300,7 @@ export default function Profile({ history }) {
                        </Typography>
                           <Grid container direction="row">
                             <Typography className={styles.typography} gutterBottom>Estado:</Typography>
-                            <Typography gutterBottom>{selectedUf}</Typography>
+                            <Typography gutterBottom>{selectedUf.name}</Typography>
                           </Grid>
                           <Grid container direction="row">
                             <Typography className={styles.typography} gutterBottom>Cidade:</Typography>

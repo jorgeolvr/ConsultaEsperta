@@ -139,6 +139,7 @@ export default function Details({ history }) {
 
           firebase.db.collection('appointments')
             .where("date", "==", selectedDate.format("DD/MM/YYYY").toString())
+            .where("status", "==", "pending" || "confirmed")
             .get()
             .then(snapshot => {
               if (snapshot) {

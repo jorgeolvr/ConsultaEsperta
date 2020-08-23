@@ -27,7 +27,7 @@ export default function Routes() {
   const [street, setStreet] = useState('')
   const [streetNumber, setStreetNumber] = useState('')
   const [neighbour, setNeighbour] = useState('')
-  const [selectedUf, setSelectedUf] = useState('')
+  const [selectedUf, setSelectedUf] = useState([])
   const [description, setDescription] = useState('')
   const [city, setCity] = useState('')
   const [speciality, setSpeciality] = useState('')
