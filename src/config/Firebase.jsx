@@ -96,8 +96,9 @@ class Firebase {
   }
 
   deleteUser() {
-    const userId = this.getId()
-    this.db.collection('users').doc(userId).delete()
+    //const userId = this.getId()
+    //this.db.collection('users').doc(userId).delete()
+    this.auth().currentUser.delete()
   }
 
   patientDatabase(cardName, cardNumber, brand, expireDate, securityCode) {

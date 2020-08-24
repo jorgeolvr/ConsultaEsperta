@@ -11,6 +11,7 @@ import {
   Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Avatar
 } from '@material-ui/core'
 import PermContactCalendarIcon from '@material-ui/icons/PermContactCalendar'
+import UpdateIcon from '@material-ui/icons/Update'
 import { makeStyles } from '@material-ui/core/styles'
 
 
@@ -196,9 +197,15 @@ export default function Profile({ history }) {
                       </Grid>
                     </Grid>
                     <div className={styles.buttons}>
-                      <Button variant="contained" color="primary" onClick={handleUpdate} className={styles.button}>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleUpdate}
+                        className={styles.button}
+                        startIcon={<UpdateIcon />}
+                      >
                         Alterar dados
-                </Button>
+                      </Button>
                     </div>
                   </Paper>
                 </main>
@@ -322,7 +329,13 @@ export default function Profile({ history }) {
                         </Grid>
                       </Grid>
                       <div className={styles.buttons}>
-                        <Button variant="contained" color="primary" onClick={handleUpdate} className={styles.button}>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={handleUpdate}
+                          className={styles.button}
+                          startIcon={<UpdateIcon />}
+                        >
                           Alterar dados
                      </Button>
                       </div>

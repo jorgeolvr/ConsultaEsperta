@@ -3,7 +3,7 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom'
 
 import Main from './pages/Main'
 import Login from './pages/Login'
-import Settings from './pages/Settings'
+import Setting from './pages/Setting'
 import Register from './pages/Register'
 import Home from './pages/Home'
 import Profile from './pages/Profile'
@@ -14,7 +14,7 @@ import Search from './pages/Search'
 import Details from './pages/Details'
 import Schedule from './pages/Schedule'
 import Service from './pages/Service'
-
+import Rating from './pages/Rating'
 
 import { Context } from './Context'
 
@@ -72,7 +72,7 @@ export default function Routes() {
         <Context.Provider value={context}>
           <Route path="/" exact component={Main} />
           <Route path="/login" component={Login} />
-          <Route path="/settings" component={Settings} />
+          <Route path="/setting" component={Setting} />
           <Route path="/register" component={Register} />
           <Route path="/forgot" component={Forgot} />
           <Route path="/home" component={Home} />
@@ -83,6 +83,7 @@ export default function Routes() {
           <Route path="/doctor" component={Doctor} />
           <Route path="/patient" component={Patient} />
           <Route path="/profile" component={Profile} />
+          <Route path="/rating" component={Rating} />
         </Context.Provider>
       </Switch>
     </BrowserRouter>

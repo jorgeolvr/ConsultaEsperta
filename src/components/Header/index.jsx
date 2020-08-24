@@ -9,7 +9,7 @@ import {
   Dialog, DialogTitle, DialogContent, DialogContentText, Button, DialogActions,
   ListItemIcon
 } from '@material-ui/core'
-import { AccountCircle, ExitToApp, Person, Settings } from '@material-ui/icons'
+import { AccountCircle, ExitToApp, Person, Settings, VpnKey, ArrowBack } from '@material-ui/icons'
 import { makeStyles } from '@material-ui/core/styles'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -49,7 +49,7 @@ function Header(props) {
   }
 
   function handleSettings() {
-    props.history.push('/settings')
+    props.history.push('/setting')
   }
 
   function handleHome() {
@@ -76,13 +76,13 @@ function Header(props) {
   function renderMainButton() {
     if (location.pathname === '/') {
       return (
-        <Button variant="outlined" color="default" onClick={handleLogin} size="small">
+        <Button variant="outlined" color="default" onClick={handleLogin} size="small" startIcon={<VpnKey />}>
           Entrar
         </Button>
       )
     } else if (location.pathname === '/login') {
       return (
-        <Button variant="outlined" color="default" onClick={handleBack} size="small">
+        <Button variant="outlined" color="default" onClick={handleBack} size="small" startIcon={<ArrowBack />}>
           Voltar
         </Button>
       )
@@ -103,6 +103,10 @@ function Header(props) {
 
   function handleSchedule() {
     props.history.push('/schedule')
+  }
+
+  function handleRating() {
+    props.history.push('/rating')
   }
 
   function handleLogin() {
@@ -261,7 +265,7 @@ function Header(props) {
               color="inherit"
               noWrap
               variant="body2"
-              onClick={handleSchedule}
+              onClick={handleRating}
               className={styles.toolbarLink}
             >
               Avaliação

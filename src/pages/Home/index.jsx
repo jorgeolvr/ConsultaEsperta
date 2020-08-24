@@ -13,8 +13,14 @@ import {
   DialogContent, DialogContentText, DialogActions, Slide, CircularProgress, ListItemSecondaryAction,
 } from '@material-ui/core'
 import { Autocomplete, Alert, AlertTitle } from '@material-ui/lab'
+
 import AssistantIcon from '@material-ui/icons/Assistant'
+import AddCircleIcon from '@material-ui/icons/AddCircle'
+import SearchIcon from '@material-ui/icons/Search'
+import CheckCircleIcon from '@material-ui/icons/CheckCircle'
+//import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 import DeleteIcon from '@material-ui/icons/Delete'
+
 import { makeStyles } from '@material-ui/core/styles'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -271,6 +277,7 @@ export default function Home({ history }) {
                           color="primary"
                           onClick={handleNext}
                           className={styles.secondButton}
+                          startIcon={<CheckCircleIcon />}
                         >
                           Continuar
                         </Button>
@@ -291,6 +298,7 @@ export default function Home({ history }) {
                     color="primary"
                     variant="contained"
                     className={styles.secondButton}
+                    startIcon={<SearchIcon />}
                   >
                     Buscar médicos
                   </Button>
@@ -321,7 +329,7 @@ export default function Home({ history }) {
         {schedules.length === 0 && (
           <Container maxWidth="md" component="main">
             <Alert severity="info" variant="standard" action={
-              <Button color="inherit" size="small" onClick={handleService}>
+              <Button color="inherit" size="small" onClick={handleService} startIcon={<AddCircleIcon />}>
                 Cadastrar
               </Button>
             } elevation={3}>
@@ -338,7 +346,7 @@ export default function Home({ history }) {
                   {doctorPrice !== "Individual" && (
                     <React.Fragment>
                       <Typography variant="h6" gutterBottom className={styles.title}>
-                        Dado das consultas
+                        Dados das consultas
                       </Typography>
                       <Grid container direction="row">
                         <Typography className={styles.typography} gutterBottom>Preço:</Typography>
@@ -377,6 +385,7 @@ export default function Home({ history }) {
                   className={styles.button}
                   onClick={handleService}
                   disabled={schedules.length === 5}
+                  startIcon={<AddCircleIcon />}
                 >
                   Cadastrar
               </Button>

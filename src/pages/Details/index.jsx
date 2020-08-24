@@ -15,6 +15,7 @@ import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
 import { Alert, AlertTitle } from '@material-ui/lab'
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import SearchIcon from '@material-ui/icons/Search'
 import { makeStyles } from '@material-ui/core/styles'
 
 import MomentUtils from '@date-io/moment'
@@ -244,7 +245,12 @@ export default function Details({ history }) {
                         justifyContent: 'flex-end',
                         marginTop: 8
                       }}>
-                        <Button onClick={handleDate} color="primary" variant="contained" >
+                        <Button
+                          onClick={handleDate}
+                          color="primary"
+                          variant="contained"
+                          startIcon={<SearchIcon />}
+                        >
                           Buscar horários
                         </Button>
                       </Grid>

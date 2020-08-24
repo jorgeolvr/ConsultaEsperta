@@ -16,6 +16,7 @@ import {
 } from '@material-ui/core'
 import { Autocomplete, Alert, AlertTitle } from '@material-ui/lab'
 import ListAltIcon from '@material-ui/icons/ListAlt'
+import SearchIcon from '@material-ui/icons/Search'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import StarRate from '@material-ui/icons/Star'
 import { makeStyles } from '@material-ui/core/styles'
@@ -293,8 +294,14 @@ export default function Search({ history }) {
                     </Grid>
                   </ExpansionPanelDetails>
                   <div className={styles.buttons}>
-                    <Button variant="contained" color="primary" onClick={handleAdvancedSearch} className={styles.button}>
-                      Buscar
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={handleAdvancedSearch}
+                      className={styles.button}
+                      startIcon={<SearchIcon />}
+                    >
+                      Buscar médicos
                   </Button>
                   </div>
                 </ExpansionPanel>
