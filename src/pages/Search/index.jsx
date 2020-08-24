@@ -82,18 +82,12 @@ export default function Search({ history }) {
 
   useEffect(() => {
     axios.get('https://servicodados.ibge.gov.br/api/v1/localidades/estados').then(res => {
-      const states = res.data.map(uf => new Object({ 'initial': `${uf.sigla}`, 'name': `${uf.nome}` }))
-      //const states = res.data.map(uf => uf.sigla)
+      const states = res.data.map(uf => uf = { 'initial': `${uf.sigla}`, 'name': `${uf.nome}` })
       setUfs(states)
     })
   }, [setUfs])
 
   useEffect(() => {
-    /* Carregar as cidades sempre que a UF mudar
-    if (selectedUf === '0') {
-      return
-    } */
-
     if (selectedUf !== null) {
       axios.get(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${selectedUf.initial}/municipios`).then(res => {
         const cityNames = res.data.map(city => city.nome)

@@ -6,9 +6,10 @@ import firebase from '../../config/Firebase'
 
 import {
   Toolbar, Grid, IconButton, Typography, Link, Menu, MenuItem, Slide, Container,
-  Dialog, DialogTitle, DialogContent, DialogContentText, Button, DialogActions
+  Dialog, DialogTitle, DialogContent, DialogContentText, Button, DialogActions,
+  ListItemIcon
 } from '@material-ui/core'
-import { AccountCircle, /*Notifications*/ } from '@material-ui/icons'
+import { AccountCircle, ExitToApp, Person, Settings } from '@material-ui/icons'
 import { makeStyles } from '@material-ui/core/styles'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -45,6 +46,10 @@ function Header(props) {
   async function handleLogout() {
     await firebase.logout()
     props.history.push('/')
+  }
+
+  function handleSettings() {
+    props.history.push('/settings')
   }
 
   function handleHome() {
@@ -160,6 +165,7 @@ function Header(props) {
             </Typography>
             <MenuItem>Confirmar</MenuItem>
           </Menu> */}
+          {renderMainButton()}
           {firebase.getId() !== null && (
             <React.Fragment>
               <IconButton
@@ -187,12 +193,29 @@ function Header(props) {
                 open={openUser}
                 onClose={handleCloseUser}
               >
-                <Typography color="textSecondary" className={styles.user}>{firebase.getUsername()}</Typography>
-                <MenuItem onClick={handleLogout}>Sair</MenuItem>
+                <MenuItem onClick={handleLogout} className={styles.user} disabled >
+                  <ListItemIcon>
+                    <Person />
+                  </ListItemIcon>
+                  <Typography>
+                    {firebase.getUsername()}
+                  </Typography>
+                </MenuItem>
+                <MenuItem onClick={handleSettings}>
+                  <ListItemIcon>
+                    <Settings />
+                  </ListItemIcon>
+                  <Typography>Ajustes</Typography>
+                </MenuItem>
+                <MenuItem onClick={handleLogout}>
+                  <ListItemIcon>
+                    <ExitToApp />
+                  </ListItemIcon>
+                  <Typography>Sair</Typography>
+                </MenuItem>
               </Menu>
             </React.Fragment>
           )}
-          {renderMainButton()}
         </Grid>
       </Toolbar>
       <Container maxWidth="sm">
@@ -232,7 +255,7 @@ function Header(props) {
               onClick={handleSchedule}
               className={styles.toolbarLink}
             >
-              Sugestões
+              Sugestão
             </Link>
             <Link
               color="inherit"
@@ -241,7 +264,7 @@ function Header(props) {
               onClick={handleSchedule}
               className={styles.toolbarLink}
             >
-              Avaliações
+              Avaliação
             </Link>
           </Toolbar>
         )}
@@ -276,8 +299,8 @@ const useStyles = makeStyles(theme => ({
 
   },
   user: {
-    padding: theme.spacing(1, 2, 1, 2)
-  },
-}));
+    marginBottom: 10
+  }
+}))
 
 export default withRouter(Header)

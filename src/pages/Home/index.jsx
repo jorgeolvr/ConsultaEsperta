@@ -7,11 +7,6 @@ import firebase from '../../config/Firebase'
 import Header from '../../components/Header'
 import Footer from '../../components/Footer'
 
-//import DatePicker from "react-datepicker";
-//import { registerLocale, setDefaultLocale } from "react-datepicker"
-//import "react-datepicker/dist/react-datepicker.css"
-//import { ptBR } from 'date-fns/locale'
-
 import {
   Grid, Container, CssBaseline, Typography, Button, TextField, Avatar, Divider, IconButton, List,
   Paper, Stepper, Step, StepLabel, StepContent, Dialog, DialogTitle, ListItem, ListItemText,
@@ -31,8 +26,8 @@ function getSteps() {
 }
 
 export default function Home({ history }) {
-  const styles = useStyles();
-  const steps = getSteps();
+  const styles = useStyles()
+  const steps = getSteps()
 
   const {
     globalLocation, setGlobalLocation, globalSpeciality, setGlobalSpeciality
@@ -102,18 +97,12 @@ export default function Home({ history }) {
 
   useEffect(() => {
     axios.get('https://servicodados.ibge.gov.br/api/v1/localidades/estados').then(res => {
-      const states = res.data.map(uf => new Object({ 'initial': `${uf.sigla}`, 'name': `${uf.nome}` }))
-      //const states = res.data.map(uf => uf.sigla)
+      const states = res.data.map(uf => uf = { 'initial': `${uf.sigla}`, 'name': `${uf.nome}` })
       setUfs(states)
     })
   }, [])
 
   useEffect(() => {
-    /* Carregar as cidades sempre que a UF mudar
-    if (selectedUf === null) {
-      return
-    } */
-
     if (selectedUf !== null) {
       axios.get(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${selectedUf.initial}/municipios`).then(res => {
         const cityNames = res.data.map(city => city.nome)
