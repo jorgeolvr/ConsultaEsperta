@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import firebase from '../../config/Firebase'
 
@@ -7,22 +7,107 @@ import Footer from '../../components/Footer'
 
 import {
   Grid, Container, CssBaseline, Typography, Avatar,
-  Paper, Button, TextField
+  Paper, Button, TextField, InputAdornment, IconButton,
+  Dialog, DialogTitle, DialogContent, DialogContentText,
+  DialogActions, Slide
 } from '@material-ui/core'
 
+import { Visibility, VisibilityOff } from '@material-ui/icons'
 import SettingsIcon from '@material-ui/icons/Settings'
+import SaveIcon from '@material-ui/icons/Save'
 import DeleteIcon from '@material-ui/icons/Delete'
+
 import { makeStyles } from '@material-ui/core/styles'
+
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+})
 
 export default function Settings({ history }) {
   const styles = useStyles()
+  const [openDialog, setOpenDialog] = useState(false)
+  const [openDialogDelete, setOpenDialogDelete] = useState(false)
+
+  const [values, setValues] = useState({
+    password: '',
+    confirmPassword: '',
+    showPassword: false,
+    showConfirmPassword: false
+  })
+
+  const handleChange = prop => event => {
+    setValues({ ...values, [prop]: event.target.value })
+  }
+
+  const handleClickShowPassword = () => {
+    setValues({ ...values, showPassword: !values.showPassword })
+  }
+
+  const handleMouseDownPassword = event => {
+    event.preventDefault()
+  }
+
+  const handleClickShowConfirmPassword = () => {
+    setValues({ ...values, showConfirmPassword: !values.showConfirmPassword })
+  }
+
+  const handleMouseDownConfirmPassword = event => {
+    event.preventDefault();
+  }
+
+  const handleClose = () => {
+    setOpenDialog(false)
+  }
+
+  const handleCloseDelete = () => {
+    setOpenDialogDelete(false)
+  }
+
+  function handleAccept() {
+    firebase.deleteUser()
+  }
 
   function handleDelete() {
-    firebase.deleteUser()
+    setOpenDialogDelete(true)
+  }
+
+  function handleChangePassword() {
+    setOpenDialogDelete(true)
+    if (values.password === values.confirmPassword) {
+      firebase.changePassword(values.password)
+    } else {
+      setOpenDialog(true)
+    }
   }
 
   return (
     <React.Fragment>
+      <div>
+        <Dialog open={openDialog} onClose={handleClose} keepMounted TransitionComponent={Transition}>
+          <DialogTitle>Atenção</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              As senhas digitadas nos campos se diferem. Por favor digite novamente.
+              </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="primary" autoFocus>Ok</Button>
+          </DialogActions>
+        </Dialog>
+        <Dialog open={openDialogDelete} onClose={handleCloseDelete} keepMounted TransitionComponent={Transition}>
+          <DialogTitle>Atenção</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Você realmente deseja deletar sua conta do Consulta Esperta?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleAccept} color="primary" autoFocus>Sim</Button>
+            <Button onClick={handleCloseDelete} color="secondary" autoFocus>Não</Button>
+          </DialogActions>
+        </Dialog>
+      </div>
       <Grid container className={styles.mainGrid}>
         <Grid container direction="column">
           <CssBaseline />
@@ -64,15 +149,7 @@ export default function Settings({ history }) {
                 <Typography className={styles.typography} gutterBottom>Identificação: </Typography>
                 <Typography gutterBottom>{firebase.getId()}</Typography>
               </Grid>
-              <Grid container direction="row">
-                <Typography className={styles.typography} gutterBottom>Nome do usuário: </Typography>
-                <Typography gutterBottom>{firebase.getUsername()}</Typography>
-              </Grid>
 
-              <Grid container direction="row">
-                <Typography className={styles.typography} gutterBottom>Email do usuário: </Typography>
-                <Typography gutterBottom>{firebase.getEmail()}</Typography>
-              </Grid>
               <div className={styles.buttons}>
                 <Button
                   variant="contained"
@@ -81,7 +158,60 @@ export default function Settings({ history }) {
                   className={styles.button}
                   onClick={handleDelete}
                 >
-                  Excluir conta
+                  Excluir
+                </Button>
+              </div>
+              <Typography variant="h6" gutterBottom className={styles.title}>
+                Alteração de senha
+                       </Typography>
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    fullWidth
+                    label="Senha"
+                    type={values.showPassword ? 'text' : 'password'}
+                    value={values.password}
+                    onChange={handleChange('password')}
+                    autoComplete="current-password"
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton size="small" onClick={handleClickShowPassword} onMouseDown={handleMouseDownPassword}>
+                            {values.showPassword ? <Visibility /> : <VisibilityOff />}
+                          </IconButton>
+                        </InputAdornment>
+                      )
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    fullWidth
+                    label="Confirmar senha"
+                    type={values.showConfirmPassword ? 'text' : 'password'}
+                    value={values.confirmPassword}
+                    onChange={handleChange('confirmPassword')}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton size="small" onClick={handleClickShowConfirmPassword} onMouseDown={handleMouseDownConfirmPassword}>
+                            {values.showConfirmPassword ? <Visibility /> : <VisibilityOff />}
+                          </IconButton>
+                        </InputAdornment>
+                      )
+                    }}
+                  />
+                </Grid>
+              </Grid>
+              <div className={styles.buttons}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<SaveIcon />}
+                  className={styles.button}
+                  onClick={handleChangePassword}
+                >
+                  Salvar
                 </Button>
               </div>
             </Paper>

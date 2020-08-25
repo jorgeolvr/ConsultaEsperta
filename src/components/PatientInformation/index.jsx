@@ -1,15 +1,36 @@
-import React, { useContext } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Context } from '../../Context'
 
 import InputMask from 'react-input-mask'
 import firebase from '../../config/Firebase'
 
-import { Grid, TextField } from '@material-ui/core'
+import { Grid, TextField, CircularProgress } from '@material-ui/core'
 
 export default function PatientInformation() {
-  const { cpf, setCpf, phone, setPhone } = useContext(Context)
+  const [fetchData, setFetchData] = useState(true)
+  //const { cpf, setCpf, phone, setPhone } = useContext(Context)
+  const {
+    cpf, phone,
+    setCpf, setPhone, setType, setCardName,
+    setCardNumber, setExpireDate, setSecurityCode
+  } = useContext(Context)
 
-  return (
+  /*useEffect(() => {
+    firebase.db.collection('users').doc(firebase.getId()).get().then(function (doc) {
+      if (!doc.exists) {
+        setCpf('')
+        setPhone('')
+        setType('')
+        setCardName('')
+        setCardNumber('')
+        setExpireDate('')
+        setSecurityCode('')
+        setFetchData(true)
+      }
+    })
+  }, []) */
+
+  return fetchData === true ? (
     <React.Fragment>
       <Grid container spacing={3}>
         <Grid item xs={12}>
@@ -40,5 +61,5 @@ export default function PatientInformation() {
         </Grid>
       </Grid>
     </React.Fragment>
-  )
+  ) : <div id="loader"><CircularProgress /></div>
 }

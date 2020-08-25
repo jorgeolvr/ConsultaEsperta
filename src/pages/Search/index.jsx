@@ -301,7 +301,7 @@ export default function Search({ history }) {
                       className={styles.button}
                       startIcon={<SearchIcon />}
                     >
-                      Buscar médicos
+                      Buscar
                   </Button>
                   </div>
                 </ExpansionPanel>

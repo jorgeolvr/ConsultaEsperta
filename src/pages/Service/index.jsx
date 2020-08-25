@@ -8,7 +8,11 @@ import {
 } from '@material-ui/core'
 
 import firebase from '../../config/Firebase'
+
 import EventAvailableIcon from '@material-ui/icons/EventAvailable'
+import ArrowForwardIcon from '@material-ui/icons/ArrowForward'
+import SaveIcon from '@material-ui/icons/Save'
+
 import { makeStyles } from '@material-ui/core/styles'
 
 import Header from '../../components/Header'
@@ -219,8 +223,9 @@ export default function Service({ history }) {
                           color="primary"
                           onClick={activeStep === steps.length - 1 ? handleService : handleNext}
                           className={styles.button}
+                          startIcon={activeStep === steps.length - 1 ? <SaveIcon /> : <ArrowForwardIcon />}
                         >
-                          {activeStep === steps.length - 1 ? 'Salvar Dados' : 'Avançar'}
+                          {activeStep === steps.length - 1 ? 'Salvar' : 'Avançar'}
                         </Button>
                       </div>
                     </React.Fragment>

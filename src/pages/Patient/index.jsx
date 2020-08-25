@@ -13,7 +13,11 @@ import {
   Grid, Container, CssBaseline, Typography, Paper, Stepper, Step, StepLabel, Button,
   Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Slide, Avatar
 } from '@material-ui/core'
+
 import PermContactCalendarIcon from '@material-ui/icons/PermContactCalendar'
+import ArrowForwardIcon from '@material-ui/icons/ArrowForward'
+import SaveIcon from '@material-ui/icons/Save'
+
 import { makeStyles } from '@material-ui/core/styles'
 
 const steps = ['Dados pessoais', 'Forma de pagamento', 'Revisar dados'];
@@ -148,8 +152,9 @@ export default function PatientProfile({ history }) {
                             color="primary"
                             onClick={activeStep === steps.length - 1 ? handleProfile : handleNext}
                             className={styles.button}
+                            startIcon={activeStep === steps.length - 1 ? <SaveIcon /> : <ArrowForwardIcon />}
                           >
-                            {activeStep === steps.length - 1 ? 'Salvar Dados' : 'Avançar'}
+                            {activeStep === steps.length - 1 ? 'Salvar' : 'Avançar'}
                           </Button>
                         </div>
                       </React.Fragment>

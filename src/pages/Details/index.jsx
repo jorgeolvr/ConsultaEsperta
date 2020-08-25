@@ -65,42 +65,12 @@ export default function Details({ history }) {
         setSpeciality(speciality)
         setRating(rating)
         setImage(image)
-        setFetchData(true)
+        //setFetchData(true)
       }
     })
-  }, [idDoctor, setName, setStreet, setNumber, setNeighbour, setPrice, setImage])
+  })
 
-  const handleClose = () => {
-    setOpenDialog(false)
-  }
-
-  const handleAppointment = (idSchedule, daySchedule, hourSchedule) => {
-    firebase.db.collection('users')
-      .doc(firebase.getId())
-      .get()
-      .then(function (doc) {
-        if (!doc.exists) {
-          setOpenDialog(true)
-        } else {
-          firebase.db.collection('appointments').doc().set({
-            idPatient: firebase.getId(),
-            patientName: firebase.getUsername(),
-            idDoctor: idDoctor,
-            idSchedule: idSchedule,
-            doctorName: name,
-            address: `${street}, ${number} - ${neighbour}`,
-            day: daySchedule,
-            date: selectedDate.format("DD/MM/YYYY").toString(),
-            hour: hourSchedule,
-            status: "pending"
-          })
-
-          history.push('/schedule')
-        }
-      })
-  }
-
-  const handleDate = () => {
+  useEffect(() => {
     var selectedDay = ''
     var hours = []
 
@@ -151,7 +121,42 @@ export default function Details({ history }) {
               }
             })
         }
+        setFetchData(true)
       })
+  }, [doctorSchedules])
+
+  const handleClose = () => {
+    setOpenDialog(false)
+  }
+
+  const handleAppointment = (idSchedule, daySchedule, hourSchedule) => {
+    firebase.db.collection('users')
+      .doc(firebase.getId())
+      .get()
+      .then(function (doc) {
+        if (!doc.exists) {
+          setOpenDialog(true)
+        } else {
+          firebase.db.collection('appointments').doc().set({
+            idPatient: firebase.getId(),
+            patientName: firebase.getUsername(),
+            idDoctor: idDoctor,
+            idSchedule: idSchedule,
+            doctorName: name,
+            address: `${street}, ${number} - ${neighbour}`,
+            day: daySchedule,
+            date: selectedDate.format("DD/MM/YYYY").toString(),
+            hour: hourSchedule,
+            status: "pending"
+          })
+
+          history.push('/schedule')
+        }
+      })
+  }
+
+  const handleDate = () => {
+
   }
 
   return fetchData === true ? (
@@ -167,7 +172,7 @@ export default function Details({ history }) {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose} color="secondary" autoFocus>Ok</Button>
+            <Button onClick={handleClose} color="primary" autoFocus>Ok</Button>
           </DialogActions>
         </Dialog>
       </div>
@@ -233,10 +238,12 @@ export default function Details({ history }) {
                     <Container maxWidth="md">
                       <MuiPickersUtilsProvider utils={MomentUtils} locale="pt-br">
                         <DatePicker
+                          disablePast
                           format="DD/MM/yyyy"
                           value={selectedDate}
                           onChange={handleDateChange}
                           label="Selecione uma data"
+                          cancelLabel="Cancelar"
                           fullWidth
                         />
                       </MuiPickersUtilsProvider>
@@ -245,14 +252,14 @@ export default function Details({ history }) {
                         justifyContent: 'flex-end',
                         marginTop: 8
                       }}>
-                        <Button
+                        {/*<Button
                           onClick={handleDate}
                           color="primary"
                           variant="contained"
                           startIcon={<SearchIcon />}
                         >
-                          Buscar horários
-                        </Button>
+                          Buscar
+                        </Button> */}
                       </Grid>
                       <Grid className={styles.hourGrid}>
                         {doctorSchedules.length === 0 && (
@@ -269,10 +276,12 @@ export default function Details({ history }) {
                                   <Typography className={styles.typography} gutterBottom>Dia da semana:</Typography>
                                   <Typography gutterBottom>{doctorSchedule.day}</Typography>
                                 </Grid>
-                                <Grid container direction="row">
-                                  <Typography className={styles.typography} gutterBottom>Preço da consulta:</Typography>
-                                  <Typography gutterBottom>R$ {doctorSchedule.price}</Typography>
-                                </Grid>
+                                {price === "Individual" && (
+                                  <Grid container direction="row">
+                                    <Typography className={styles.typography} gutterBottom>Preço da consulta:</Typography>
+                                    <Typography gutterBottom>R$ {doctorSchedule.price}</Typography>
+                                  </Grid>
+                                )}
                               </Grid>
                               <Grid item container direction="column" xs={12} sm={6}>
                                 <Grid container direction="row">

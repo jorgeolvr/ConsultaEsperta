@@ -7,17 +7,12 @@ import Header from '../../components/Header'
 import Footer from '../../components/Footer'
 
 import {
-  Grid, Container, CssBaseline, Typography, Paper, Button, CircularProgress, Slide,
-  Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Avatar
+  Grid, Container, CssBaseline, Typography, Paper, Button, CircularProgress,
+  Avatar
 } from '@material-ui/core'
 import PermContactCalendarIcon from '@material-ui/icons/PermContactCalendar'
-import UpdateIcon from '@material-ui/icons/Update'
+import SwapHorizIcon from '@material-ui/icons/SwapHoriz';
 import { makeStyles } from '@material-ui/core/styles'
-
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-})
 
 export default function Profile({ history }) {
   const [fetchData, setFetchData] = useState(false)
@@ -32,13 +27,18 @@ export default function Profile({ history }) {
     setDescription, selectedUf, setSelectedUf, city, setCity
   } = useContext(Context)
   const lastDigitsCard = cardNumber.split(" ")[3]
-  const [openDialog, setOpenDialog] = useState(false)
+  //const [openDialog, setOpenDialog] = useState(false)
 
   function handleUpdate() {
-    setOpenDialog(true)
+    //setOpenDialog(true)
+    if (type === "Paciente") {
+      history.push('/patient')
+    } else if (type === "Médico") {
+      history.push('/doctor')
+    }
   }
 
-  const handleClose = () => {
+  /*const handleClose = () => {
     setOpenDialog(false)
   }
 
@@ -48,7 +48,7 @@ export default function Profile({ history }) {
 
   function handleDoctor() {
     history.push('/doctor')
-  }
+  } */
 
   useEffect(() => {
     firebase.db.collection('users').doc(firebase.getId()).get().then(function (doc) {
@@ -59,7 +59,6 @@ export default function Profile({ history }) {
         setCpf(cpf)
         setPhone(phone)
         setType(type)
-        setFetchData(true)
       }
     })
   })
@@ -80,7 +79,9 @@ export default function Profile({ history }) {
     } else if (type === "Médico") {
       firebase.db.collection('doctors').doc(firebase.getId()).get().then(function (doc) {
         if (doc.exists) {
-          const { crm, street, number, neighbour, state, location, speciality, description } = doc.data()
+          const {
+            crm, street, number, neighbour, state, location, speciality, description
+          } = doc.data()
 
           setStreet(street)
           setStreetNumber(number)
@@ -100,7 +101,7 @@ export default function Profile({ history }) {
     <React.Fragment>
       {type === "Paciente" ? (
         <React.Fragment>
-          <div>
+          {/*<div>
             <Dialog open={openDialog} onClose={handleClose} keepMounted TransitionComponent={Transition}>
               <DialogTitle>Alteração de perfil</DialogTitle>
               <DialogContent>
@@ -113,7 +114,7 @@ export default function Profile({ history }) {
                 <Button onClick={handlePatient} color="primary" autoFocus>Paciente</Button>
               </DialogActions>
             </Dialog>
-          </div>
+          </div> */}
           <Grid container className={styles.mainGrid}>
             <Container>
               <Grid container direction="column">
@@ -202,9 +203,9 @@ export default function Profile({ history }) {
                         color="primary"
                         onClick={handleUpdate}
                         className={styles.button}
-                        startIcon={<UpdateIcon />}
+                        startIcon={<SwapHorizIcon />}
                       >
-                        Alterar dados
+                        Alterar
                       </Button>
                     </div>
                   </Paper>
@@ -215,7 +216,7 @@ export default function Profile({ history }) {
           <Footer />
         </React.Fragment>) : (
           <React.Fragment>
-            <div>
+            {/*<div>
               <Dialog open={openDialog} onClose={handleClose} keepMounted TransitionComponent={Transition}>
                 <DialogTitle>Alteração de perfil</DialogTitle>
                 <DialogContent>
@@ -228,7 +229,7 @@ export default function Profile({ history }) {
                   <Button onClick={handlePatient} color="primary" autoFocus>Paciente</Button>
                 </DialogActions>
               </Dialog>
-            </div>
+            </div> */}
             <Grid container className={styles.mainGrid}>
               <Container>
                 <Grid container direction="column">
@@ -334,9 +335,9 @@ export default function Profile({ history }) {
                           color="primary"
                           onClick={handleUpdate}
                           className={styles.button}
-                          startIcon={<UpdateIcon />}
+                          startIcon={<SwapHorizIcon />}
                         >
-                          Alterar dados
+                          Alterar
                      </Button>
                       </div>
                     </Paper>

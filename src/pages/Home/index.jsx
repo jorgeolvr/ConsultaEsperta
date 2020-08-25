@@ -300,7 +300,7 @@ export default function Home({ history }) {
                     className={styles.secondButton}
                     startIcon={<SearchIcon />}
                   >
-                    Buscar médicos
+                    Buscar
                   </Button>
                 </div>
               </Paper>
@@ -329,7 +329,7 @@ export default function Home({ history }) {
         {schedules.length === 0 && (
           <Container maxWidth="md" component="main">
             <Alert severity="info" variant="standard" action={
-              <Button color="inherit" size="small" onClick={handleService} startIcon={<AddCircleIcon />}>
+              <Button color="inherit" size="small" onClick={handleService}>
                 Cadastrar
               </Button>
             } elevation={3}>
@@ -364,7 +364,7 @@ export default function Home({ history }) {
                       {schedule.price === "Individual" ? <ListItemText primary="Preço" secondary={schedule.price} /> : ""}
                       <ListItemText primary="Atendimento" secondary={`${schedule.begin} às ${schedule.end}`} />
                       <ListItemText primary="Duração" secondary={`${schedule.duration} minutos`} />
-                      <ListItemText primary="Intervalo" secondary={`${schedule.interval} minutos`} />
+                      <ListItemText primary="Intervalo" secondary={schedule.interval === 0 ? `Inexistente` : `${schedule.interval} minutos`} />
                       {doctorPrice === "Individual" && (
                         <ListItemText primary="Preço" secondary={`R$ ${schedule.price}`} />
                       )}

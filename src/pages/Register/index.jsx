@@ -8,7 +8,7 @@ import {
   Link, Grid, CssBaseline, Divider,
   Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Slide
 } from '@material-ui/core'
-import { Visibility, VisibilityOff } from '@material-ui/icons';
+import { Visibility, VisibilityOff } from '@material-ui/icons'
 import { makeStyles } from '@material-ui/core/styles'
 
 import firebase from '../../config/Firebase'

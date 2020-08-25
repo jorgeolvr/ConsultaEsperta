@@ -3,6 +3,7 @@ import 'firebase/auth'
 import 'firebase/firebase-firestore'
 
 class Firebase {
+
   constructor() {
     app.initializeApp(config)
     this.auth = app.auth()
@@ -58,7 +59,6 @@ class Firebase {
 
   doctorDatabase(name, crm, description, state, location, speciality, street, number, neighbour) {
     const userId = this.getId()
-
     const doctorsRef = this.db.collection('doctors').doc(userId)
 
     // Passando imagem hardcode por enquanto
@@ -83,7 +83,7 @@ class Firebase {
           name: name,
           street: street,
           number: number,
-          neighbour: neighbour,
+          //neighbour: neighbour,
           crm: crm,
           description: description,
           state: state,
@@ -93,6 +93,11 @@ class Firebase {
         })
       }
     })
+  }
+
+  changePassword(password) {
+    var user = this.auth().currentUser
+    user.updatePassword(password)
   }
 
   deleteUser() {
@@ -154,6 +159,7 @@ class Firebase {
     var provider = new app.auth.GoogleAuthProvider()
     await this.auth.signInWithPopup(provider)
   }
+
 
   logout() {
     return this.auth.signOut()

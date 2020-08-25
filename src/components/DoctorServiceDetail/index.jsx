@@ -26,6 +26,7 @@ export default function DoctorServiceDetail() {
               minutesStep={60}
               value={beginHour}
               onChange={setBeginHour}
+              cancelLabel="Cancelar"
               fullWidth
             />
           </MuiPickersUtilsProvider>
@@ -38,6 +39,7 @@ export default function DoctorServiceDetail() {
               minutesStep={60}
               value={endHour}
               onChange={setEndHour}
+              cancelLabel="Cancelar"
               fullWidth
             />
           </MuiPickersUtilsProvider>

@@ -143,7 +143,7 @@ export default function ScheduleInformation() {
             label="Bairro"
             defaultValue={neighbour}
             onChange={event => setNeighbour(event.target.value)}
-            inputProps={{ maxLength: 20 }}
+            inputProps={{ maxLength: 30 }}
             fullWidth
           />
         </Grid>
