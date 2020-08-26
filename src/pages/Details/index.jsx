@@ -15,7 +15,7 @@ import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
 import { Alert, AlertTitle } from '@material-ui/lab'
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
-import SearchIcon from '@material-ui/icons/Search'
+//import SearchIcon from '@material-ui/icons/Search'
 import { makeStyles } from '@material-ui/core/styles'
 
 import MomentUtils from '@date-io/moment'
@@ -123,7 +123,7 @@ export default function Details({ history }) {
         }
         setFetchData(true)
       })
-  }, [doctorSchedules])
+  }, [idDoctor, selectedDate])
 
   const handleClose = () => {
     setOpenDialog(false)
@@ -153,10 +153,6 @@ export default function Details({ history }) {
           history.push('/schedule')
         }
       })
-  }
-
-  const handleDate = () => {
-
   }
 
   return fetchData === true ? (

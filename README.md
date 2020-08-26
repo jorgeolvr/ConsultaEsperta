@@ -4,7 +4,7 @@
 
 # Descrição do projeto  
 
-O aplicativo Consulta Esperta é um *Marketplace* na área de saúde, provendo um ambiente para que profissionais da aúde possam difundir e cobrar por seus serviços, gerenciar suas agendas de atendimento e prontuários de pacientes e para que pacientes possam encontrar profissionais de saúde de acordo com sua demanda de especialidade, localização, horário, preço e qualidade de atendimento. Abaixo a descrição dos principais requisitos do aplicativo:
+O aplicativo Consulta Esperta é um *Marketplace* na área da saúde, provendo um ambiente para que profissionais de saúde possam difundir e cobrar por seus serviços, gerenciar suas agendas de atendimento e prontuários de pacientes e para que pacientes possam encontrar profissionais de saúde de acordo com sua demanda de especialidade, localização, horário, preço e qualidade de atendimento. Abaixo a descrição dos principais requisitos do aplicativo:
 
 
 ## Requisitos não funcionais
@@ -71,14 +71,17 @@ git clone https://github.com/wladbrandao/ConsultaEsperta.git
 As seguintes bibliotecas foram utilizadas na implementação do projeto:
 
 ### Web
-- [React.js](https://pt-br.reactjs.org/) - Framework JavaScript de código aberto com foco em criar interfaces de usuário em páginas web
-- [Firebase](https://firebase.google.com/) - Backend as a service para aplicações Web e Mobile do Google
+- [React](https://pt-br.reactjs.org/) - Framework javaScript com foco em criar interfaces de usuário em páginas web
+- [Firebase](https://firebase.google.com/) - Backend as a service para aplicações web e mobile do Google
+- [Axios](https://github.com/axios/axios) - Cliente para realização de requisições web por meio dos métodos HTTP
+- [Moment](https://momentjs.com/) - Framework para manipulação, validação e formatação de datas 
 - [Material Design UI](https://material-ui.com/) - Componentes React para um desenvolvimento mais rápido e fácil
 
 ### Mobile
-- [React Native](https://facebook.github.io/react-native/) - Framework JavaScript para desenvolver aplicativos de forma nativa
-- [Firebase](https://firebase.google.com/) - Backend as a service para aplicações Web e Mobile do Google
-- [Material Design UI](https://material-ui.com/) - Componentes React para um desenvolvimento mais rápido e fácil
+- [React Native](https://facebook.github.io/react-native/) - Framework javaScript para desenvolver aplicativos de forma nativa
+- [Firebase](https://firebase.google.com/) - Backend as a service para aplicações web e mobile do Google
+- [Axios](https://github.com/axios/axios) - Cliente para realização de requisições web por meio dos métodos HTTP
+- [Moment](https://momentjs.com/) - Framework para manipulação, validação e formatação de datas 
 
 ## Inicialização da aplicação
 O *yarn* foi utilizado como gerenciador de pacotes nesse projeto. Se você ainda não possui, digite o comando abaixo no terminal para instalar globalmente:
