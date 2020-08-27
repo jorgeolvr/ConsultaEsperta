@@ -18,7 +18,6 @@ import AssistantIcon from '@material-ui/icons/Assistant'
 import AddCircleIcon from '@material-ui/icons/AddCircle'
 import SearchIcon from '@material-ui/icons/Search'
 import CheckCircleIcon from '@material-ui/icons/CheckCircle'
-//import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 import DeleteIcon from '@material-ui/icons/Delete'
 
 import { makeStyles } from '@material-ui/core/styles'
@@ -36,7 +35,10 @@ export default function Home({ history }) {
   const steps = getSteps()
 
   const {
-    globalLocation, setGlobalLocation, globalSpeciality, setGlobalSpeciality
+    globalLocation, setGlobalLocation, globalSpeciality, setGlobalSpeciality,
+    setCpf, setPhone, setCardName, setCardNumber, setExpireDate, setSecurityCode,
+    setCrm, setDescription, setCity, setSpeciality, setStreet, setStreetNumber,
+    setNeighbour, setSelectedUf
   } = useContext(Context)
 
   const [openDialog, setOpenDialog] = useState(false)
@@ -45,17 +47,11 @@ export default function Home({ history }) {
 
   const [userType, setUserType] = useState('')
   const [ufs, setUfs] = useState([])
-  const [selectedUf, setSelectedUf] = useState([])
+  const [selectedHomeUf, setSelectedHomeUf] = useState([])
   const [cities, setCities] = useState([])
   const [specialities, setSpecialities] = useState([])
   const [schedules, setSchedules] = useState([])
   const [doctorPrice, setDoctorPrice] = useState('')
-
-  /*const [selectedDate, setSelectedDate] = useState(new Date())
-
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  }; */
 
   function handleSearch() {
     if (globalLocation === "" || globalSpeciality === "") {
@@ -109,15 +105,15 @@ export default function Home({ history }) {
   }, [])
 
   useEffect(() => {
-    if (selectedUf !== null) {
-      axios.get(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${selectedUf.initial}/municipios`).then(res => {
+    if (selectedHomeUf !== null) {
+      axios.get(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${selectedHomeUf.initial}/municipios`).then(res => {
         const cityNames = res.data.map(city => city.nome)
         setCities(cityNames)
       })
     } else {
       setCities([])
     }
-  }, [selectedUf])
+  }, [selectedHomeUf])
 
   useEffect(() => {
     firebase.db.collection("specialities").orderBy("name")
@@ -171,6 +167,20 @@ export default function Home({ history }) {
             setFetchData(true)
           }
         } else {
+          setCpf('')
+          setCrm('')
+          setPhone('')
+          setCardName('')
+          setCardNumber('')
+          setSecurityCode('')
+          setExpireDate('')
+          setDescription('')
+          setCity('')
+          setNeighbour('')
+          setSpeciality('')
+          setStreet('')
+          setStreetNumber('')
+          setSelectedUf('')
           setFetchData(true)
         }
       })
@@ -194,9 +204,9 @@ export default function Home({ history }) {
                   {option.name}
                 </React.Fragment>
               )}
-              value={selectedUf}
+              value={selectedHomeUf}
               onChange={(event, newValue) => {
-                setSelectedUf(newValue)
+                setSelectedHomeUf(newValue)
                 setGlobalLocation("")
               }}
               renderInput={(params) => <TextField {...params} label="Estados" variant="standard" />}
@@ -211,7 +221,7 @@ export default function Home({ history }) {
               options={cities}
               getOptionLabel={cities => cities}
               value={globalLocation}
-              disabled={selectedUf === null || selectedUf.length === 0}
+              disabled={selectedHomeUf === null || selectedHomeUf.length === 0}
               onChange={(event, newValue) => {
                 setGlobalLocation(newValue)
               }}
