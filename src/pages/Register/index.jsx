@@ -110,7 +110,6 @@ export default function Register({ history }) {
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
                   <TextField
-                    autoFocus
                     fullWidth
                     id="firstName"
                     label="Nome"
@@ -118,6 +117,7 @@ export default function Register({ history }) {
                     value={name}
                     onChange={event => setName(event.target.value)}
                     autoComplete="fname"
+                    inputProps={{ maxLength: 15 }}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -129,6 +129,7 @@ export default function Register({ history }) {
                     value={lastName}
                     onChange={event => setLastName(event.target.value)}
                     autoComplete="lname"
+                    inputProps={{ maxLength: 20 }}
                   />
                 </Grid>
                 <Grid item xs={12}>

@@ -110,7 +110,7 @@ export default function Details({ history }) {
 
           firebase.db.collection('appointments')
             .where("date", "==", selectedDate.format("DD/MM/YYYY").toString())
-            .where("status", "==", "pending" || "confirmed")
+            .where("status", "==", "confirmed")
             .get()
             .then(snapshot => {
               if (snapshot) {
@@ -147,9 +147,8 @@ export default function Details({ history }) {
             day: daySchedule,
             date: selectedDate.format("DD/MM/YYYY").toString(),
             hour: hourSchedule,
-            status: "pending"
+            status: "confirmed"
           })
-
           history.push('/schedule')
         }
       })
@@ -159,12 +158,11 @@ export default function Details({ history }) {
     <React.Fragment>
       <div>
         <Dialog open={openDialog} onClose={handleClose} keepMounted TransitionComponent={Transition}>
-          <DialogTitle>Agendamento de consultas</DialogTitle>
+          <DialogTitle>Atenção</DialogTitle>
           <DialogContent>
             <DialogContentText>
               Você precisa completar seu perfil com dados pessoais e forma de pagamento
-              antes de marcar uma consulta médica. Clique em perfil no menu principal para
-              continuar.
+              antes de marcar uma consulta médica.
             </DialogContentText>
           </DialogContent>
           <DialogActions>
@@ -248,14 +246,6 @@ export default function Details({ history }) {
                         justifyContent: 'flex-end',
                         marginTop: 8
                       }}>
-                        {/*<Button
-                          onClick={handleDate}
-                          color="primary"
-                          variant="contained"
-                          startIcon={<SearchIcon />}
-                        >
-                          Buscar
-                        </Button> */}
                       </Grid>
                       <Grid className={styles.hourGrid}>
                         {doctorSchedules.length === 0 && (
@@ -295,7 +285,8 @@ export default function Details({ history }) {
                                   variant="outlined"
                                   onClick={() =>
                                     handleAppointment(doctorSchedule.key, doctorSchedule.day, time)
-                                  }>
+                                  }
+                                >
                                   {time}
                                 </Button>
                               ))}

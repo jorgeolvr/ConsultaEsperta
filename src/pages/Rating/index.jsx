@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 
 import firebase from '../../config/Firebase'
 
@@ -7,9 +7,9 @@ import Footer from '../../components/Footer'
 
 import {
   Grid, Container, CssBaseline, Typography, Avatar,
-  Paper, Button, TextField
+  Button, CircularProgress, Card, CardContent, CardActions
 } from '@material-ui/core'
-
+import { Alert, AlertTitle } from '@material-ui/lab'
 import CommentIcon from '@material-ui/icons/Comment'
 
 import { makeStyles } from '@material-ui/core/styles'
@@ -17,11 +17,123 @@ import { makeStyles } from '@material-ui/core/styles'
 export default function Rating({ history }) {
   const styles = useStyles()
 
-  function handleDelete() {
+  const [appointments, setAppointments] = useState([])
+  const [fetchData, setFetchData] = useState(false)
+  const [userType, setUserType] = useState('')
 
+  useEffect(() => {
+    firebase.db.collection("users").doc(firebase.getId()).get().then(doc => {
+      if (doc.exists) {
+        const { type } = doc.data()
+        if (type === "Paciente") {
+          firebase.db.collection('appointments')
+            .where("idPatient", "==", firebase.getId())
+            .where("status", "==", "confirmed")
+            .get().then(snapshot => {
+              if (snapshot) {
+                let appointments = []
+                snapshot.forEach(appointment => {
+                  appointments.push({
+                    key: appointment.id,
+                    ...appointment.data()
+                  })
+                })
+                setAppointments(appointments)
+                setUserType(type)
+                setFetchData(true)
+              }
+            })
+        } else if (type === "Médico") {
+          firebase.db.collection('appointments')
+            .where("idDoctor", "==", firebase.getId())
+            .where("status", "==", "confirmed")
+            .get().then(snapshot => {
+              if (snapshot) {
+                let appointments = []
+                snapshot.forEach(appointment => {
+                  appointments.push({
+                    key: appointment.id,
+                    ...appointment.data()
+                  })
+                })
+                setAppointments(appointments)
+                setUserType(type)
+                setFetchData(true)
+              }
+            })
+        }
+      } else {
+        setFetchData(true)
+      }
+    })
+  })
+
+  function doctorComponent() {
+    return (
+      <React.Fragment>
+        {appointments.map((appointment) => (
+          <React.Fragment>
+            <Grid item key={appointment.key} xs={12} sm={6} md={4}>
+              <Card elevation={3}>
+                <CardContent>
+                  <Typography className={styles.title} color="textSecondary" gutterBottom>
+                    Paciente
+                  </Typography>
+                  <Typography variant="h5" component="h2">
+                    {appointment.patientName}
+                  </Typography>
+                  <Typography className={styles.information} color="textSecondary">
+                    {appointment.date} às {appointment.hour}
+                  </Typography>
+                  <Typography variant="body1" component="p">
+                    {appointment.address}
+                  </Typography>
+                </CardContent>
+                <CardActions>
+                  <Button size="small" color="primary">Avaliar paciente</Button>
+                </CardActions>
+              </Card>
+            </Grid>
+          </React.Fragment>
+        ))}
+      </React.Fragment>
+    )
   }
 
-  return (
+  function patientComponent() {
+    return (
+      <React.Fragment>
+        {appointments.map((appointment) => (
+          <React.Fragment>
+            <Grid item key={appointment.key} xs={12} sm={6} md={4}>
+              <Card elevation={3}>
+                <CardContent>
+                  <Typography className={styles.title} color="textSecondary" gutterBottom>
+                    Doutor
+                  </Typography>
+                  <Typography variant="h5" component="h2">
+                    {appointment.doctorName}
+                  </Typography>
+                  <Typography className={styles.information} color="textSecondary">
+                    {appointment.date} às {appointment.hour}
+                  </Typography>
+                  <Typography variant="body1" component="p">
+                    {appointment.address}
+                  </Typography>
+                </CardContent>
+                <CardActions>
+                  <Button size="small" color="primary">Avaliar médico</Button>
+                </CardActions>
+              </Card>
+            </Grid>
+          </React.Fragment>
+        ))}
+      </React.Fragment>
+    )
+  }
+
+
+  return fetchData === true ? (
     <React.Fragment>
       <Grid container className={styles.mainGrid}>
         <Grid container direction="column">
@@ -51,24 +163,34 @@ export default function Rating({ history }) {
                 color="textSecondary"
               >
                 Avalie e atribua notas a um profissional da saúde que
-                você teve uma consulta marcada.
+                você teve uma consulta realizada.
               </Typography>
             </Container>
           </Container>
-          <main className={styles.layout}>
-
-          </main>
+          <Container className={styles.cardGrid} maxWidth="md">
+            <Grid container spacing={4}>
+              {appointments.length === 0 && (
+                <Container maxWidth="md" component="main">
+                  <Alert severity="info" variant="standard" elevation={3}>
+                    <AlertTitle>Informação</AlertTitle>
+                    Você ainda não possui nenhuma consulta confirmada.
+                  </Alert>
+                </Container>
+              )}
+              {userType === "Médico" ? doctorComponent() : patientComponent()}
+            </Grid>
+          </Container>
         </Grid>
       </Grid>
       <Footer />
     </React.Fragment>
-  )
+  ) : <div id="loader"><CircularProgress /></div>
 }
 
 const useStyles = makeStyles(theme => ({
   mainGrid: {
-    minHeight: '100vh',
-    backgroundColor: '#F5FFFA'
+    backgroundColor: '#F5FFFA',
+    minHeight: '100vh'
   },
   mainContainer: {
     padding: theme.spacing(6, 0, 6),
@@ -76,43 +198,30 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
   },
-  layout: {
-    width: 'auto',
-    marginLeft: theme.spacing(2),
-    marginRight: theme.spacing(2),
-    [theme.breakpoints.up(600 + theme.spacing(2) * 2)]: {
-      width: 600,
-      marginLeft: 'auto',
-      marginRight: 'auto',
-    },
+  resultTypography: {
+    paddingTop: 20,
+    paddingBottom: 20,
+    paddingLeft: 20,
+    paddingRight: 20,
+    fontWeight: 'bold'
   },
   mainTitle: {
     fontWeight: 'bold',
     color: '#322153',
     fontFamily: 'Ubuntu',
   },
-  paper: {
-    marginBottom: theme.spacing(8),
-    padding: theme.spacing(2),
-    [theme.breakpoints.up(600 + theme.spacing(3) * 2)]: {
-      padding: theme.spacing(3),
-    },
+  cardGrid: {
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(8),
   },
-  buttons: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-  },
-  button: {
-    marginTop: theme.spacing(3),
-    marginLeft: theme.spacing(1),
+  alert: {
+    marginBottom: theme.spacing(4)
   },
   title: {
-    marginTop: theme.spacing(2),
-    fontWeight: 'bold'
+    fontSize: 14,
   },
-  typography: {
-    fontWeight: 'bold',
-    marginRight: 5
+  information: {
+    marginBottom: 12,
   },
   avatar: {
     margin: theme.spacing(1),

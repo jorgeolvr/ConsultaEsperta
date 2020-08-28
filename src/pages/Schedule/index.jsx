@@ -61,6 +61,8 @@ export default function Schedule() {
               }
             })
         }
+      } else {
+        setFetchData(true)
       }
     })
   })
@@ -87,11 +89,6 @@ export default function Schedule() {
                   </Typography>
                 </CardContent>
                 <CardActions>
-                  {appointment.status === "pending" && (
-                    <React.Fragment>
-                      <Button size="small" disabled>Pendente</Button>
-                    </React.Fragment>
-                  )}
                   {appointment.status === "confirmed" && (
                     <React.Fragment>
                       <Button size="small" disabled>Confirmado</Button>
@@ -134,15 +131,11 @@ export default function Schedule() {
                   </Typography>
                 </CardContent>
                 <CardActions>
-                  {appointment.status === "pending" && (
-                    <React.Fragment>
-                      <Button size="small" onClick={() => handleConfirm(appointment.key)} color="primary">Confirmar</Button>
-                      <Button size="small" onClick={() => handleCancel(appointment.key, appointment.idDoctor, appointment.idSchedule)} color="secondary">Cancelar</Button>
-                    </React.Fragment>
-                  )}
+
                   {appointment.status === "confirmed" && (
                     <React.Fragment>
                       <Button size="small" disabled>Confirmado</Button>
+                      <Button size="small" onClick={() => handleCancel(appointment.key, appointment.idDoctor, appointment.idSchedule)} color="secondary">Cancelar</Button>
                     </React.Fragment>
                   )}
                   {appointment.status === "cancelled" && (
@@ -157,13 +150,6 @@ export default function Schedule() {
         ))}
       </React.Fragment>
     )
-  }
-
-  function handleConfirm(key) {
-    firebase.db.collection('appointments').doc(key).update({
-      status: "confirmed"
-    })
-    setAlertConfirm(true)
   }
 
   function handleCancel(key, idDoctor, idSchedule) {
