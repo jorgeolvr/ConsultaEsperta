@@ -66,6 +66,10 @@ export default function Home({ history }) {
     history.push('/service')
   }
 
+  function handleCloseAlert() {
+    setOpenAlert(false)
+  }
+
   function handleDelete(key) {
     if (schedules.length === 1) {
       firebase.db.collection('doctors').doc(firebase.getId()).update({
@@ -190,7 +194,11 @@ export default function Home({ history }) {
       alert("Você foi desconectado. Faça login novamente.")
       history.push('/')
     }
-  })
+  }, [
+    history, setCardName, setCardNumber, setCity, setCpf, setCrm, setDescription,
+    setExpireDate, setNeighbour, setPhone, setSecurityCode, setSelectedUf, setSpeciality,
+    setStreet, setStreetNumber
+  ])
 
   function getStepContent(step) {
     switch (step) {
@@ -269,7 +277,7 @@ export default function Home({ history }) {
         </Container>
         <main className={styles.layout}>
           {openAlert === true && (
-            <Alert severity="info" variant="standard" elevation={3} className={styles.userAlert}>
+            <Alert severity="info" variant="standard" elevation={3} onClose={handleCloseAlert} className={styles.userAlert}>
               <AlertTitle>Informação</AlertTitle>
                   Para marcar consultas ou criar horários de atendimento é necessário clicar
                   na aba de perfil no menu superior e completar seus dados cadastrais.
