@@ -90,7 +90,7 @@ export default function Rating({ history }) {
                   </Typography>
                 </CardContent>
                 <CardActions>
-                  <Button size="small" color="primary">Avaliar paciente</Button>
+                  <Button size="small" color="primary">Iniciar avaliação</Button>
                 </CardActions>
               </Card>
             </Grid>
@@ -109,7 +109,7 @@ export default function Rating({ history }) {
               <Card elevation={3}>
                 <CardContent>
                   <Typography className={styles.title} color="textSecondary" gutterBottom>
-                    Doutor
+                    Médico
                   </Typography>
                   <Typography variant="h5" component="h2">
                     {appointment.doctorName}
@@ -122,7 +122,7 @@ export default function Rating({ history }) {
                   </Typography>
                 </CardContent>
                 <CardActions>
-                  <Button size="small" color="primary">Avaliar médico</Button>
+                  <Button size="small" color="primary">Iniciar avaliação</Button>
                 </CardActions>
               </Card>
             </Grid>

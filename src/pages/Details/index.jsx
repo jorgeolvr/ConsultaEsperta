@@ -15,7 +15,6 @@ import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
 import { Alert, AlertTitle } from '@material-ui/lab'
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
-//import SearchIcon from '@material-ui/icons/Search'
 import { makeStyles } from '@material-ui/core/styles'
 
 import MomentUtils from '@date-io/moment'
@@ -46,7 +45,12 @@ export default function Details({ history }) {
   const [selectedDate, handleDateChange] = useState(moment())
   const [hoursFiltered, setHoursFiltered] = useState([])
 
+  const [idSchedule, setIdSchedule] = useState('')
+  const [selectedDay, setSelectedDay] = useState('')
+  const [selectedTime, setSelectedTime] = useState('')
+
   const [openDialog, setOpenDialog] = useState(false)
+  const [openDialogConfirm, setOpenDialogConfirm] = useState(false)
 
   useEffect(() => {
     firebase.db.collection('doctors').doc(idDoctor).get().then(function (doc) {
@@ -129,7 +133,18 @@ export default function Details({ history }) {
     setOpenDialog(false)
   }
 
-  const handleAppointment = (idSchedule, daySchedule, hourSchedule) => {
+  const handleCloseDialogConfirm = () => {
+    setOpenDialogConfirm(false)
+  }
+
+  function handleStackbar(key, day, time) {
+    setIdSchedule(key)
+    setSelectedDay(day)
+    setSelectedTime(time)
+    setOpenDialogConfirm(true)
+  }
+
+  const handleAppointment = () => {
     firebase.db.collection('users')
       .doc(firebase.getId())
       .get()
@@ -144,9 +159,9 @@ export default function Details({ history }) {
             idSchedule: idSchedule,
             doctorName: name,
             address: `${street}, ${number} - ${neighbour}`,
-            day: daySchedule,
+            day: selectedDay,
             date: selectedDate.format("DD/MM/YYYY").toString(),
-            hour: hourSchedule,
+            hour: selectedTime,
             status: "confirmed"
           })
           history.push('/schedule')
@@ -167,6 +182,21 @@ export default function Details({ history }) {
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose} color="primary" autoFocus>Ok</Button>
+          </DialogActions>
+        </Dialog>
+      </div>
+      <div>
+        <Dialog open={openDialogConfirm} onClose={handleCloseDialogConfirm} keepMounted TransitionComponent={Transition}>
+          <DialogTitle>Marcação de consulta</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Você deseja confirmar a marcação de consulta para {selectedDay},
+              dia {selectedDate.format("DD/MM/YYYY").toString()} às {selectedTime}?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseDialogConfirm} color="secondary" autoFocus>Cancelar</Button>
+            <Button onClick={handleAppointment} color="primary" autoFocus>Confirmar</Button>
           </DialogActions>
         </Dialog>
       </div>
@@ -279,16 +309,20 @@ export default function Details({ history }) {
                             <Divider />
                             <Grid style={{ marginTop: 10 }}>
                               {hoursFiltered.map((time) => (
+
                                 <Button
                                   className={styles.buttonHour}
                                   color="primary"
                                   variant="outlined"
                                   onClick={() =>
-                                    handleAppointment(doctorSchedule.key, doctorSchedule.day, time)
+                                    handleStackbar(doctorSchedule.key, doctorSchedule.day, time)
+                                    //handleAppointment(doctorSchedule.key, doctorSchedule.day, time)
                                   }
                                 >
                                   {time}
                                 </Button>
+
+
                               ))}
                             </Grid>
                           </React.Fragment>

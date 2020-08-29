@@ -9,7 +9,7 @@ import {
   Dialog, DialogTitle, DialogContent, DialogContentText, Button, DialogActions,
   ListItemIcon
 } from '@material-ui/core'
-import { AccountCircle, ExitToApp, Person, Settings, VpnKey, ArrowBack } from '@material-ui/icons'
+import { AccountCircle, ExitToApp, Person, Settings, VpnKey, ArrowBack, Notifications } from '@material-ui/icons'
 import { makeStyles } from '@material-ui/core/styles'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -24,8 +24,8 @@ function Header(props) {
   const [anchorUser, setAnchorUser] = useState(null)
   const openUser = Boolean(anchorUser)
 
-  //const [anchorNotification, setAnchorNotification] = React.useState(null)
-  //const openNotification = Boolean(anchorNotification)
+  const [anchorNotification, setAnchorNotification] = React.useState(null)
+  const openNotification = Boolean(anchorNotification)
 
   const handleUser = event => {
     setAnchorUser(event.currentTarget);
@@ -35,13 +35,13 @@ function Header(props) {
     setAnchorUser(null);
   }
 
-  /* const handleMenuNotification = event => {
-       setAnchorNotification(event.currentTarget);
-   } */
+  const handleMenuNotification = event => {
+    setAnchorNotification(event.currentTarget);
+  }
 
-  /*const handleCloseNotification = () => {
+  const handleCloseNotification = () => {
     setAnchorNotification(null);
-  } */
+  }
 
   async function handleLogout() {
     await firebase.logout()
@@ -137,38 +137,37 @@ function Header(props) {
       <Toolbar className={styles.toolbar}>
         <img src={logo} alt="Consulta Esperta" height="28em" className={styles.img} onClick={handleHome} />
         <Grid>
-          {/*<IconButton
-                        aria-label="account of current user"
-                        aria-controls="menu-account"
-                        aria-haspopup="true"
-                        onClick={handleMenuNotification}
-                        color="inherit"
-                        size="medium"
-                    >
-                        <Badge color="secondary" variant="dot">
-                            <Notifications color='inherit' />
-                        </Badge>
-                    </IconButton> 
-          <Menu
-            id="menu-account"
-            anchorEl={anchorNotification}
-            anchorOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            keepMounted
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            open={openNotification}
-            onClose={handleCloseNotification}
-          >
-            <Typography color="textSecondary" className={styles.user}>
-              Você tem uma nova consulta
-            </Typography>
-            <MenuItem>Confirmar</MenuItem>
-          </Menu> */}
+          {firebase.getId() !== null && (
+            <React.Fragment>
+              <IconButton
+                aria-label="account of current user"
+                aria-controls="menu-account"
+                aria-haspopup="true"
+                onClick={handleMenuNotification}
+                color="inherit"
+                size="medium"
+              >
+                <Notifications color='inherit' />
+              </IconButton>
+              <Menu
+                id="menu-account"
+                anchorEl={anchorNotification}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={openNotification}
+                onClose={handleCloseNotification}
+              >
+                <MenuItem disabled>Sem notificações</MenuItem>
+              </Menu>
+            </React.Fragment>
+          )}
           {renderMainButton()}
           {firebase.getId() !== null && (
             <React.Fragment>

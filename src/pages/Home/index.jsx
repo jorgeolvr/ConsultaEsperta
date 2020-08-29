@@ -285,7 +285,6 @@ export default function Home({ history }) {
                         <Button
                           variant="contained"
                           color="primary"
-                          disabled={selectedHomeUf === ''}
                           onClick={handleNext}
                           className={styles.secondButton}
                           startIcon={<CheckCircleIcon />}
