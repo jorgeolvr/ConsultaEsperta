@@ -42,6 +42,7 @@ export default function Home({ history }) {
   } = useContext(Context)
 
   const [openDialog, setOpenDialog] = useState(false)
+  const [openAlert, setOpenAlert] = useState(false)
   const [activeStep, setActiveStep] = useState(0)
   const [fetchData, setFetchData] = useState(false)
 
@@ -181,6 +182,7 @@ export default function Home({ history }) {
           setStreet('')
           setStreetNumber('')
           setSelectedUf('')
+          setOpenAlert(true)
           setFetchData(true)
         }
       })
@@ -266,6 +268,13 @@ export default function Home({ history }) {
             </Typography>
         </Container>
         <main className={styles.layout}>
+          {openAlert === true && (
+            <Alert severity="info" variant="standard" elevation={3} className={styles.userAlert}>
+              <AlertTitle>Informação</AlertTitle>
+                  Para marcar consultas ou criar horários de atendimento é necessário clicar
+                  na aba de perfil no menu superior e completar seus dados cadastrais.
+            </Alert>
+          )}
           <Paper elevation={3} className={styles.paper}>
             <Stepper activeStep={activeStep} orientation="vertical">
               {steps.map((label, index) => (
@@ -429,7 +438,9 @@ export default function Home({ history }) {
             <Header />
           </Container>
           <Container>
-            {userType === "Médico" ? doctorComponent() : patientComponent()}
+            {userType === "Médico" ?
+              doctorComponent() : patientComponent()
+            }
           </Container>
         </Grid>
       </Grid >
@@ -506,4 +517,7 @@ const useStyles = makeStyles(theme => ({
     marginTop: theme.spacing(2),
     fontWeight: 'bold'
   },
+  userAlert: {
+    marginBottom: 20
+  }
 }))

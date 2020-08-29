@@ -141,10 +141,7 @@ export default function Details({ history }) {
     setIdSchedule(key)
     setSelectedDay(day)
     setSelectedTime(time)
-    setOpenDialogConfirm(true)
-  }
 
-  const handleAppointment = () => {
     firebase.db.collection('users')
       .doc(firebase.getId())
       .get()
@@ -152,21 +149,25 @@ export default function Details({ history }) {
         if (!doc.exists) {
           setOpenDialog(true)
         } else {
-          firebase.db.collection('appointments').doc().set({
-            idPatient: firebase.getId(),
-            patientName: firebase.getUsername(),
-            idDoctor: idDoctor,
-            idSchedule: idSchedule,
-            doctorName: name,
-            address: `${street}, ${number} - ${neighbour}`,
-            day: selectedDay,
-            date: selectedDate.format("DD/MM/YYYY").toString(),
-            hour: selectedTime,
-            status: "confirmed"
-          })
-          history.push('/schedule')
+          setOpenDialogConfirm(true)
         }
       })
+  }
+
+  const handleAppointment = () => {
+    firebase.db.collection('appointments').doc().set({
+      idPatient: firebase.getId(),
+      patientName: firebase.getUsername(),
+      idDoctor: idDoctor,
+      idSchedule: idSchedule,
+      doctorName: name,
+      address: `${street}, ${number} - ${neighbour}`,
+      day: selectedDay,
+      date: selectedDate.format("DD/MM/YYYY").toString(),
+      hour: selectedTime,
+      status: "confirmed"
+    })
+    history.push('/schedule')
   }
 
   return fetchData === true ? (
