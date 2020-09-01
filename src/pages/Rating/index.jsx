@@ -90,7 +90,7 @@ export default function Rating({ history }) {
                   </Typography>
                 </CardContent>
                 <CardActions>
-                  <Button size="small" color="primary">Iniciar avaliação</Button>
+
                 </CardActions>
               </Card>
             </Grid>
@@ -122,7 +122,10 @@ export default function Rating({ history }) {
                   </Typography>
                 </CardContent>
                 <CardActions>
-                  <Button size="small" color="primary">Iniciar avaliação</Button>
+                  <Button size="small" color="primary" onClick={() => history.push({
+                    pathname: '/form',
+                    idDoctor: appointment.idDoctor
+                  })}>Avaliar</Button>
                 </CardActions>
               </Card>
             </Grid>
@@ -132,55 +135,56 @@ export default function Rating({ history }) {
     )
   }
 
-
   return fetchData === true ? (
     <React.Fragment>
       <Grid container className={styles.mainGrid}>
-        <Grid container direction="column">
-          <CssBaseline />
-          <Container component="main" maxWidth="lg">
-            <Header />
-          </Container>
-          <Container maxWidth="sm" component="main" className={styles.mainContainer}>
-            <Avatar className={styles.avatar}>
-              <CommentIcon />
-            </Avatar>
-            <Typography
-              className={styles.mainTitle}
-              component="h2"
-              variant="h3"
-              align="center"
-              color="textPrimary"
-              gutterBottom
-            >
-              Minhas avaliações
-              </Typography>
-            <Container maxWidth="sm">
-              <Typography
-                component="h5"
-                variant="h6"
-                align="center"
-                color="textSecondary"
-              >
-                Avalie e atribua notas a um profissional da saúde que
-                você teve uma consulta realizada.
-              </Typography>
+        <Container>
+          <Grid container direction="column">
+            <CssBaseline />
+            <Container component="main" maxWidth="lg">
+              <Header />
             </Container>
-          </Container>
-          <Container className={styles.cardGrid} maxWidth="md">
-            <Grid container spacing={4}>
-              {appointments.length === 0 && (
-                <Container maxWidth="md" component="main">
-                  <Alert severity="info" variant="standard" elevation={3}>
-                    <AlertTitle>Informação</AlertTitle>
+            <Container maxWidth="sm" component="main" className={styles.mainContainer}>
+              <Avatar className={styles.avatar}>
+                <CommentIcon />
+              </Avatar>
+              <Typography
+                className={styles.mainTitle}
+                component="h2"
+                variant="h3"
+                align="center"
+                color="textPrimary"
+                gutterBottom
+              >
+                Minhas avaliações
+              </Typography>
+              <Container maxWidth="sm">
+                <Typography
+                  component="h5"
+                  variant="h6"
+                  align="center"
+                  color="textSecondary"
+                >
+                  Avalie e atribua notas a um profissional da saúde que
+                  você teve uma consulta realizada.
+              </Typography>
+              </Container>
+            </Container>
+            <Container className={styles.cardGrid} maxWidth="md">
+              <Grid container spacing={4}>
+                {appointments.length === 0 && (
+                  <Container maxWidth="md" component="main">
+                    <Alert severity="info" variant="standard" elevation={3}>
+                      <AlertTitle>Informação</AlertTitle>
                     Você ainda não possui nenhuma consulta confirmada.
                   </Alert>
-                </Container>
-              )}
-              {userType === "Médico" ? doctorComponent() : patientComponent()}
-            </Grid>
-          </Container>
-        </Grid>
+                  </Container>
+                )}
+                {userType === "Médico" ? doctorComponent() : patientComponent()}
+              </Grid>
+            </Container>
+          </Grid>
+        </Container>
       </Grid>
       <Footer />
     </React.Fragment>

@@ -1,12 +1,12 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import Header from '../../components/Header'
 import Footer from '../../components/Footer'
 
 import {
   TextField, IconButton, InputAdornment, Button, Paper, Container,
-  Link, Grid, CssBaseline, Divider,
-  Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Slide
+  Link, Grid, CssBaseline, Dialog, DialogTitle, DialogContent,
+  DialogContentText, DialogActions, Slide
 } from '@material-ui/core'
 import { Visibility, VisibilityOff } from '@material-ui/icons'
 import { makeStyles } from '@material-ui/core/styles'
@@ -32,6 +32,12 @@ export default function Register({ history }) {
     showConfirmPassword: false
   })
   const [error, setError] = useState('')
+
+  useEffect(() => {
+    if (firebase.getId() !== null) {
+      history.push('/home')
+    }
+  })
 
   const handleChange = prop => event => {
     setValues({ ...values, [prop]: event.target.value })
@@ -94,122 +100,130 @@ export default function Register({ history }) {
         </Dialog>
       </div>
       <Grid container className={styles.mainGrid}>
-        <Grid container direction="column">
-          <CssBaseline />
-          <Container component="main" maxWidth="lg">
-            <Header />
-          </Container>
-        </Grid>
-      </Grid>
-      <Grid className={styles.background} container alignItems="center" justify="center">
-        <Container component="main" maxWidth="xs">
-          <CssBaseline />
-          <Paper elevation={3} className={styles.paper}>
-            <img src={logo} alt="Consulta Esperta" height="90em" />
-            <form className={styles.form} onSubmit={e => e.preventDefault() && false} noValidate>
-              <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    fullWidth
-                    id="firstName"
-                    label="Nome"
-                    name="firstName"
-                    value={name}
-                    onChange={event => setName(event.target.value)}
-                    autoComplete="fname"
-                    inputProps={{ maxLength: 15 }}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    fullWidth
-                    id="lastName"
-                    label="Sobrenome"
-                    name="lastName"
-                    value={lastName}
-                    onChange={event => setLastName(event.target.value)}
-                    autoComplete="lname"
-                    inputProps={{ maxLength: 20 }}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    fullWidth
-                    id="email"
-                    label="Endereço de e-mail"
-                    name="email"
-                    value={email}
-                    onChange={event => setEmail(event.target.value)}
-                    autoComplete="email"
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    fullWidth
-                    name="password"
-                    label="Senha"
-                    type={values.showPassword ? 'text' : 'password'}
-                    id="password"
-                    value={values.password}
-                    onChange={handleChange('password')}
-                    autoComplete="current-password"
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton size="small" onClick={handleClickShowPassword} onMouseDown={handleMouseDownPassword}>
-                            {values.showPassword ? <Visibility /> : <VisibilityOff />}
-                          </IconButton>
-                        </InputAdornment>
-                      )
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    fullWidth
-                    name="confirmPassword"
-                    label="Confirmar senha"
-                    type={values.showConfirmPassword ? 'text' : 'password'}
-                    id="confirmPassword"
-                    value={values.confirmPassword}
-                    onChange={handleChange('confirmPassword')}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton size="small" onClick={handleClickShowConfirmPassword} onMouseDown={handleMouseDownConfirmPassword}>
-                            {values.showConfirmPassword ? <Visibility /> : <VisibilityOff />}
-                          </IconButton>
-                        </InputAdornment>
-                      )
-                    }}
-                  />
-                </Grid>
-              </Grid>
-              <Button
-                type="submit"
-                fullWidth
-                onClick={handleRegister}
-                variant="contained"
-                color="defaut"
-                className={styles.btn}>
-                Cadastrar
-              </Button>
-              <Grid container justify="center">
-                <Grid item>
-                  <Link
-                    component="button"
-                    onClick={handleLogin}
-                    className={styles.link}
-                    variant="body2">
-                    Já possui uma conta? Entre aqui
-                  </Link>
-                </Grid>
-              </Grid>
-            </form>
-          </Paper>
+        <Container>
+          <Grid container direction="column">
+            <CssBaseline />
+            <Container component="main" maxWidth="lg">
+              <Header />
+            </Container>
+            <Grid className={styles.background} container alignItems="center" justify="center">
+              <Container component="main" maxWidth="xs">
+                <CssBaseline />
+                <Paper elevation={3} className={styles.paper}>
+                  <img src={logo} alt="Consulta Esperta" height="90em" />
+                  <form className={styles.form} onSubmit={e => e.preventDefault() && false} noValidate>
+                    <Grid container spacing={2}>
+                      <Grid item xs={12} sm={6}>
+                        <TextField
+                          fullWidth
+                          autoFocus
+                          id="firstName"
+                          label="Nome"
+                          name="firstName"
+                          value={name}
+                          onChange={event => setName(event.target.value)}
+                          autoComplete="fname"
+                          inputProps={{ maxLength: 15 }}
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <TextField
+                          fullWidth
+                          id="lastName"
+                          label="Sobrenome"
+                          name="lastName"
+                          value={lastName}
+                          onChange={event => setLastName(event.target.value)}
+                          autoComplete="lname"
+                          inputProps={{ maxLength: 20 }}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          fullWidth
+                          id="email"
+                          label="Endereço de e-mail"
+                          name="email"
+                          value={email}
+                          onChange={event => setEmail(event.target.value)}
+                          autoComplete="email"
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          fullWidth
+                          name="password"
+                          label="Senha"
+                          type={values.showPassword ? 'text' : 'password'}
+                          id="password"
+                          value={values.password}
+                          onChange={handleChange('password')}
+                          autoComplete="current-password"
+                          InputProps={{
+                            endAdornment: (
+                              <InputAdornment position="end">
+                                <IconButton size="small" onClick={handleClickShowPassword} onMouseDown={handleMouseDownPassword}>
+                                  {values.showPassword ? <Visibility /> : <VisibilityOff />}
+                                </IconButton>
+                              </InputAdornment>
+                            )
+                          }}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          fullWidth
+                          name="confirmPassword"
+                          label="Confirmar senha"
+                          type={values.showConfirmPassword ? 'text' : 'password'}
+                          id="confirmPassword"
+                          value={values.confirmPassword}
+                          onChange={handleChange('confirmPassword')}
+                          InputProps={{
+                            endAdornment: (
+                              <InputAdornment position="end">
+                                <IconButton
+                                  size="small"
+                                  onClick={handleClickShowConfirmPassword}
+                                  onMouseDown={handleMouseDownConfirmPassword}
+                                >
+                                  {values.showConfirmPassword ?
+                                    <Visibility /> : <VisibilityOff />
+                                  }
+                                </IconButton>
+                              </InputAdornment>
+                            )
+                          }}
+                        />
+                      </Grid>
+                    </Grid>
+                    <Button
+                      type="submit"
+                      fullWidth
+                      onClick={handleRegister}
+                      variant="contained"
+                      color="defaut"
+                      className={styles.btn}>
+                      Cadastrar
+                    </Button>
+                    <Grid container justify="center">
+                      <Grid item>
+                        <Link
+                          component="button"
+                          onClick={handleLogin}
+                          className={styles.link}
+                          variant="body2">
+                          Já possui uma conta? Entre aqui
+                        </Link>
+                      </Grid>
+                    </Grid>
+                  </form>
+                </Paper>
+              </Container>
+            </Grid>
+          </Grid>
         </Container>
       </Grid>
-      <Divider />
       <Footer />
     </React.Fragment>
   )

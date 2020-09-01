@@ -101,20 +101,6 @@ export default function Profile({ history }) {
     <React.Fragment>
       {type === "Paciente" ? (
         <React.Fragment>
-          {/*<div>
-            <Dialog open={openDialog} onClose={handleClose} keepMounted TransitionComponent={Transition}>
-              <DialogTitle>Alteração de perfil</DialogTitle>
-              <DialogContent>
-                <DialogContentText>
-                  Precisamos que você nos informe o seu tipo de usuário. Selecione abaixo se você é um médico ou um paciente.
-            </DialogContentText>
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={handleDoctor} color="secondary" autoFocus>Médico</Button>
-                <Button onClick={handlePatient} color="primary" autoFocus>Paciente</Button>
-              </DialogActions>
-            </Dialog>
-          </div> */}
           <Grid container className={styles.mainGrid}>
             <Container>
               <Grid container direction="column">
@@ -216,20 +202,6 @@ export default function Profile({ history }) {
           <Footer />
         </React.Fragment>) : (
           <React.Fragment>
-            {/*<div>
-              <Dialog open={openDialog} onClose={handleClose} keepMounted TransitionComponent={Transition}>
-                <DialogTitle>Alteração de perfil</DialogTitle>
-                <DialogContent>
-                  <DialogContentText>
-                    Precisamos que você nos informe o seu tipo de usuário. Selecione abaixo se você é um médico ou um paciente.
-                 </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                  <Button onClick={handleDoctor} color="secondary" autoFocus>Médico</Button>
-                  <Button onClick={handlePatient} color="primary" autoFocus>Paciente</Button>
-                </DialogActions>
-              </Dialog>
-            </div> */}
             <Grid container className={styles.mainGrid}>
               <Container>
                 <Grid container direction="column">

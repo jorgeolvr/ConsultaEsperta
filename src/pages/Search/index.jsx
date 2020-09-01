@@ -354,11 +354,12 @@ export default function Search({ history }) {
                               size="small"
                               color="primary"
                               onClick={() =>
-                                history.push(`/details/${doctor.key}`)}
-                              /*onClick={() => history.push({
-                                pathname: '/details',
-                                idDoctor: doctor.key
-                              })} */
+                                //history.push(`/detail/${doctor.key}`)}
+                                ///onClick={() => 
+                                history.push({
+                                  pathname: '/detail',
+                                  idDoctor: doctor.key
+                                })}
                               className={styles.details}
                             >
                               Ver Detalhes

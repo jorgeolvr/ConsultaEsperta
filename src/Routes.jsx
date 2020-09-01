@@ -11,10 +11,11 @@ import Doctor from './pages/Doctor'
 import Patient from './pages/Patient'
 import Forgot from './pages/Forgot'
 import Search from './pages/Search'
-import Details from './pages/Details'
+import Detail from './pages/Detail'
 import Schedule from './pages/Schedule'
 import Service from './pages/Service'
 import Rating from './pages/Rating'
+import Form from './pages/Form'
 
 import { Context } from './Context'
 
@@ -48,8 +49,8 @@ export default function Routes() {
   const [rating, setRating] = useState('')
   const [date, setDate] = useState('')
   const [day, setDay] = useState('')
-  const [beginHour, setBeginHour] = useState(moment().set({ hour: 0, minute: 0 }))
-  const [endHour, setEndHour] = useState(moment().set({ hour: 0, minute: 0 }))
+  const [beginHour, setBeginHour] = useState(moment().set({ minute: 0 }))
+  const [endHour, setEndHour] = useState(moment().set({ minute: 0 }))
   const [duration, setDuration] = useState(0)
   const [interval, setInterval] = useState(0)
   const [checked, setChecked] = React.useState(false)
@@ -77,13 +78,14 @@ export default function Routes() {
           <Route path="/forgot" component={Forgot} />
           <Route path="/home" component={Home} />
           <Route path="/search" component={Search} />
-          <Route path="/details/:idDoctor" component={Details} />
+          <Route path="/detail" component={Detail} />
           <Route path="/service" component={Service} />
           <Route path="/schedule" component={Schedule} />
           <Route path="/doctor" component={Doctor} />
           <Route path="/patient" component={Patient} />
           <Route path="/profile" component={Profile} />
           <Route path="/rating" component={Rating} />
+          <Route path="/form" component={Form} />
         </Context.Provider>
       </Switch>
     </BrowserRouter>

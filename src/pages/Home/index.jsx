@@ -279,8 +279,8 @@ export default function Home({ history }) {
           {openAlert === true && (
             <Alert severity="info" variant="standard" elevation={3} onClose={handleCloseAlert} className={styles.userAlert}>
               <AlertTitle>Informação</AlertTitle>
-                  Para marcar consultas ou criar horários de atendimento é necessário clicar
-                  na aba de perfil no menu superior e completar seus dados cadastrais.
+                  Para usar todas as funcionalidades é necessário criar seu o
+                  perfil de médico ou paciente acessando a opção no menu superior.
             </Alert>
           )}
           <Paper elevation={3} className={styles.paper}>
@@ -377,7 +377,7 @@ export default function Home({ history }) {
                       </Typography>
                       <Grid container direction="row">
                         <Typography className={styles.typography} gutterBottom>Preço:</Typography>
-                        <Typography gutterBottom>{doctorPrice}</Typography>
+                        <Typography gutterBottom>{`R$ ${doctorPrice}`}</Typography>
                       </Grid>
                     </React.Fragment>
                   )}
@@ -388,18 +388,28 @@ export default function Home({ history }) {
                       {schedule.day}
                     </Typography>
                     <ListItem key={schedule.key}>
-                      {schedule.price === "Individual" ? <ListItemText primary="Preço" secondary={schedule.price} /> : ""}
-                      <ListItemText primary="Atendimento" secondary={`${schedule.begin} às ${schedule.end}`} />
-                      <ListItemText primary="Duração" secondary={`${schedule.duration} minutos`} />
-                      <ListItemText primary="Intervalo" secondary={schedule.interval === 0 ? `Inexistente` : `${schedule.interval} minutos`} />
-                      {doctorPrice === "Individual" && (
-                        <ListItemText primary="Preço" secondary={`R$ ${schedule.price}`} />
-                      )}
+                      <Grid container>
+                        <Grid item sm={3} xs={6}>
+                          <ListItemText primary="Atendimento" secondary={`${schedule.begin} às ${schedule.end}`} />
+                        </Grid>
+                        <Grid item sm={3} xs={6}>
+                          <ListItemText primary="Duração" secondary={`${schedule.duration} minutos`} />
+                        </Grid>
+                        <Grid item sm={3} xs={6}>
+                          <ListItemText primary="Intervalo" secondary={schedule.interval === 0 ? `Inexistente` : `${schedule.interval} minutos`} />
+                        </Grid>
+                        <Grid item sm={3} xs={6}>
+                          {doctorPrice === "Individual" && (
+                            <ListItemText primary="Preço" secondary={`R$ ${schedule.price}`} />
+                          )}
+                        </Grid>
+                      </Grid>
                       <ListItemSecondaryAction>
                         <IconButton variant="contained" color="secondary">
                           <DeleteIcon onClick={() => handleDelete(schedule.key)} />
                         </IconButton>
                       </ListItemSecondaryAction>
+
                     </ListItem>
                     <Divider />
                   </Container>
@@ -419,8 +429,9 @@ export default function Home({ history }) {
               </div>
             </Paper>
           </main>
-        )}
-      </React.Fragment>
+        )
+        }
+      </React.Fragment >
     )
   }
 
@@ -440,17 +451,19 @@ export default function Home({ history }) {
         </Dialog>
       </div>
       <Grid container className={styles.mainGrid}>
-        <Grid container direction="column">
-          <CssBaseline />
-          <Container component="main" maxWidth="lg">
-            <Header />
-          </Container>
-          <Container>
-            {userType === "Médico" ?
-              doctorComponent() : patientComponent()
-            }
-          </Container>
-        </Grid>
+        <Container>
+          <Grid container direction="column">
+            <CssBaseline />
+            <Container component="main" maxWidth="lg">
+              <Header />
+            </Container>
+            <Container>
+              {userType === "Médico" ?
+                doctorComponent() : patientComponent()
+              }
+            </Container>
+          </Grid>
+        </Container>
       </Grid >
       <Footer />
     </React.Fragment >
