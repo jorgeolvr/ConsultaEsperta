@@ -109,114 +109,119 @@ export default function Settings({ history }) {
         </Dialog>
       </div>
       <Grid container className={styles.mainGrid}>
-        <Grid container direction="column">
-          <CssBaseline />
-          <Container component="main" maxWidth="lg">
-            <Header />
-          </Container>
-          <Container maxWidth="sm" component="main" className={styles.mainContainer}>
-            <Avatar className={styles.avatar}>
-              <SettingsIcon />
-            </Avatar>
-            <Typography
-              className={styles.mainTitle}
-              component="h2"
-              variant="h3"
-              align="center"
-              color="textPrimary"
-              gutterBottom
-            >
-              Meus ajustes
-              </Typography>
-            <Container maxWidth="sm">
-              <Typography
-                component="h5"
-                variant="h6"
-                align="center"
-                color="textSecondary"
-              >
-                Visualize as principais definições de conta de usuário
-                que você cadastrou no sistema.
-              </Typography>
+        <Container>
+          <Grid container direction="column">
+            <CssBaseline />
+            <Container component="main" maxWidth="lg">
+              <Header />
             </Container>
-          </Container>
-          <main className={styles.layout}>
-            <Paper elevation={3} className={styles.paper}>
-              <Typography variant="h6" gutterBottom className={styles.title}>
-                Definições da Conta
+            <Container maxWidth="sm" component="main" className={styles.mainContainer}>
+              <Avatar className={styles.avatar}>
+                <SettingsIcon />
+              </Avatar>
+              <Typography
+                className={styles.mainTitle}
+                component="h2"
+                variant="h3"
+                align="center"
+                color="textPrimary"
+                gutterBottom
+              >
+                Meus ajustes
               </Typography>
-              <Grid container direction="row">
-                <Typography className={styles.typography} gutterBottom>Identificação: </Typography>
-                <Typography gutterBottom>{firebase.getId()}</Typography>
-              </Grid>
-
-              <div className={styles.buttons}>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  startIcon={<DeleteIcon />}
-                  className={styles.button}
-                  onClick={handleDelete}
+              <Container maxWidth="sm">
+                <Typography
+                  component="h5"
+                  variant="h6"
+                  align="center"
+                  color="textSecondary"
                 >
-                  Excluir
+                  Visualize as principais definições de conta de usuário
+                  que você cadastrou no sistema.
+              </Typography>
+              </Container>
+            </Container>
+            <main className={styles.layout}>
+              <Paper elevation={3} className={styles.paper}>
+                <Typography variant="h6" gutterBottom className={styles.title}>
+                  Definições da Conta
+              </Typography>
+                <Grid container direction="row">
+                  <Typography className={styles.typography} gutterBottom>Identificação: </Typography>
+                  <Typography gutterBottom>{firebase.getId()}</Typography>
+                  <Typography component="h6" color="textSecondary" gutterBottom>
+                    Se você decidir que não quer mais usar os nossos serviços,
+                    é possível deletar a sua conta do sistema clicando no botão abaixo.
+                  </Typography>
+                </Grid>
+                <div className={styles.buttons}>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    startIcon={<DeleteIcon />}
+                    className={styles.button}
+                    onClick={handleDelete}
+                  >
+                    Excluir
                 </Button>
-              </div>
-              <Typography variant="h6" gutterBottom className={styles.title}>
-                Alteração de senha
+                </div>
+                <Typography variant="h6" gutterBottom className={styles.title}>
+                  Alteração de senha
                        </Typography>
-              <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    fullWidth
-                    label="Senha"
-                    type={values.showPassword ? 'text' : 'password'}
-                    value={values.password}
-                    onChange={handleChange('password')}
-                    autoComplete="current-password"
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton size="small" onClick={handleClickShowPassword} onMouseDown={handleMouseDownPassword}>
-                            {values.showPassword ? <Visibility /> : <VisibilityOff />}
-                          </IconButton>
-                        </InputAdornment>
-                      )
-                    }}
-                  />
+                <Grid container spacing={2}>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      label="Senha"
+                      type={values.showPassword ? 'text' : 'password'}
+                      value={values.password}
+                      onChange={handleChange('password')}
+                      autoComplete="current-password"
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton size="small" onClick={handleClickShowPassword} onMouseDown={handleMouseDownPassword}>
+                              {values.showPassword ? <Visibility /> : <VisibilityOff />}
+                            </IconButton>
+                          </InputAdornment>
+                        )
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      label="Confirmar senha"
+                      type={values.showConfirmPassword ? 'text' : 'password'}
+                      value={values.confirmPassword}
+                      onChange={handleChange('confirmPassword')}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton size="small" onClick={handleClickShowConfirmPassword} onMouseDown={handleMouseDownConfirmPassword}>
+                              {values.showConfirmPassword ? <Visibility /> : <VisibilityOff />}
+                            </IconButton>
+                          </InputAdornment>
+                        )
+                      }}
+                    />
+                  </Grid>
                 </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    fullWidth
-                    label="Confirmar senha"
-                    type={values.showConfirmPassword ? 'text' : 'password'}
-                    value={values.confirmPassword}
-                    onChange={handleChange('confirmPassword')}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton size="small" onClick={handleClickShowConfirmPassword} onMouseDown={handleMouseDownConfirmPassword}>
-                            {values.showConfirmPassword ? <Visibility /> : <VisibilityOff />}
-                          </IconButton>
-                        </InputAdornment>
-                      )
-                    }}
-                  />
-                </Grid>
-              </Grid>
-              <div className={styles.buttons}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  startIcon={<SaveIcon />}
-                  className={styles.button}
-                  onClick={handleChangePassword}
-                >
-                  Salvar
+                <div className={styles.buttons}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    startIcon={<SaveIcon />}
+                    className={styles.button}
+                    onClick={handleChangePassword}
+                  >
+                    Salvar
                 </Button>
-              </div>
-            </Paper>
-          </main>
-        </Grid>
+                </div>
+              </Paper>
+            </main>
+          </Grid>
+        </Container>
       </Grid>
       <Footer />
     </React.Fragment>
