@@ -8,11 +8,11 @@ import Footer from '../../components/Footer'
 
 import {
   Grid, Container, CssBaseline, Typography, Avatar, Accordion,
-  CircularProgress, AccordionSummary,
-  //AccordionActions,AccordionDetails
+  CircularProgress, AccordionSummary, AccordionDetails, Box, TextField,
+  //AccordionActions
 } from '@material-ui/core'
-
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { Rating } from '@material-ui/lab'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import CommentIcon from '@material-ui/icons/Comment'
 
 import { makeStyles } from '@material-ui/core/styles'
@@ -76,7 +76,7 @@ export default function Form({ history }) {
             </Container>
             <Container className={styles.cardGrid} maxWidth="md">
               <React.Fragment>
-                <Accordion defaultExpanded>
+                <Accordion defaultExpanded elevation={3}>
                   <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
                     aria-controls="panel1c-content"
@@ -85,6 +85,40 @@ export default function Form({ history }) {
                     <Typography className={styles.heading}>Médico</Typography>
                     <Typography className={styles.secondaryHeading}>Avalie o médico consultado</Typography>
                   </AccordionSummary>
+                  <AccordionDetails>
+                    <Grid container>
+                      <Grid item sm={3} xs={6}>
+                        <Box component="fieldset" borderColor="transparent">
+                          <Typography component="legend">Atendimento</Typography>
+                          <Rating />
+                        </Box>
+                      </Grid>
+                      <Grid item sm={3} xs={6}>
+                        <Box component="fieldset" borderColor="transparent">
+                          <Typography component="legend">Pontualidade</Typography>
+                          <Rating />
+                        </Box>
+                      </Grid>
+                      <Grid item sm={3} xs={6}>
+                        <Box component="fieldset" borderColor="transparent">
+                          <Typography component="legend">Privacidade</Typography>
+                          <Rating />
+                        </Box>
+                      </Grid>
+                      <Grid item sm={3} xs={6}>
+                        <Box component="fieldset" borderColor="transparent">
+                          <Typography component="legend">Personalidade</Typography>
+                          <Rating />
+                        </Box>
+                      </Grid>
+                      <Grid item sm={12} xs={12}>
+                        <Box component="fieldset" borderColor="transparent">
+                          <Typography component="legend">Comentários (opcional)</Typography>
+                          <TextField fullWidth variant="outlined" rowsMax={2} rows={2} />
+                        </Box>
+                      </Grid>
+                    </Grid>
+                  </AccordionDetails>
                 </Accordion>
                 <Accordion>
                   <AccordionSummary
@@ -95,6 +129,40 @@ export default function Form({ history }) {
                     <Typography className={styles.heading}>Local</Typography>
                     <Typography className={styles.secondaryHeading}>Avalie o local de atendimento</Typography>
                   </AccordionSummary>
+                  <AccordionDetails>
+                    <Grid container>
+                      <Grid item sm={3} xs={6}>
+                        <Box component="fieldset" borderColor="transparent">
+                          <Typography component="legend">Limpeza</Typography>
+                          <Rating />
+                        </Box>
+                      </Grid>
+                      <Grid item sm={3} xs={6}>
+                        <Box component="fieldset" borderColor="transparent">
+                          <Typography component="legend">Organização</Typography>
+                          <Rating />
+                        </Box>
+                      </Grid>
+                      <Grid item sm={3} xs={6}>
+                        <Box component="fieldset" borderColor="transparent">
+                          <Typography component="legend">Segurança</Typography>
+                          <Rating />
+                        </Box>
+                      </Grid>
+                      <Grid item sm={3} xs={6}>
+                        <Box component="fieldset" borderColor="transparent">
+                          <Typography component="legend">Equipamentos</Typography>
+                          <Rating />
+                        </Box>
+                      </Grid>
+                      <Grid item sm={12} xs={12}>
+                        <Box component="fieldset" borderColor="transparent">
+                          <Typography component="legend">Comentários (opcional)</Typography>
+                          <TextField fullWidth variant="outlined" rowsMax={2} rows={2} />
+                        </Box>
+                      </Grid>
+                    </Grid>
+                  </AccordionDetails>
                 </Accordion>
               </React.Fragment>
             </Container>

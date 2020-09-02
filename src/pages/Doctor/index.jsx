@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { Context } from '../../Context'
 
 import Header from '../../components/Header'
@@ -21,7 +21,7 @@ import SaveIcon from '@material-ui/icons/Save'
 
 import { makeStyles } from '@material-ui/core/styles'
 
-const steps = ['Dado pessoal', 'Dados de consulta', 'Revisar dados']
+const steps = ['Dados pessoais', 'Dados de consulta', 'Revisar dados']
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -55,7 +55,7 @@ export default function Doctor({ history }) {
     selectedUf
   } = useContext(Context)
 
-  useState(() => {
+  useEffect(() => {
     firebase.db.collection("users").doc(firebase.getId()).get().then(doc => {
       if (doc.exists) {
         const { type } = doc.data()
@@ -133,7 +133,7 @@ export default function Doctor({ history }) {
           </Container>
           <main className={styles.layout}>
             <Paper elevation={3} className={styles.paper}>
-              <Stepper activeStep={activeStep} className={styles.stepper}>
+              <Stepper activeStep={activeStep} className={styles.stepper} alternativeLabel>
                 {steps.map((label) => (
                   <Step key={label}>
                     <StepLabel>{label}</StepLabel>

@@ -7,7 +7,7 @@ import firebase from '../../config/Firebase'
 import {
   Toolbar, Grid, IconButton, Typography, Link, Menu, MenuItem, Slide, Container,
   Dialog, DialogTitle, DialogContent, DialogContentText, Button, DialogActions,
-  ListItemIcon
+  ListItemIcon, Badge
 } from '@material-ui/core'
 import { AccountCircle, ExitToApp, Person, Settings, VpnKey, ArrowBack, Notifications } from '@material-ui/icons'
 import { makeStyles } from '@material-ui/core/styles'
@@ -139,6 +139,7 @@ function Header(props) {
         <Grid>
           {firebase.getId() !== null && (
             <React.Fragment>
+
               <IconButton
                 aria-label="account of current user"
                 aria-controls="menu-account"
@@ -146,9 +147,11 @@ function Header(props) {
                 onClick={handleMenuNotification}
                 color="inherit"
                 size="medium"
-              >
-                <Notifications color='inherit' />
+              ><Badge badgeContent={0} color="error" children={<Notifications />} showZero>
+                  <Notifications color='inherit' />
+                </Badge>
               </IconButton>
+
               <Menu
                 id="menu-account"
                 anchorEl={anchorNotification}

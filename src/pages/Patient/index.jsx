@@ -21,7 +21,7 @@ import SaveIcon from '@material-ui/icons/Save'
 
 import { makeStyles } from '@material-ui/core/styles'
 
-const steps = ['Dado pessoal', 'Forma de pag.', 'Revisar dados']
+const steps = ['Dados pessoais', 'Forma de pagamento', 'Revisar dados']
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -53,7 +53,7 @@ export default function PatientProfile({ history }) {
     cpf, phone, cardName, cardNumber, brand, expireDate, securityCode
   } = useContext(Context)
 
-  useState(() => {
+  useEffect(() => {
     firebase.db.collection("users").doc(firebase.getId()).get().then(doc => {
       if (doc.exists) {
         const { type } = doc.data()
@@ -130,7 +130,7 @@ export default function PatientProfile({ history }) {
           </Container>
           <main className={styles.layout}>
             <Paper elevation={3} className={styles.paper}>
-              <Stepper activeStep={activeStep} className={styles.stepper}>
+              <Stepper activeStep={activeStep} className={styles.stepper} alternativeLabel>
                 {steps.map((label) => (
                   <Step key={label}>
                     <StepLabel>{label}</StepLabel>

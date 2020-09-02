@@ -85,7 +85,10 @@ export default function Schedule() {
                     {appointment.date} às {appointment.hour}
                   </Typography>
                   <Typography variant="body1" component="p">
-                    {appointment.address}
+                    {appointment.address.split("-")[0]}
+                  </Typography>
+                  <Typography variant="body1" component="p">
+                    {appointment.address.split("-")[1]}
                   </Typography>
                 </CardContent>
                 <CardActions>
@@ -127,7 +130,10 @@ export default function Schedule() {
                     {appointment.date} às {appointment.hour}
                   </Typography>
                   <Typography variant="body1" component="p">
-                    {appointment.address}
+                    {appointment.address.split("-")[0]}
+                  </Typography>
+                  <Typography variant="body1" component="p">
+                    {appointment.address.split("-")[1]}
                   </Typography>
                 </CardContent>
                 <CardActions>

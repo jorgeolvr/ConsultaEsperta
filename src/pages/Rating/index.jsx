@@ -86,11 +86,17 @@ export default function Rating({ history }) {
                     {appointment.date} às {appointment.hour}
                   </Typography>
                   <Typography variant="body1" component="p">
-                    {appointment.address}
+                    {appointment.address.split("-")[0]}
+                  </Typography>
+                  <Typography variant="body1" component="p">
+                    {appointment.address.split("-")[1]}
                   </Typography>
                 </CardContent>
                 <CardActions>
-
+                  <Button size="small" color="primary" onClick={() => history.push({
+                    pathname: '/form',
+                    idDoctor: appointment.idDoctor
+                  })}>Avaliar</Button>
                 </CardActions>
               </Card>
             </Grid>
@@ -118,7 +124,10 @@ export default function Rating({ history }) {
                     {appointment.date} às {appointment.hour}
                   </Typography>
                   <Typography variant="body1" component="p">
-                    {appointment.address}
+                    {appointment.address.split("-")[0]}
+                  </Typography>
+                  <Typography variant="body1" component="p">
+                    {appointment.address.split("-")[1]}
                   </Typography>
                 </CardContent>
                 <CardActions>
