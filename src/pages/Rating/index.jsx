@@ -137,17 +137,18 @@ export default function Rating({ history }) {
 
   return fetchData === true ? (
     <React.Fragment>
-      <Grid container className={styles.mainGrid}>
-        <Container>
-          <Grid container direction="column">
-            <CssBaseline />
-            <Container component="main" maxWidth="lg">
-              <Header />
-            </Container>
-            <Container maxWidth="sm" component="main" className={styles.mainContainer}>
-              <Avatar className={styles.avatar}>
-                <CommentIcon />
-              </Avatar>
+      <Grid container className={styles.mainGrid} direction="column">
+        <Grid container direction="column">
+          <CssBaseline />
+          <Container component="main" maxWidth="lg">
+            <Header />
+          </Container>
+          <Container maxWidth="sm" component="main" className={styles.mainContainer}>
+            <Avatar className={styles.avatar}>
+              <CommentIcon />
+            </Avatar>
+
+            <Container>
               <Typography
                 className={styles.mainTitle}
                 component="h2"
@@ -158,33 +159,31 @@ export default function Rating({ history }) {
               >
                 Minhas avaliações
               </Typography>
-              <Container maxWidth="sm">
-                <Typography
-                  component="h5"
-                  variant="h6"
-                  align="center"
-                  color="textSecondary"
-                >
-                  Avalie e atribua notas a um profissional da saúde que
-                  você teve uma consulta realizada.
+              <Typography
+                component="h5"
+                variant="h6"
+                align="center"
+                color="textSecondary"
+              >
+                Avalie e atribua notas a um profissional da saúde que
+                você teve uma consulta realizada.
               </Typography>
-              </Container>
             </Container>
-            <Container className={styles.cardGrid} maxWidth="md">
-              <Grid container spacing={4}>
-                {appointments.length === 0 && (
-                  <Container maxWidth="md" component="main">
-                    <Alert severity="info" variant="standard" elevation={3}>
-                      <AlertTitle>Informação</AlertTitle>
+          </Container>
+          <Container className={styles.cardGrid} maxWidth="md">
+            <Grid container spacing={4}>
+              {appointments.length === 0 && (
+                <Container maxWidth="md" component="main">
+                  <Alert severity="info" variant="standard" elevation={3}>
+                    <AlertTitle>Informação</AlertTitle>
                     Você ainda não possui nenhuma consulta confirmada.
                   </Alert>
-                  </Container>
-                )}
-                {userType === "Médico" ? doctorComponent() : patientComponent()}
-              </Grid>
-            </Container>
-          </Grid>
-        </Container>
+                </Container>
+              )}
+              {userType === "Médico" ? doctorComponent() : patientComponent()}
+            </Grid>
+          </Container>
+        </Grid>
       </Grid>
       <Footer />
     </React.Fragment>

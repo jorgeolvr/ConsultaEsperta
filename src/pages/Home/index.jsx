@@ -267,13 +267,15 @@ export default function Home({ history }) {
           <Avatar className={styles.avatar}>
             <AssistantIcon />
           </Avatar>
-          <Typography className={styles.mainTitle} component="h2" variant="h3" align="center" gutterBottom>
-            Reinvente o seu jeito de agendar consultas
+          <Container>
+            <Typography className={styles.mainTitle} component="h2" variant="h3" align="center" gutterBottom>
+              Reinvente o seu jeito de agendar consultas
             </Typography>
-          <Typography component="h5" variant="h6" align="center" color="textSecondary" gutterBottom>
-            Busque profissionais por especialidade, localização,
-            preço e qualidade de atendimento.
+            <Typography component="h5" variant="h6" align="center" color="textSecondary" gutterBottom>
+              Busque profissionais por especialidade, localização,
+              preço e qualidade de atendimento.
             </Typography>
+          </Container>
         </Container>
         <main className={styles.layout}>
           {openAlert === true && (
@@ -345,13 +347,14 @@ export default function Home({ history }) {
           <Avatar className={styles.avatar}>
             <AssistantIcon />
           </Avatar>
-          <Typography className={styles.mainTitle} component="h2" variant="h3" align="center" color="textPrimary" gutterBottom>
-            Reinvente o seu jeito de atender consultas
+          <Container>
+            <Typography className={styles.mainTitle} component="h2" variant="h3" align="center" color="textPrimary" gutterBottom>
+              Reinvente o seu jeito de atender consultas
             </Typography>
-          <Typography component="h5" variant="h6" align="center" color="textSecondary">
-            Visualize e cadastre seus dias de atendimento com horário, preço, duração e intervalo entre consultas.
+            <Typography component="h5" variant="h6" align="center" color="textSecondary">
+              Visualize e cadastre seus dias de atendimento com horário, preço, duração e intervalo entre consultas.
           </Typography>
-
+          </Container>
         </Container>
         {schedules.length === 0 && (
           <Container maxWidth="md" component="main">
@@ -451,19 +454,15 @@ export default function Home({ history }) {
         </Dialog>
       </div>
       <Grid container className={styles.mainGrid}>
-        <Container>
-          <Grid container direction="column">
-            <CssBaseline />
-            <Container component="main" maxWidth="lg">
-              <Header />
-            </Container>
-            <Container>
-              {userType === "Médico" ?
-                doctorComponent() : patientComponent()
-              }
-            </Container>
-          </Grid>
-        </Container>
+        <Grid container direction="column">
+          <CssBaseline />
+          <Container component="main" maxWidth="lg">
+            <Header />
+          </Container>
+          {userType === "Médico" ?
+            doctorComponent() : patientComponent()
+          }
+        </Grid>
       </Grid >
       <Footer />
     </React.Fragment >

@@ -166,12 +166,12 @@ export default function Schedule() {
   return fetchData === true ? (
     <React.Fragment>
       <Grid container className={styles.mainGrid} direction="column">
-        <Container>
-          <Grid container direction="column">
-            <CssBaseline />
-            <Container component="main" maxWidth="lg">
-              <Header />
-            </Container>
+        <Grid container direction="column">
+          <CssBaseline />
+          <Container component="main" maxWidth="lg">
+            <Header />
+          </Container>
+          <Container>
             <Container maxWidth="sm" component="main" className={styles.mainContainer}>
               <Avatar className={styles.avatar}>
                 <WatchLaterIcon />
@@ -183,40 +183,40 @@ export default function Schedule() {
                 Visualize e confirme os dados de todas as suas consultas marcadas.
           </Typography>
             </Container>
-            <Container className={styles.cardGrid} maxWidth="md">
-              <Grid container spacing={4}>
-                {alertConfirm === true && (
-                  <Container className={styles.alert} maxWidth="md" component="main">
-                    <Alert onClose={() => { setAlertConfirm(false) }} severity="success" variant="standard" elevation={3}>
-                      <AlertTitle>Sucesso</AlertTitle>
+          </Container>
+          <Container className={styles.cardGrid} maxWidth="md">
+            <Grid container spacing={4}>
+              {alertConfirm === true && (
+                <Container className={styles.alert} maxWidth="md" component="main">
+                  <Alert onClose={() => { setAlertConfirm(false) }} severity="success" variant="standard" elevation={3}>
+                    <AlertTitle>Sucesso</AlertTitle>
                   A sua consulta foi confirmada!
               </Alert>
-                  </Container>
-                )}
-                {alertCancel === true && (
-                  <Container className={styles.alert} maxWidth="md" component="main">
-                    <Alert onClose={() => { setAlertCancel(false) }} severity="info" variant="standard" elevation={3}>
-                      <AlertTitle>Informação</AlertTitle>
+                </Container>
+              )}
+              {alertCancel === true && (
+                <Container className={styles.alert} maxWidth="md" component="main">
+                  <Alert onClose={() => { setAlertCancel(false) }} severity="info" variant="standard" elevation={3}>
+                    <AlertTitle>Informação</AlertTitle>
                   A sua consulta foi cancelada.
               </Alert>
-                  </Container>
-                )}
-                {appointments.length === 0 && (
-                  <Container maxWidth="md" component="main">
-                    <Alert severity="info" variant="standard" elevation={3}>
-                      <AlertTitle>Informação</AlertTitle>
+                </Container>
+              )}
+              {appointments.length === 0 && (
+                <Container maxWidth="md" component="main">
+                  <Alert severity="info" variant="standard" elevation={3}>
+                    <AlertTitle>Informação</AlertTitle>
                   Você ainda não possui nenhuma consulta marcada.
               </Alert>
-                  </Container>
-                )}
-                {userType === "Médico" ? doctorComponent() : patientComponent()}
-              </Grid>
-            </Container>
-          </Grid>
-        </Container>
+                </Container>
+              )}
+              {userType === "Médico" ? doctorComponent() : patientComponent()}
+            </Grid>
+          </Container>
+        </Grid>
       </Grid>
       <Footer />
-    </React.Fragment>
+    </React.Fragment >
   ) : <div id="loader"><CircularProgress /></div>
 }
 

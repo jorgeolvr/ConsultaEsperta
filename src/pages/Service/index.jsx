@@ -178,12 +178,14 @@ export default function Service({ history }) {
             <Avatar className={styles.avatar}>
               <EventAvailableIcon />
             </Avatar>
-            <Typography className={styles.mainTitle} component="h2" variant="h3" align="center" gutterBottom>
-              Meu atendimento
+            <Container>
+              <Typography className={styles.mainTitle} component="h2" variant="h3" align="center" gutterBottom>
+                Meu atendimento
             </Typography>
-            <Typography component="h5" variant="h6" align="center" color="textSecondary">
-              Cadastre a sua disponibilidade informando o dia, preço, duração e intervalos de consulta.
+              <Typography component="h5" variant="h6" align="center" color="textSecondary">
+                Cadastre a sua disponibilidade informando o dia, preço, duração e intervalos de consulta.
         </Typography>
+            </Container>
           </Container>
           <main className={styles.layout}>
             <Paper elevation={3} className={styles.paper}>

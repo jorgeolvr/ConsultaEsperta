@@ -27,28 +27,15 @@ export default function Profile({ history }) {
     setDescription, selectedUf, setSelectedUf, city, setCity
   } = useContext(Context)
   const lastDigitsCard = cardNumber.split(" ")[3]
-  //const [openDialog, setOpenDialog] = useState(false)
+
 
   function handleUpdate() {
-    //setOpenDialog(true)
     if (type === "Paciente") {
       history.push('/patient')
     } else if (type === "Médico") {
       history.push('/doctor')
     }
   }
-
-  /*const handleClose = () => {
-    setOpenDialog(false)
-  }
-
-  function handlePatient() {
-    history.push('/patient')
-  }
-
-  function handleDoctor() {
-    history.push('/doctor')
-  } */
 
   useEffect(() => {
     firebase.db.collection('users').doc(firebase.getId()).get().then(function (doc) {
@@ -61,7 +48,7 @@ export default function Profile({ history }) {
         setType(type)
       }
     })
-  })
+  }, [setCpf, setEmail, setName, setPhone, setType])
 
   useEffect(() => {
     if (type === "Paciente") {
@@ -95,232 +82,224 @@ export default function Profile({ history }) {
         }
       })
     }
-  })
+  }, [
+    setBrand, setCardName, setCardNumber, setCity, setCrm, setDescription,
+    setExpireDate, setNeighbour, setSecurityCode, setSelectedUf, setSpeciality,
+    setStreet, setStreetNumber, type
+  ])
+
+  function doctorComponent() {
+    return (
+      <React.Fragment>
+        <main className={styles.layout}>
+          <Paper elevation={3} className={styles.paper}>
+            <Typography variant="h6" gutterBottom className={styles.title}>
+              Dados de Autenticação
+                   </Typography>
+            <Grid container direction="row">
+              <Typography className={styles.typography} gutterBottom>E-mail:</Typography>
+              <Typography gutterBottom>{email}</Typography>
+            </Grid>
+
+            <Typography variant="h6" gutterBottom className={styles.title}>
+              Informações médicas
+                   </Typography>
+            <Grid container direction="row">
+              <Typography className={styles.typography} gutterBottom>Descrição:</Typography>
+              <Typography gutterBottom>{description}</Typography>
+            </Grid>
+            <Grid container direction="row">
+              <Typography className={styles.typography} gutterBottom>Especialidade:</Typography>
+              <Typography gutterBottom>{speciality}</Typography>
+            </Grid>
+
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <Typography variant="h6" gutterBottom className={styles.title}>
+                  Dados Pessoais
+                       </Typography>
+                <Grid container direction="row">
+                  <Typography className={styles.typography} gutterBottom>Nome:</Typography>
+                  <Typography gutterBottom>{name}</Typography>
+                </Grid>
+                <Grid container direction="row">
+                  <Typography className={styles.typography} gutterBottom>CPF:</Typography>
+                  <Typography gutterBottom>{cpf}</Typography>
+                </Grid>
+                <Grid container direction="row">
+                  <Typography className={styles.typography} gutterBottom>CRM:</Typography>
+                  <Typography gutterBottom>{crm}</Typography>
+                </Grid>
+                <Grid container direction="row">
+                  <Typography className={styles.typography} gutterBottom>Telefone:</Typography>
+                  <Typography gutterBottom>{phone}</Typography>
+                </Grid>
+                <Grid container direction="row">
+                  <Typography className={styles.typography} gutterBottom>Tipo de Usuário:</Typography>
+                  <Typography gutterBottom>{type}</Typography>
+                </Grid>
+              </Grid>
+              <Grid item container direction="column" xs={12} sm={6}>
+                <Typography variant="h6" gutterBottom className={styles.title}>
+                  Informações do local
+                       </Typography>
+                <Grid container direction="row">
+                  <Typography className={styles.typography} gutterBottom>Estado:</Typography>
+                  <Typography gutterBottom>{selectedUf.name}</Typography>
+                </Grid>
+                <Grid container direction="row">
+                  <Typography className={styles.typography} gutterBottom>Cidade:</Typography>
+                  <Typography gutterBottom>{city}</Typography>
+                </Grid>
+                <Grid container direction="row">
+                  <Typography className={styles.typography} gutterBottom>Rua:</Typography>
+                  <Typography gutterBottom>{street}</Typography>
+                </Grid>
+                <Grid container direction="row">
+                  <Typography className={styles.typography} gutterBottom>Número:</Typography>
+                  <Typography gutterBottom>{streetNumber}</Typography>
+                </Grid>
+
+                <Grid container direction="row">
+                  <Typography className={styles.typography} gutterBottom>Bairro:</Typography>
+                  <Typography gutterBottom>{neighbour}</Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+            <div className={styles.buttons}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleUpdate}
+                className={styles.button}
+                startIcon={<SwapHorizIcon />}
+              >
+                Alterar
+                     </Button>
+            </div>
+          </Paper>
+        </main>
+      </React.Fragment >
+    )
+  }
+
+  function patientComponent() {
+    return (
+      <React.Fragment>
+        <main className={styles.layout}>
+          <Paper elevation={3} className={styles.paper}>
+            <Typography variant="h6" gutterBottom className={styles.title}>
+              Dados de Autenticação
+        </Typography>
+            <Grid container direction="row">
+              <Typography className={styles.typography} gutterBottom>E-mail:</Typography>
+              <Typography gutterBottom>{email}</Typography>
+            </Grid>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <Typography variant="h6" gutterBottom className={styles.title}>
+                  Dados Pessoais
+                  </Typography>
+                <Grid container direction="row">
+                  <Typography className={styles.typography} gutterBottom>Nome:</Typography>
+                  <Typography gutterBottom>{name}</Typography>
+                </Grid>
+                <Grid container direction="row">
+                  <Typography className={styles.typography} gutterBottom>CPF:</Typography>
+                  <Typography gutterBottom>{cpf}</Typography>
+                </Grid>
+                <Grid container direction="row">
+                  <Typography className={styles.typography} gutterBottom>Telefone:</Typography>
+                  <Typography gutterBottom>{phone}</Typography>
+                </Grid>
+                <Grid container direction="row">
+                  <Typography className={styles.typography} gutterBottom>Tipo de Usuário:</Typography>
+                  <Typography gutterBottom>{type}</Typography>
+                </Grid>
+              </Grid>
+              <Grid item container direction="column" xs={12} sm={6}>
+                <Typography variant="h6" gutterBottom className={styles.title}>
+                  Forma de Pagamento
+                  </Typography>
+                <Grid container direction="row">
+                  <Typography className={styles.typography} gutterBottom>Bandeira:</Typography>
+                  <Typography gutterBottom>{brand}</Typography>
+                </Grid>
+                <Grid container direction="row">
+                  <Typography className={styles.typography} gutterBottom>Dono do Cartão:</Typography>
+                  <Typography gutterBottom>{cardName}</Typography>
+                </Grid>
+                <Grid container direction="row">
+                  <Typography className={styles.typography} gutterBottom>Número do Cartão:</Typography>
+                  <Typography gutterBottom>Final {lastDigitsCard}</Typography>
+                </Grid>
+                <Grid container direction="row">
+                  <Typography className={styles.typography} gutterBottom>Expirado em:</Typography>
+                  <Typography gutterBottom>{expireDate}</Typography>
+                </Grid>
+                <Grid container direction="row">
+                  <Typography className={styles.typography} gutterBottom>CVV:</Typography>
+                  <Typography gutterBottom>{securityCode}</Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+            <div className={styles.buttons}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleUpdate}
+                className={styles.button}
+                startIcon={<SwapHorizIcon />}
+              >
+                Alterar
+                </Button>
+            </div>
+          </Paper>
+        </main>
+      </React.Fragment>
+    )
+  }
 
   return fetchData === true ? (
     <React.Fragment>
-      {type === "Paciente" ? (
-        <React.Fragment>
-          <Grid container className={styles.mainGrid}>
-            <Container>
-              <Grid container direction="column">
-                <CssBaseline />
-                <Container component="main" maxWidth="lg">
-                  <Header />
-                </Container>
-                <Container maxWidth="sm" component="main" className={styles.mainContainer}>
-                  <Avatar className={styles.avatar}>
-                    <PermContactCalendarIcon />
-                  </Avatar>
-                  <Typography
-                    className={styles.mainTitle}
-                    component="h2"
-                    variant="h3"
-                    align="center"
-                    color="textPrimary"
-                    gutterBottom
-                  >
-                    Meu perfil
-            </Typography>
-                  <Typography component="h5" variant="h6" align="center" color="textSecondary" gutterBottom>
-                    Visualize ou altere os seus dados de autenticação, dados pessoais e forma de pagamento.
-            </Typography>
-                </Container>
-                <main className={styles.layout}>
-                  <Paper elevation={3} className={styles.paper}>
-                    <Typography variant="h6" gutterBottom className={styles.title}>
-                      Dados de Autenticação
+      <Grid container className={styles.mainGrid}>
+        <Grid container direction="column">
+          <CssBaseline />
+          <Container component="main" maxWidth="lg">
+            <Header />
+          </Container>
+          <Container maxWidth="sm" component="main" className={styles.mainContainer}>
+            <Avatar className={styles.avatar}>
+              <PermContactCalendarIcon />
+            </Avatar>
+            <Typography
+              className={styles.mainTitle}
+              component="h2"
+              variant="h3"
+              align="center"
+              color="textPrimary"
+              gutterBottom
+            >
+              Meu perfil
               </Typography>
-                    <Grid container direction="row">
-                      <Typography className={styles.typography} gutterBottom>E-mail:</Typography>
-                      <Typography gutterBottom>{email}</Typography>
-                    </Grid>
-                    <Grid container spacing={2}>
-                      <Grid item xs={12} sm={6}>
-                        <Typography variant="h6" gutterBottom className={styles.title}>
-                          Dados Pessoais
-                        </Typography>
-                        <Grid container direction="row">
-                          <Typography className={styles.typography} gutterBottom>Nome:</Typography>
-                          <Typography gutterBottom>{name}</Typography>
-                        </Grid>
-                        <Grid container direction="row">
-                          <Typography className={styles.typography} gutterBottom>CPF:</Typography>
-                          <Typography gutterBottom>{cpf}</Typography>
-                        </Grid>
-                        <Grid container direction="row">
-                          <Typography className={styles.typography} gutterBottom>Telefone:</Typography>
-                          <Typography gutterBottom>{phone}</Typography>
-                        </Grid>
-                        <Grid container direction="row">
-                          <Typography className={styles.typography} gutterBottom>Tipo de Usuário:</Typography>
-                          <Typography gutterBottom>{type}</Typography>
-                        </Grid>
-                      </Grid>
-                      <Grid item container direction="column" xs={12} sm={6}>
-                        <Typography variant="h6" gutterBottom className={styles.title}>
-                          Forma de Pagamento
-                        </Typography>
-                        <Grid container direction="row">
-                          <Typography className={styles.typography} gutterBottom>Bandeira:</Typography>
-                          <Typography gutterBottom>{brand}</Typography>
-                        </Grid>
-                        <Grid container direction="row">
-                          <Typography className={styles.typography} gutterBottom>Dono do Cartão:</Typography>
-                          <Typography gutterBottom>{cardName}</Typography>
-                        </Grid>
-                        <Grid container direction="row">
-                          <Typography className={styles.typography} gutterBottom>Número do Cartão:</Typography>
-                          <Typography gutterBottom>Final {lastDigitsCard}</Typography>
-                        </Grid>
-                        <Grid container direction="row">
-                          <Typography className={styles.typography} gutterBottom>Expirado em:</Typography>
-                          <Typography gutterBottom>{expireDate}</Typography>
-                        </Grid>
-                        <Grid container direction="row">
-                          <Typography className={styles.typography} gutterBottom>CVV:</Typography>
-                          <Typography gutterBottom>{securityCode}</Typography>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                    <div className={styles.buttons}>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={handleUpdate}
-                        className={styles.button}
-                        startIcon={<SwapHorizIcon />}
-                      >
-                        Alterar
-                      </Button>
-                    </div>
-                  </Paper>
-                </main>
-              </Grid>
+            <Container>
+              <Typography
+                component="h5"
+                variant="h6"
+                align="center"
+                color="textSecondary"
+                gutterBottom
+              >
+                Visualize ou altere os seus dados de autenticação,
+                dados pessoais e outras informações.
+                </Typography>
             </Container>
-          </Grid>
-          <Footer />
-        </React.Fragment>) : (
-          <React.Fragment>
-            <Grid container className={styles.mainGrid}>
-              <Container>
-                <Grid container direction="column">
-                  <CssBaseline />
-                  <Container component="main" maxWidth="lg">
-                    <Header />
-                  </Container>
-                  <Container maxWidth="sm" component="main" className={styles.mainContainer}>
-                    <Avatar className={styles.avatar}>
-                      <PermContactCalendarIcon />
-                    </Avatar>
-                    <Typography
-                      className={styles.mainTitle}
-                      component="h2"
-                      variant="h3"
-                      align="center"
-                      gutterBottom
-                    >
-                      Meu perfil
-                 </Typography>
-                    <Typography component="h5" variant="h6" align="center" color="textSecondary" gutterBottom>
-                      Visualize ou altere os seus dados de autenticação, dados pessoais e outras informações.
-                 </Typography>
-                  </Container>
-                  <main className={styles.layout}>
-                    <Paper elevation={3} className={styles.paper}>
-                      <Typography variant="h6" gutterBottom className={styles.title}>
-                        Dados de Autenticação
-                   </Typography>
-                      <Grid container direction="row">
-                        <Typography className={styles.typography} gutterBottom>E-mail:</Typography>
-                        <Typography gutterBottom>{email}</Typography>
-                      </Grid>
-
-                      <Typography variant="h6" gutterBottom className={styles.title}>
-                        Informações médicas
-                   </Typography>
-                      <Grid container direction="row">
-                        <Typography className={styles.typography} gutterBottom>Descrição:</Typography>
-                        <Typography gutterBottom>{description}</Typography>
-                      </Grid>
-                      <Grid container direction="row">
-                        <Typography className={styles.typography} gutterBottom>Especialidade:</Typography>
-                        <Typography gutterBottom>{speciality}</Typography>
-                      </Grid>
-
-                      <Grid container spacing={2}>
-                        <Grid item xs={12} sm={6}>
-                          <Typography variant="h6" gutterBottom className={styles.title}>
-                            Dados Pessoais
-                       </Typography>
-                          <Grid container direction="row">
-                            <Typography className={styles.typography} gutterBottom>Nome:</Typography>
-                            <Typography gutterBottom>{name}</Typography>
-                          </Grid>
-                          <Grid container direction="row">
-                            <Typography className={styles.typography} gutterBottom>CPF:</Typography>
-                            <Typography gutterBottom>{cpf}</Typography>
-                          </Grid>
-                          <Grid container direction="row">
-                            <Typography className={styles.typography} gutterBottom>CRM:</Typography>
-                            <Typography gutterBottom>{crm}</Typography>
-                          </Grid>
-                          <Grid container direction="row">
-                            <Typography className={styles.typography} gutterBottom>Telefone:</Typography>
-                            <Typography gutterBottom>{phone}</Typography>
-                          </Grid>
-                          <Grid container direction="row">
-                            <Typography className={styles.typography} gutterBottom>Tipo de Usuário:</Typography>
-                            <Typography gutterBottom>{type}</Typography>
-                          </Grid>
-                        </Grid>
-                        <Grid item container direction="column" xs={12} sm={6}>
-                          <Typography variant="h6" gutterBottom className={styles.title}>
-                            Informações do local
-                       </Typography>
-                          <Grid container direction="row">
-                            <Typography className={styles.typography} gutterBottom>Estado:</Typography>
-                            <Typography gutterBottom>{selectedUf.name}</Typography>
-                          </Grid>
-                          <Grid container direction="row">
-                            <Typography className={styles.typography} gutterBottom>Cidade:</Typography>
-                            <Typography gutterBottom>{city}</Typography>
-                          </Grid>
-                          <Grid container direction="row">
-                            <Typography className={styles.typography} gutterBottom>Rua:</Typography>
-                            <Typography gutterBottom>{street}</Typography>
-                          </Grid>
-                          <Grid container direction="row">
-                            <Typography className={styles.typography} gutterBottom>Número:</Typography>
-                            <Typography gutterBottom>{streetNumber}</Typography>
-                          </Grid>
-
-                          <Grid container direction="row">
-                            <Typography className={styles.typography} gutterBottom>Bairro:</Typography>
-                            <Typography gutterBottom>{neighbour}</Typography>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                      <div className={styles.buttons}>
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          onClick={handleUpdate}
-                          className={styles.button}
-                          startIcon={<SwapHorizIcon />}
-                        >
-                          Alterar
-                     </Button>
-                      </div>
-                    </Paper>
-                  </main>
-                </Grid>
-              </Container>
-            </Grid>
-            <Footer />
-          </React.Fragment >
-        )}
-    </React.Fragment>
+          </Container>
+          {type === "Paciente" ? patientComponent() : doctorComponent()}
+        </Grid>
+      </Grid>
+      <Footer />
+    </React.Fragment >
   ) : <div id="loader"><CircularProgress /></div>
 }
 

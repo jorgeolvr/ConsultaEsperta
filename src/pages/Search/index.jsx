@@ -177,16 +177,16 @@ export default function Search({ history }) {
         </Dialog>
       </div>
       <Grid container className={styles.mainGrid}>
-        <Container>
-          <Grid container direction="column">
-            <CssBaseline />
-            <Container component="main" maxWidth="lg">
-              <Header />
-            </Container>
-            <Container maxWidth="sm" component="main" className={styles.mainContainer}>
-              <Avatar className={styles.avatar}>
-                <ListAltIcon />
-              </Avatar>
+        <Grid container direction="column">
+          <CssBaseline />
+          <Container component="main" maxWidth="lg">
+            <Header />
+          </Container>
+          <Container maxWidth="sm" component="main" className={styles.mainContainer}>
+            <Avatar className={styles.avatar}>
+              <ListAltIcon />
+            </Avatar>
+            <Container>
               <Typography className={styles.mainTitle} component="h2" variant="h3" align="center" gutterBottom>
                 Lista de médicos
             </Typography>
@@ -194,62 +194,63 @@ export default function Search({ history }) {
                 Aqui você pode encontrar todos os profissionais de acordo com a sua pesquisa.
             </Typography>
             </Container>
-            <Grid container>
-              <Container className={styles.expansionGrid} maxWidth="md">
-                <ExpansionPanel elevation={3} style={{ marginBottom: 20 }}>
-                  <ExpansionPanelSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel1a-content"
-                    id="panel1a-header"
-                  >
-                    <Typography className={styles.heading}>Busca avançada</Typography>
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
-                    <Grid container spacing={2} >
-                      <Grid item xs={12} sm={4}>
-                        <Autocomplete
-                          fullWidth
-                          options={ufs}
-                          getOptionLabel={uf => uf.name}
-                          renderOption={(option) => (
-                            <React.Fragment>
-                              {option.name}
-                            </React.Fragment>
-                          )}
-                          value={selectedUf}
-                          onChange={(event, newValue) => {
-                            setSelectedUf(newValue)
-                            setLocation('')
-                          }}
-                          renderInput={(params) => <TextField {...params} label="Estados" variant="standard" />}
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={4}>
-                        <Autocomplete
-                          fullWidth
-                          options={cities}
-                          getOptionLabel={cities => cities}
-                          value={location}
-                          disabled={selectedUf === null || selectedUf.length === 0}
-                          onChange={(event, newValue) => {
-                            setLocation(newValue)
-                          }}
-                          renderInput={(params) => <TextField {...params} label="Cidades" variant="standard" />}
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={4}>
-                        <Autocomplete
-                          fullWidth
-                          options={specialities}
-                          getOptionLabel={specialities => specialities}
-                          value={speciality}
-                          onChange={(event, newValue) => {
-                            setSpeciality(newValue)
-                          }}
-                          renderInput={(params) => <TextField {...params} label="Especialidades" variant="standard" />}
-                        />
-                      </Grid>
-                      {/*<Grid item xs={12} sm={4}>
+          </Container>
+          <Grid container>
+            <Container className={styles.expansionGrid} maxWidth="md">
+              <ExpansionPanel elevation={3} style={{ marginBottom: 20 }}>
+                <ExpansionPanelSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                >
+                  <Typography className={styles.heading}>Busca avançada</Typography>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails>
+                  <Grid container spacing={2} >
+                    <Grid item xs={12} sm={4}>
+                      <Autocomplete
+                        fullWidth
+                        options={ufs}
+                        getOptionLabel={uf => uf.name}
+                        renderOption={(option) => (
+                          <React.Fragment>
+                            {option.name}
+                          </React.Fragment>
+                        )}
+                        value={selectedUf}
+                        onChange={(event, newValue) => {
+                          setSelectedUf(newValue)
+                          setLocation('')
+                        }}
+                        renderInput={(params) => <TextField {...params} label="Estados" variant="standard" />}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={4}>
+                      <Autocomplete
+                        fullWidth
+                        options={cities}
+                        getOptionLabel={cities => cities}
+                        value={location}
+                        disabled={selectedUf === null || selectedUf.length === 0}
+                        onChange={(event, newValue) => {
+                          setLocation(newValue)
+                        }}
+                        renderInput={(params) => <TextField {...params} label="Cidades" variant="standard" />}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={4}>
+                      <Autocomplete
+                        fullWidth
+                        options={specialities}
+                        getOptionLabel={specialities => specialities}
+                        value={speciality}
+                        onChange={(event, newValue) => {
+                          setSpeciality(newValue)
+                        }}
+                        renderInput={(params) => <TextField {...params} label="Especialidades" variant="standard" />}
+                      />
+                    </Grid>
+                    {/*<Grid item xs={12} sm={4}>
                       <InputLabel shrink>
                         Faixa de preço
                                             </InputLabel>
@@ -281,98 +282,95 @@ export default function Search({ history }) {
                                                 }}
                                             />
                                             </Grid>*/}
-                      <Grid item xs={12} sm={4}>
-                        <TextField
-                          label="Avaliação"
-                          type="number"
-                          InputProps={{ inputProps: { min: 0, max: 5 } }}
-                          value={rating}
-                          onChange={event => setRating(event.target.value)}
-                          fullWidth
-                        />
-                      </Grid>
+                    <Grid item xs={12} sm={4}>
+                      <TextField
+                        label="Avaliação"
+                        type="number"
+                        InputProps={{ inputProps: { min: 0, max: 5 } }}
+                        value={rating}
+                        onChange={event => setRating(event.target.value)}
+                        fullWidth
+                      />
                     </Grid>
-                  </ExpansionPanelDetails>
-                  <div className={styles.buttons}>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={handleAdvancedSearch}
-                      className={styles.button}
-                      startIcon={<SearchIcon />}
-                    >
-                      Buscar
+                  </Grid>
+                </ExpansionPanelDetails>
+                <div className={styles.buttons}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleAdvancedSearch}
+                    className={styles.button}
+                    startIcon={<SearchIcon />}
+                  >
+                    Buscar
                   </Button>
-                  </div>
-                </ExpansionPanel>
-                <Grid container className={styles.bar}>
-                  <Grid>
-                    <Typography variant="subtitle1" component="p" gutterBottom>
-                      Médicos encontrados ({doctors.length})
+                </div>
+              </ExpansionPanel>
+              <Grid container className={styles.bar}>
+                <Grid>
+                  <Typography variant="subtitle1" component="p" gutterBottom>
+                    Médicos encontrados ({doctors.length})
                     </Typography>
-                  </Grid>
-                  <Grid>
-                    <Button size="small" color="primary" onClick={handleShowAll}>
-                      Ver todos
-                    </Button>
-                  </Grid>
                 </Grid>
-                <Divider />
-              </Container>
-              <Container maxWidth="md" className={styles.alert}>
-                {doctors.length === 0 && (
-                  <Alert severity="warning" variant="standard" elevation={3}>
-                    <AlertTitle>Atenção</AlertTitle>
+                <Grid>
+                  <Button size="small" color="primary" onClick={handleShowAll}>
+                    Ver todos
+                    </Button>
+                </Grid>
+              </Grid>
+              <Divider />
+            </Container>
+            <Container maxWidth="md" className={styles.alert}>
+              {doctors.length === 0 && (
+                <Alert severity="warning" variant="standard" elevation={3}>
+                  <AlertTitle>Atenção</AlertTitle>
                   Essa pesquisa não retornou nenhum resultado!
-                  </Alert>
-                )}
-              </Container>
-              <Container className={styles.cardGrid} maxWidth="md">
-                {doctors.length !== 0 && (
-                  <Grid container spacing={4}>
-                    {doctors.map((doctor) => (
-                      <Grid item key={doctor.key} xs={12} sm={6} md={4}>
-                        <Card className={styles.card} elevation={3}>
-                          <CardMedia
-                            className={styles.cardMedia}
-                            image={doctor.image}
-                            title="Imagem"
-                          />
-                          <CardContent className={styles.cardContent}>
-                            <Typography gutterBottom variant="h5" component="h2">
-                              {doctor.name}
-                            </Typography>
-                            <Typography>
-                              {doctor.description}
-                            </Typography>
-                            <Grid className={styles.rating}>
-                              <Chip icon={<StarRate />} label={doctor.rating} />
-                            </Grid>
-                          </CardContent>
-                          <CardActions>
-                            <Button
-                              size="small"
-                              color="primary"
-                              onClick={() =>
-                                //history.push(`/detail/${doctor.key}`)}
-                                ///onClick={() => 
-                                history.push({
-                                  pathname: '/detail',
-                                  idDoctor: doctor.key
-                                })}
-                              className={styles.details}
-                            >
-                              Ver Detalhes
+                </Alert>
+              )}
+            </Container>
+            <Container className={styles.cardGrid} maxWidth="md">
+              {doctors.length !== 0 && (
+                <Grid container spacing={4}>
+                  {doctors.map((doctor) => (
+                    <Grid item key={doctor.key} xs={12} sm={6} md={4}>
+                      <Card className={styles.card} elevation={3}>
+                        <CardMedia
+                          className={styles.cardMedia}
+                          image={doctor.image}
+                          title="Imagem"
+                        />
+                        <CardContent className={styles.cardContent}>
+                          <Typography gutterBottom variant="h5" component="h2">
+                            {doctor.name}
+                          </Typography>
+                          <Typography>
+                            {doctor.description}
+                          </Typography>
+                          <Grid className={styles.rating}>
+                            <Chip icon={<StarRate />} label={doctor.rating} />
+                          </Grid>
+                        </CardContent>
+                        <CardActions>
+                          <Button
+                            size="small"
+                            color="primary"
+                            onClick={() =>
+                              history.push({
+                                pathname: '/detail',
+                                idDoctor: doctor.key
+                              })}
+                            className={styles.details}
+                          >
+                            Ver Detalhes
                             </Button>
-                          </CardActions>
-                        </Card>
-                      </Grid>
-                    ))}
-                  </Grid>)}
-              </Container>
-            </Grid>
+                        </CardActions>
+                      </Card>
+                    </Grid>
+                  ))}
+                </Grid>)}
+            </Container>
           </Grid>
-        </Container>
+        </Grid>
       </Grid >
       <Footer />
     </React.Fragment>

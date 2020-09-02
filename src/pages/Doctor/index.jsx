@@ -11,7 +11,8 @@ import firebase from '../../config/Firebase'
 
 import {
   Grid, Container, CssBaseline, Typography, Paper, Stepper, Step, StepLabel, Button,
-  Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Slide, Avatar
+  Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Slide, Avatar,
+  CircularProgress
 } from '@material-ui/core'
 
 import PermContactCalendarIcon from '@material-ui/icons/PermContactCalendar'
@@ -20,7 +21,7 @@ import SaveIcon from '@material-ui/icons/Save'
 
 import { makeStyles } from '@material-ui/core/styles'
 
-const steps = ['Dados pessoais', 'Dados de consulta', 'Revisar dados']
+const steps = ['Dado pessoal', 'Dados de consulta', 'Revisar dados']
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -43,6 +44,7 @@ export default function Doctor({ history }) {
   const styles = useStyles()
   const [activeStep, setActiveStep] = useState(0)
   const [open, setOpen] = useState(false)
+  const [fetchData, setFetchData] = useState(false)
 
   const name = firebase.getUsername()
   const email = firebase.getEmail()
@@ -52,6 +54,18 @@ export default function Doctor({ history }) {
     crm, cpf, phone, description, speciality, city, street, streetNumber, neighbour,
     selectedUf
   } = useContext(Context)
+
+  useState(() => {
+    firebase.db.collection("users").doc(firebase.getId()).get().then(doc => {
+      if (doc.exists) {
+        const { type } = doc.data()
+        if (type !== "Médico") {
+          history.push('/home')
+        }
+      }
+      setFetchData(true)
+    })
+  })
 
 
   function handleMain() {
@@ -83,7 +97,7 @@ export default function Doctor({ history }) {
     firebase.doctorDatabase(name, crm, description, selectedUf.name, city, speciality, street, streetNumber, neighbour)
   }
 
-  return (
+  return fetchData === true ? (
     <React.Fragment>
       <div>
         <Dialog open={open} onClose={handleClose} keepMounted TransitionComponent={Transition}>
@@ -99,12 +113,12 @@ export default function Doctor({ history }) {
         </Dialog>
       </div>
       <Grid container className={styles.mainGrid}>
-        <Container>
-          <Grid container direction="column">
-            <CssBaseline />
-            <Container component="main" maxWidth="lg">
-              <Header />
-            </Container>
+        <Grid container direction="column">
+          <CssBaseline />
+          <Container component="main" maxWidth="lg">
+            <Header />
+          </Container>
+          <Container>
             <Container maxWidth="sm" component="main" className={styles.mainContainer}>
               <Avatar className={styles.avatar}>
                 <PermContactCalendarIcon />
@@ -113,64 +127,64 @@ export default function Doctor({ history }) {
                 Meu perfil
             </Typography>
               <Typography component="h5" variant="h6" align="center" color="textSecondary" gutterBottom>
-                Preencha os campos com seus dados pessoais e forma de pagamento para manter o perfil atualizado.
+                Preencha os campos com seus dados pessoais e dados de atendimento para manter o perfil atualizado.
             </Typography>
             </Container>
-            <main className={styles.layout}>
-              <Paper elevation={3} className={styles.paper}>
-                <Stepper activeStep={activeStep} className={styles.stepper}>
-                  {steps.map((label) => (
-                    <Step key={label}>
-                      <StepLabel>{label}</StepLabel>
-                    </Step>
-                  ))}
-                </Stepper>
-                <React.Fragment>
-                  {activeStep === steps.length ? (
-                    <React.Fragment>
-                      <Typography variant="h5" gutterBottom>
-                        Obrigado por completar seu perfil.
+          </Container>
+          <main className={styles.layout}>
+            <Paper elevation={3} className={styles.paper}>
+              <Stepper activeStep={activeStep} className={styles.stepper}>
+                {steps.map((label) => (
+                  <Step key={label}>
+                    <StepLabel>{label}</StepLabel>
+                  </Step>
+                ))}
+              </Stepper>
+              <React.Fragment>
+                {activeStep === steps.length ? (
+                  <React.Fragment>
+                    <Typography variant="h5" gutterBottom>
+                      Obrigado por completar seu perfil.
                     </Typography>
-                      <Typography variant="subtitle1">
-                        Volte para a tela principal e comece a usar.
-                        Se quiser mudar seu perfil, volte aqui e conclua esse processo novamente.
+                    <Typography variant="subtitle1">
+                      Volte para a tela principal e comece a usar.
+                      Se quiser mudar seu perfil, volte aqui e conclua esse processo novamente.
                     </Typography>
-                      <div className={styles.buttons}>
-                        <Button variant="contained" color="primary" onClick={handleMain} className={styles.button}>
-                          Ok
+                    <div className={styles.buttons}>
+                      <Button variant="contained" color="primary" onClick={handleMain} className={styles.button}>
+                        Ok
                       </Button>
+                    </div>
+                  </React.Fragment>
+                ) : (
+                    <React.Fragment>
+                      {getStepContent(activeStep)}
+                      <div className={styles.buttons}>
+                        {activeStep !== 0 && (
+                          <Button onClick={handleBack} className={styles.button}>
+                            Voltar
+                          </Button>
+                        )}
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={activeStep === steps.length - 1 ? handleProfile : handleNext}
+                          className={styles.button}
+                          startIcon={activeStep === steps.length - 1 ? <SaveIcon /> : <ArrowForwardIcon />}
+                        >
+                          {activeStep === steps.length - 1 ? 'Salvar' : 'Avançar'}
+                        </Button>
                       </div>
                     </React.Fragment>
-                  ) : (
-                      <React.Fragment>
-                        {getStepContent(activeStep)}
-                        <div className={styles.buttons}>
-                          {activeStep !== 0 && (
-                            <Button onClick={handleBack} className={styles.button}>
-                              Voltar
-                            </Button>
-                          )}
-                          <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={activeStep === steps.length - 1 ? handleProfile : handleNext}
-                            className={styles.button}
-                            startIcon={activeStep === steps.length - 1 ? <SaveIcon /> : <ArrowForwardIcon />}
-                          >
-                            {activeStep === steps.length - 1 ? 'Salvar' : 'Avançar'}
-                          </Button>
-                        </div>
-                      </React.Fragment>
-                    )}
-                </React.Fragment>
-              </Paper>
-            </main>
-          </Grid>
-        </Container>
+                  )}
+              </React.Fragment>
+            </Paper>
+          </main>
+        </Grid>
       </Grid>
       <Footer />
     </React.Fragment>
-  )
+  ) : <div id="loader"><CircularProgress /></div>
 }
 
 const useStyles = makeStyles(theme => ({

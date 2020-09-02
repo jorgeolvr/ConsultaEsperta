@@ -44,78 +44,75 @@ export default function Forgot({ history }) {
   return (
     <React.Fragment>
       <Grid container className={styles.mainGrid}>
-        <Container>
-          <Grid container direction="column">
-            <CssBaseline />
-            <Container component="main" maxWidth="lg">
-              <Header />
-            </Container>
-
-            <Grid className={styles.background} container alignItems="center" justify="center" >
-              <Container component="main" maxWidth="xs">
-                <CssBaseline />
-                <Paper elevation={3} className={styles.paper}>
-                  <img src={logo} alt="Consulta Esperta" height="90em" />
-                  <form className={styles.form} onSubmit={e => e.preventDefault() && false} noValidate>
-                    <Typography component="h6" color="textSecondary" gutterBottom>
-                      Ao solicitar essa mudança, você receberá um email para a realização da troca de senha.
-                      Por favor, preencha os campos abaixo:
-            </Typography>
-                    <Grid container spacing={2}>
-                      <Grid item xs={12}>
-                        <TextField
-                          fullWidth
-                          autoFocus
-                          id="email"
-                          label="Endereço de e-mail"
-                          name="email"
-                          value={email}
-                          onChange={event => setEmail(event.target.value)}
-                          autoComplete="email"
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <TextField
-                          fullWidth
-                          id="email"
-                          label="Confirmar endereço de e-mail"
-                          name="email"
-                          value={confirmEmail}
-                          onChange={event => setConfirmEmail(event.target.value)}
-                          autoComplete="email"
-                        />
-                      </Grid>
+        <Grid container direction="column">
+          <CssBaseline />
+          <Container component="main" maxWidth="lg">
+            <Header />
+          </Container>
+          <Grid className={styles.background} container alignItems="center" justify="center" >
+            <Container component="main" maxWidth="xs">
+              <CssBaseline />
+              <Paper elevation={3} className={styles.paper}>
+                <img src={logo} alt="Consulta Esperta" height="90em" />
+                <form className={styles.form} onSubmit={e => e.preventDefault() && false} noValidate>
+                  <Typography component="h6" color="textSecondary" gutterBottom>
+                    Ao solicitar essa mudança, você receberá um email para a realização da troca de senha.
+                    Por favor, preencha os campos abaixo:
+                    </Typography>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                      <TextField
+                        fullWidth
+                        autoFocus
+                        id="email"
+                        label="Endereço de e-mail"
+                        name="email"
+                        value={email}
+                        onChange={event => setEmail(event.target.value)}
+                        autoComplete="email"
+                      />
                     </Grid>
-                    <Button
-                      type="submit"
-                      fullWidth
-                      onClick={sendEmail}
-                      variant="contained"
-                      color="defaut"
-                      className={styles.btn}>
-                      Solicitar
+                    <Grid item xs={12}>
+                      <TextField
+                        fullWidth
+                        id="email"
+                        label="Confirmar endereço de e-mail"
+                        name="email"
+                        value={confirmEmail}
+                        onChange={event => setConfirmEmail(event.target.value)}
+                        autoComplete="email"
+                      />
+                    </Grid>
+                  </Grid>
+                  <Button
+                    type="submit"
+                    fullWidth
+                    onClick={sendEmail}
+                    variant="contained"
+                    color="defaut"
+                    className={styles.btn}>
+                    Solicitar
                     </Button>
-                    <Grid container justify="center">
-                      <Grid item>
-                        <Link
-                          component="button"
-                          onClick={handleLogin}
-                          className={styles.link}
-                          variant="body2">
-                          Voltar para a tela de login
+                  <Grid container justify="center">
+                    <Grid item>
+                      <Link
+                        component="button"
+                        onClick={handleLogin}
+                        className={styles.link}
+                        variant="body2">
+                        Voltar para a tela de login
                       </Link>
-                      </Grid>
                     </Grid>
-                  </form>
-                </Paper>
-              </Container>
-            </Grid>
+                  </Grid>
+                </form>
+              </Paper>
+            </Container>
           </Grid>
-        </Container>
+        </Grid>
       </Grid>
       <Footer />
     </React.Fragment>
-  );
+  )
 }
 
 const useStyles = makeStyles(theme => ({

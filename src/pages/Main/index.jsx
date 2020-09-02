@@ -30,41 +30,39 @@ export default function Main({ history }) {
   return (
     <React.Fragment>
       <Grid container className={styles.mainGrid}>
-        <Container>
-          <Grid container direction="column">
-            <CssBaseline />
-            <Container component="main" maxWidth="lg">
-              <Header />
-            </Container>
-          </Grid>
-        </Container>
+        <Grid container direction="column">
+          <CssBaseline />
+          <Container component="main" maxWidth="lg">
+            <Header />
+          </Container>
+        </Grid>
         <Container className={styles.mainContainer} maxWidth="md" component="main">
-          <Container>
-            <Grid container >
-              <Grid item xs={12} md={6} className={styles.grid}>
-                <img src={logo} alt="Consulta Esperta" height="70em" />
-                <Typography className={styles.mainTitle} component="h2" variant="h3" gutterBottom>
-                  Seu marketplace de consultas médicas
+
+          <Grid container >
+            <Grid item xs={12} md={6} className={styles.grid}>
+              <img src={logo} alt="Consulta Esperta" height="70em" />
+              <Typography className={styles.mainTitle} component="h2" variant="h3" gutterBottom>
+                Seu marketplace de consultas médicas
               </Typography>
-                <Typography className={styles.mainSubtitle} component="h6" color="textSecondary" gutterBottom>
-                  Ajudamos pessoas a encontrar profissionais especializados por meio de recomendações.
+              <Typography className={styles.mainSubtitle} component="h6" color="textSecondary" gutterBottom>
+                Ajudamos pessoas a encontrar profissionais especializados por meio de recomendações.
               </Typography>
-                <Grid className={styles.information} container>
-                  <Grid item xs={12} sm={6}>
-                    <Grid container direction="row">
-                      <Button startIcon={<ArrowDownward />} color="primary" variant="text" onClick={handleScroll}>
-                        Veja mais abaixo
+              <Grid className={styles.information} container>
+                <Grid item xs={12} sm={6}>
+                  <Grid container direction="row">
+                    <Button startIcon={<ArrowDownward />} color="primary" variant="text" onClick={handleScroll}>
+                      Veja mais abaixo
                     </Button>
-                    </Grid>
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid item xs={12} md={6}>
-                <img src={medicine} alt="Imagem" className={styles.img} height="350em" width="100%" />
-              </Grid>
             </Grid>
-          </Container>
+            <Grid item xs={12} md={6}>
+              <img src={medicine} alt="Imagem" className={styles.img} height="350em" width="100%" />
+            </Grid>
+          </Grid>
         </Container>
+
       </Grid>
       <Divider />
       <Container ref={ref}>
