@@ -91,7 +91,7 @@ export default function PatientProfile({ history }) {
   const handleProfile = () => {
     setActiveStep(activeStep + 1);
     firebase.userDatabase(name, email, cpf, phone, "Paciente")
-    firebase.patientDatabase(cardName, cardNumber, brand, expireDate, securityCode)
+    firebase.patientDatabase(name, cardName, cardNumber, brand, expireDate, securityCode)
   }
 
   return fetchData === true ? (

@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
 
+import moment from 'moment'
+import 'moment/locale/pt-br'
+
 import Main from './pages/Main'
 import Login from './pages/Login'
 import Setting from './pages/Setting'
@@ -16,11 +19,9 @@ import Schedule from './pages/Schedule'
 import Service from './pages/Service'
 import Rating from './pages/Rating'
 import Form from './pages/Form'
+import Suggestion from './pages/Suggestion'
 
 import { Context } from './Context'
-
-import moment from 'moment'
-import 'moment/locale/pt-br'
 
 export default function Routes() {
   const [name, setName] = useState('')
@@ -46,7 +47,7 @@ export default function Routes() {
   const [globalSpeciality, setGlobalSpeciality] = useState('')
   const [doctors, setDoctors] = useState([])
   const [price, setPrice] = useState('')
-  const [rating, setRating] = useState('')
+  const [rating, setRating] = useState(0)
   const [date, setDate] = useState('')
   const [day, setDay] = useState('')
   const [beginHour, setBeginHour] = useState(moment().set({ minute: 0 }))
@@ -86,6 +87,7 @@ export default function Routes() {
           <Route path="/profile" component={Profile} />
           <Route path="/rating" component={Rating} />
           <Route path="/form" component={Form} />
+          <Route path="/suggestion" component={Suggestion} />
         </Context.Provider>
       </Switch>
     </BrowserRouter>

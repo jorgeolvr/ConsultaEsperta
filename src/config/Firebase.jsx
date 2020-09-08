@@ -57,7 +57,7 @@ class Firebase {
     })
   }
 
-  doctorDatabase(name, crm, description, state, location, speciality, street, number, neighbour) {
+  doctorDatabase(name, crm, description, state, location, speciality, street, number, neighbour, rating) {
     const userId = this.getId()
     const doctorsRef = this.db.collection('doctors').doc(userId)
 
@@ -83,13 +83,14 @@ class Firebase {
           name: name,
           street: street,
           number: number,
-          //neighbour: neighbour,
+          neighbour: neighbour,
           crm: crm,
           description: description,
           state: state,
           location: location,
           speciality: speciality,
-          image: image
+          image: image,
+          rating: 0
         })
       }
     })
@@ -106,26 +107,29 @@ class Firebase {
     this.auth().currentUser.delete()
   }
 
-  patientDatabase(cardName, cardNumber, brand, expireDate, securityCode) {
+  patientDatabase(name, cardName, cardNumber, brand, expireDate, securityCode, rating) {
     const userId = this.getId()
     const patientRef = this.db.collection('patients').doc(userId)
 
     patientRef.get().then(doc => {
       if (doc.exists) {
         patientRef.update({
+          name: name,
           cardName: cardName,
           number: cardNumber,
           brand: brand,
           expireDate: expireDate,
-          securityCode: securityCode
+          securityCode: securityCode,
         })
       } else {
         patientRef.set({
+          name: name,
           cardName: cardName,
           number: cardNumber,
           brand: brand,
           expireDate: expireDate,
-          securityCode: securityCode
+          securityCode: securityCode,
+          rating: 0
         })
       }
     })

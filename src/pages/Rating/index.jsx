@@ -93,10 +93,13 @@ export default function Rating({ history }) {
                   </Typography>
                 </CardContent>
                 <CardActions>
-                  <Button size="small" color="primary" onClick={() => history.push({
-                    pathname: '/form',
-                    idDoctor: appointment.idDoctor
-                  })}>Avaliar</Button>
+                  {appointment.doctorRated === "no" ?
+                    <Button size="small" color="primary" onClick={() => history.push({
+                      pathname: '/form',
+                      idDoctor: appointment.idDoctor
+                    })}>Avaliar</Button> :
+                    <Button size="small" disabled>Avaliado</Button>
+                  }
                 </CardActions>
               </Card>
             </Grid>
@@ -131,10 +134,16 @@ export default function Rating({ history }) {
                   </Typography>
                 </CardContent>
                 <CardActions>
-                  <Button size="small" color="primary" onClick={() => history.push({
-                    pathname: '/form',
-                    idDoctor: appointment.idDoctor
-                  })}>Avaliar</Button>
+                  {appointment.patientRated === "no" ?
+                    <Button size="small" color="primary" onClick={() => history.push({
+                      pathname: '/form',
+                      idDoctor: appointment.idDoctor,
+                      idPatient: appointment.idPatient,
+                      idAppointment: appointment.key,
+                      date: appointment.date
+                    })}>Avaliar</Button> :
+                    <Button size="small" disabled>Avaliado</Button>
+                  }
                 </CardActions>
               </Card>
             </Grid>

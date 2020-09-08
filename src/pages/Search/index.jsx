@@ -11,8 +11,7 @@ import {
   Grid, Chip, Container, CircularProgress, CssBaseline, Card, Typography, Button,
   CardMedia, Slide, CardContent, CardActions, ExpansionPanel, ExpansionPanelSummary,
   ExpansionPanelDetails, Dialog, DialogTitle, DialogContent, DialogContentText,
-  DialogActions, TextField, Avatar, Divider
-  //InputLabel, Select, MenuItem
+  DialogActions, TextField, Avatar, Divider, InputLabel, Select, MenuItem
 } from '@material-ui/core'
 import { Autocomplete, Alert, AlertTitle } from '@material-ui/lab'
 import ListAltIcon from '@material-ui/icons/ListAlt'
@@ -144,7 +143,7 @@ export default function Search({ history }) {
         .where("speciality", "==", speciality)
         //.where("price", "<=", price)
         //.where("date", "==", date)
-        .where("rating", "==", rating)
+        .where("rating", ">", rating)
         .get().then(snapshot => {
           if (snapshot) {
             let doctors = []
@@ -283,14 +282,23 @@ export default function Search({ history }) {
                                             />
                                             </Grid>*/}
                     <Grid item xs={12} sm={4}>
-                      <TextField
-                        label="Avaliação"
-                        type="number"
-                        InputProps={{ inputProps: { min: 0, max: 5 } }}
+                      <InputLabel shrink>
+                        Avaliação
+                       </InputLabel>
+                      <Select
+                        fullWidth
+                        displayEmpty
                         value={rating}
                         onChange={event => setRating(event.target.value)}
-                        fullWidth
-                      />
+                      >
+                        <MenuItem value={0} disabled>
+                          <em>Escolha uma opção</em>
+                        </MenuItem>
+                        <MenuItem value={1}>Maior que 1 estrela</MenuItem>
+                        <MenuItem value={2}>Maior que 2 estrelas</MenuItem>
+                        <MenuItem value={3}>Maior que 3 estrelas</MenuItem>
+                        <MenuItem value={4}>Maior que 4 estrelas</MenuItem>
+                      </Select>
                     </Grid>
                   </Grid>
                 </ExpansionPanelDetails>

@@ -105,6 +105,10 @@ function Header(props) {
     props.history.push('/schedule')
   }
 
+  function handleSuggestion() {
+    props.history.push('/suggestion')
+  }
+
   function handleRating() {
     props.history.push('/rating')
   }
@@ -147,7 +151,7 @@ function Header(props) {
                 onClick={handleMenuNotification}
                 color="inherit"
                 size="medium"
-              ><Badge badgeContent={0} color="error" children={<Notifications />} showZero>
+              ><Badge badgeContent={0} color="error" children={<Notifications />}>
                   <Notifications color='inherit' />
                 </Badge>
               </IconButton>
@@ -258,7 +262,7 @@ function Header(props) {
               color="inherit"
               noWrap
               variant="body2"
-              onClick={handleSchedule}
+              onClick={handleSuggestion}
               className={styles.toolbarLink}
             >
               Sugestão

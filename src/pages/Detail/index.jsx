@@ -8,13 +8,15 @@ import Footer from '../../components/Footer'
 import {
   Grid, CircularProgress, CssBaseline, Container, Typography, Paper, Button, Avatar,
   ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, Dialog, DialogTitle,
-  DialogContent, DialogContentText, DialogActions, Slide, Divider
+  DialogContent, DialogContentText, DialogActions, Slide, Divider, List, ListItem,
+  ListItemText, ListItemAvatar
 } from '@material-ui/core'
 
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
 import { Alert, AlertTitle } from '@material-ui/lab'
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import Comment from '@material-ui/icons/Comment'
 import { makeStyles } from '@material-ui/core/styles'
 
 import MomentUtils from '@date-io/moment'
@@ -45,6 +47,7 @@ export default function Detail({ history }) {
   const [rating, setRating] = useState('')
   const [image, setImage] = useState('')
   const [doctorSchedules, setDoctorSchedules] = useState([])
+  const [ratings, setRatings] = useState([])
   const [selectedDate, handleDateChange] = useState(moment())
   const [hoursFiltered, setHoursFiltered] = useState([])
 
@@ -127,9 +130,27 @@ export default function Detail({ history }) {
               }
             })
         }
+
+        firebase.db.collection('ratings')
+          .where("doctorId", "==", localStorage.getItem('id'))
+          .where("commentedBy", "==", "Paciente")
+          .get().then(snapshot => {
+            if (snapshot) {
+              let ratings = []
+              snapshot.forEach(rating => {
+                ratings.push({
+                  key: ratings.id,
+                  ...rating.data()
+                })
+              })
+              setRatings(ratings)
+            }
+          })
         setFetchData(true)
       })
   }, [history, selectedDate])
+
+  console.log(ratings)
 
   const handleClose = () => {
     setOpenDialog(false)
@@ -167,7 +188,9 @@ export default function Detail({ history }) {
       day: selectedDay,
       date: selectedDate.format("DD/MM/YYYY").toString(),
       hour: selectedTime,
-      status: "confirmed"
+      status: "confirmed",
+      patientRated: "no",
+      doctorRated: "no"
     })
     history.push('/schedule')
   }
@@ -204,12 +227,12 @@ export default function Detail({ history }) {
         </Dialog>
       </div>
       <Grid container className={styles.mainGrid} direction="column">
-        <Container>
-          <Grid container direction="column">
-            <CssBaseline />
-            <Container component="main" maxWidth="lg">
-              <Header />
-            </Container>
+        <Grid container direction="column">
+          <CssBaseline />
+          <Container component="main" maxWidth="lg">
+            <Header />
+          </Container>
+          <Container>
             <Container maxWidth="sm" component="main" className={styles.mainContainer}>
               <Grid direction="row" className={styles.avatar}>
                 <Avatar src={image} className={styles.large} />
@@ -221,123 +244,146 @@ export default function Detail({ history }) {
                 </Typography>
               </Grid>
             </Container>
-            <main className={styles.layout}>
-              <Paper className={styles.paper} elevation={3}>
-                <Grid container direction="row">
-                  <Typography className={styles.typography} gutterBottom>Endereço:</Typography>
-                  <Typography gutterBottom>{`${street}, ${number} - ${neighbour}`}</Typography>
-                </Grid>
-                <Grid container spacing={2} className={styles.information}>
-                  <Grid item container direction="column" xs={12} sm={6}>
-                    <Grid container direction="row">
-                      <Typography className={styles.typography} gutterBottom>Cidade:</Typography>
-                      <Typography gutterBottom>{location}</Typography>
-                    </Grid>
-                    <Grid container direction="row">
-                      <Typography className={styles.typography} gutterBottom>Especialidade:</Typography>
-                      <Typography gutterBottom>{speciality}</Typography>
-                    </Grid>
+          </Container>
+          <main className={styles.layout}>
+            <Paper className={styles.paper} elevation={3}>
+              <Grid container direction="row">
+                <Typography className={styles.typography} gutterBottom>Endereço:</Typography>
+                <Typography gutterBottom>{`${street}, ${number} - ${neighbour}`}</Typography>
+              </Grid>
+              <Grid container spacing={2} className={styles.information}>
+                <Grid item container direction="column" xs={12} sm={6}>
+                  <Grid container direction="row">
+                    <Typography className={styles.typography} gutterBottom>Cidade:</Typography>
+                    <Typography gutterBottom>{location}</Typography>
                   </Grid>
-                  <Grid item container direction="column" xs={12} sm={6}>
-                    {price !== "Individual" && (
-                      <Grid container direction="row">
-                        <Typography className={styles.typography} gutterBottom>Preço das consultas:</Typography>
-                        <Typography gutterBottom>R$ {price}</Typography>
-                      </Grid>
-                    )}
-                    <Grid container direction="row">
-                      <Typography className={styles.typography} gutterBottom>Avaliação:</Typography>
-                      <Typography gutterBottom>{rating} estrelas</Typography>
-                    </Grid>
+                  <Grid container direction="row">
+                    <Typography className={styles.typography} gutterBottom>Especialidade:</Typography>
+                    <Typography gutterBottom>{speciality}</Typography>
                   </Grid>
                 </Grid>
-              </Paper>
-              <Grid className={styles.expansionPanel}>
-                <ExpansionPanel fullWidth elevation={3} >
-                  <ExpansionPanelSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel1a-content"
-                    id="panel1a-header"
-                  >
-                    <Typography className={styles.heading}>Consultas disponíveis</Typography>
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
-                    <Container maxWidth="md">
-                      <MuiPickersUtilsProvider utils={MomentUtils} locale="pt-br">
-                        <DatePicker
-                          disablePast
-                          format="DD/MM/yyyy"
-                          value={selectedDate}
-                          onChange={handleDateChange}
-                          label="Selecione uma data"
-                          cancelLabel="Cancelar"
-                          fullWidth
-                        />
-                      </MuiPickersUtilsProvider>
-                      <Grid style={{
-                        display: 'flex',
-                        justifyContent: 'flex-end',
-                        marginTop: 8
-                      }}>
-                      </Grid>
-                      <Grid className={styles.hourGrid}>
-                        {doctorSchedules.length === 0 && (
-                          <Alert severity="warning" variant="standard">
-                            <AlertTitle>Atenção</AlertTitle>
+                <Grid item container direction="column" xs={12} sm={6}>
+                  {price !== "Individual" && (
+                    <Grid container direction="row">
+                      <Typography className={styles.typography} gutterBottom>Preço das consultas:</Typography>
+                      <Typography gutterBottom>R$ {price}</Typography>
+                    </Grid>
+                  )}
+                  <Grid container direction="row">
+                    <Typography className={styles.typography} gutterBottom>Avaliação:</Typography>
+                    <Typography gutterBottom>{rating} estrelas</Typography>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Paper>
+            <Grid className={styles.expansionPanel}>
+              <ExpansionPanel fullWidth elevation={3} >
+                <ExpansionPanelSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                >
+                  <Typography className={styles.heading}>Consultas disponíveis</Typography>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails>
+                  <Container maxWidth="md">
+                    <MuiPickersUtilsProvider utils={MomentUtils} locale="pt-br">
+                      <DatePicker
+                        disablePast
+                        format="DD/MM/yyyy"
+                        value={selectedDate}
+                        onChange={handleDateChange}
+                        label="Selecione uma data"
+                        cancelLabel="Cancelar"
+                        fullWidth
+                      />
+                    </MuiPickersUtilsProvider>
+                    <Grid style={{
+                      display: 'flex',
+                      justifyContent: 'flex-end',
+                      marginTop: 8
+                    }}>
+                    </Grid>
+                    <Grid className={styles.hourGrid}>
+                      {doctorSchedules.length === 0 && (
+                        <Alert severity="warning" variant="standard">
+                          <AlertTitle>Atenção</AlertTitle>
                           O médico não possui horários disponíveis no dia selecionado.
-                          </Alert>
-                        )}
-                        {hoursFiltered.length !== 0 && doctorSchedules.map((doctorSchedule) => (
-                          <React.Fragment>
-                            <Grid container style={{ marginBottom: 5 }}>
-                              <Grid item container direction="column" xs={12} sm={6}>
-                                <Grid container direction="row">
-                                  <Typography className={styles.typography} gutterBottom>Dia da semana:</Typography>
-                                  <Typography gutterBottom>{doctorSchedule.day}</Typography>
-                                </Grid>
-                                {price === "Individual" && (
-                                  <Grid container direction="row">
-                                    <Typography className={styles.typography} gutterBottom>Preço da consulta:</Typography>
-                                    <Typography gutterBottom>R$ {doctorSchedule.price}</Typography>
-                                  </Grid>
-                                )}
+                        </Alert>
+                      )}
+                      {hoursFiltered.length !== 0 && doctorSchedules.map((doctorSchedule) => (
+                        <React.Fragment>
+                          <Grid container style={{ marginBottom: 5 }}>
+                            <Grid item container direction="column" xs={12} sm={6}>
+                              <Grid container direction="row">
+                                <Typography className={styles.typography} gutterBottom>Dia da semana:</Typography>
+                                <Typography gutterBottom>{doctorSchedule.day}</Typography>
                               </Grid>
-                              <Grid item container direction="column" xs={12} sm={6}>
+                              {price === "Individual" && (
                                 <Grid container direction="row">
-                                  <Typography className={styles.typography} gutterBottom>Duração da consulta:</Typography>
-                                  <Typography gutterBottom>{doctorSchedule.duration} minutos</Typography>
+                                  <Typography className={styles.typography} gutterBottom>Preço da consulta:</Typography>
+                                  <Typography gutterBottom>R$ {doctorSchedule.price}</Typography>
                                 </Grid>
+                              )}
+                            </Grid>
+                            <Grid item container direction="column" xs={12} sm={6}>
+                              <Grid container direction="row">
+                                <Typography className={styles.typography} gutterBottom>Duração da consulta:</Typography>
+                                <Typography gutterBottom>{doctorSchedule.duration} minutos</Typography>
                               </Grid>
                             </Grid>
-                            <Divider />
-                            <Grid style={{ marginTop: 10 }}>
-                              {hoursFiltered.map((time) => (
-
+                          </Grid>
+                          <Divider />
+                          <Grid container spacing={1} className={styles.hourGrid}>
+                            {hoursFiltered.map((time) => (
+                              <Grid item key={time.key} xs={4} sm={2}>
                                 <Button
-                                  className={styles.buttonHour}
                                   color="primary"
                                   variant="outlined"
                                   onClick={() =>
                                     handleStackbar(doctorSchedule.key, doctorSchedule.day, time)
-                                    //handleAppointment(doctorSchedule.key, doctorSchedule.day, time)
                                   }
                                 >
                                   {time}
                                 </Button>
-
-
-                              ))}
-                            </Grid>
-                          </React.Fragment>
-                        ))}
-                      </Grid>
-                    </Container>
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
-              </Grid>
-            </main>
-          </Grid>
-        </Container>
+                              </Grid>
+                            ))}
+                          </Grid>
+                        </React.Fragment>
+                      ))}
+                    </Grid>
+                  </Container>
+                </ExpansionPanelDetails>
+              </ExpansionPanel>
+              <ExpansionPanel fullWidth elevation={3} >
+                <ExpansionPanelSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                >
+                  <Typography className={styles.heading}>Comentários ({ratings.length})</Typography>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails>
+                  <List className={styles.commentGrid}>
+                    {ratings.map(rating => (
+                      <React.Fragment>
+                        <ListItem>
+                          <ListItemAvatar>
+                            <Avatar>
+                              <Comment />
+                            </Avatar>
+                          </ListItemAvatar>
+                          <ListItemText primary={rating.commentary} secondary={rating.username} />
+                        </ListItem>
+                        <Divider />
+                      </React.Fragment>
+                    ))}
+                  </List>
+                </ExpansionPanelDetails>
+              </ExpansionPanel>
+            </Grid>
+          </main>
+        </Grid>
       </Grid>
       <Footer />
     </React.Fragment >
@@ -411,8 +457,6 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'flex-end',
   },
   button: {
-    //marginTop: theme.spacing(3),
-    //marginLeft: theme.spacing(1),
     marginBottom: theme.spacing(3),
   },
   mainContainer: {
@@ -430,10 +474,7 @@ const useStyles = makeStyles(theme => ({
   hourGrid: {
     marginTop: 20
   },
-  buttonHour: {
-    marginTop: 2,
-    marginBottom: 2,
-    marginLeft: 2,
-    marginRight: 2
+  commentGrid: {
+    width: '100%'
   }
-}));
+}))
