@@ -165,7 +165,6 @@ export default function Rating({ history }) {
             <Avatar className={styles.avatar}>
               <CommentIcon />
             </Avatar>
-
             <Container>
               <Typography
                 className={styles.mainTitle}
@@ -183,8 +182,8 @@ export default function Rating({ history }) {
                 align="center"
                 color="textSecondary"
               >
-                Avalie e atribua notas a um profissional da saúde que
-                você teve uma consulta realizada.
+                Avalie as métricas com notas e escreva um comentário
+                sobre as suas consultas realizadas.
               </Typography>
             </Container>
           </Container>
