@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react'
 
 import {
   Grid, Container, CssBaseline, Typography, Avatar, Accordion, AccordionSummary,
-  AccordionDetails, Chip, Box, Paper, CircularProgress
+  AccordionDetails, Chip, CircularProgress, AccordionActions, Button, Divider,
+  Snackbar
 } from '@material-ui/core'
-import { Alert, AlertTitle } from '@material-ui/lab'
+import { Alert } from '@material-ui/lab'
 
 import firebase from '../../config/Firebase'
 
@@ -17,9 +18,9 @@ import { makeStyles } from '@material-ui/core/styles'
 
 export default function Suggestion({ history }) {
   const styles = useStyles()
-  let selected = []
 
   const [fetchData, setFetchData] = useState(false)
+  const [open, setOpen] = useState(false)
   const [symptoms, setSymptoms] = useState([])
   const [selectedSymptoms, setSelectedSymptoms] = useState([])
 
@@ -39,12 +40,48 @@ export default function Suggestion({ history }) {
     })
   })
 
-  function handleSymptom(name) {
+  const handleSymptom = (name) => {
+    let selected = selectedSymptoms
+
+    if (selectedSymptoms.length < 6 && !selected.includes(name)) {
+      selected.push(name)
+      setSelectedSymptoms(selected)
+      setOpen(true)
+    }
+  }
+
+
+  const handleDeleteSymptom = (name) => {
+    setSelectedSymptoms((symptoms) => selectedSymptoms.filter((symptom) => symptom !== name))
+  }
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false)
+  }
+
+  function handleResult() {
 
   }
 
   return fetchData === true ? (
     <React.Fragment>
+      <Snackbar
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'center'
+        }}
+        open={open}
+        onClose={handleClose}
+        autoHideDuration={1000}
+      >
+        <Alert severity="info" onClose={handleClose} elevation={3}>
+          Sintoma adicionado na sua lista
+        </Alert>
+      </Snackbar>
       <Grid container className={styles.mainGrid} direction="column">
         <Grid container direction="column">
           <CssBaseline />
@@ -78,38 +115,51 @@ export default function Suggestion({ history }) {
             </Container>
           </Container>
           <Container className={styles.cardGrid} maxWidth="md">
-            <Accordion defaultExpanded elevation={3}>
+            <Accordion elevation={3}>
               <AccordionSummary
                 expandIcon={<ExpandMore />}
                 aria-controls="panel1c-content"
                 id="panel1c-header"
               >
-                <Typography className={styles.heading}>Sugestão baseada em sintomas</Typography>
-                <Typography className={styles.secondaryHeading}>Selecione abaixo pelo menos três sintomas</Typography>
+                <Typography className={styles.heading}>Lista de sintomas</Typography>
+                <Typography className={styles.secondaryHeading}>Selecione de três a seis sintomas</Typography>
               </AccordionSummary>
               <AccordionDetails>
                 <Grid container>
                   {symptoms.map(symptom => (
                     <Grid item key={symptom.key} className={styles.chip} sm={3} xs={12}>
-                      <Chip label={symptom.name} variant="outlined" color="primary" onClick={() => handleSymptom(symptom.name)} />
+                      <Chip label={symptom.name} variant="outlined" onClick={() => handleSymptom(symptom.name)} />
                     </Grid>
                   ))}
                 </Grid>
               </AccordionDetails>
             </Accordion>
-            {/*<Paper component="ul" className={styles.paper}>
-              {selectedSymptoms.map((data) => {
-                return (
-                  <li key={data}>
-                    <Chip
-
-                      label={data}
-
-                    />
-                  </li>
-                );
-              })}
-            </Paper>*/}
+            <Accordion elevation={3}>
+              <AccordionSummary
+                expandIcon={<ExpandMore />}
+                aria-controls="panel1c-content"
+                id="panel1c-header"
+              >
+                <Typography className={styles.heading}>Meus sintomas</Typography>
+                <Typography className={styles.secondaryHeading}>Confira os sintomas selecionados</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Grid container>
+                  {selectedSymptoms.map((symptom) => (
+                    <Grid item key={symptom.key} className={styles.chip} sm={3} xs={12}>
+                      <Chip
+                        label={symptom}
+                        onDelete={() => handleDeleteSymptom(symptom)}
+                      />
+                    </Grid>
+                  ))}
+                </Grid>
+              </AccordionDetails>
+              <Divider />
+              <AccordionActions>
+                <Button color="primary" onClick={handleResult}>Ver sugestão</Button>
+              </AccordionActions>
+            </Accordion>
           </Container>
         </Grid>
       </Grid>
@@ -182,7 +232,7 @@ const useStyles = makeStyles(theme => ({
   chip: {
     marginBottom: 10
   },
-  paper: {
+  selection: {
     display: 'flex',
     justifyContent: 'center',
     flexWrap: 'wrap',
