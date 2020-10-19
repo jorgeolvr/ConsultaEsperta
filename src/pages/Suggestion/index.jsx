@@ -110,7 +110,7 @@ export default function Suggestion({ history }) {
                 color="textSecondary"
                 gutterBottom
               >
-                Encontre a especialidade médica ideal e sugerida por meio dos seus sintomas sentidos.
+                Encontre a especialidade médica ideal para você baseado no relato dos seus sintomas.
               </Typography>
             </Container>
           </Container>
