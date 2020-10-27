@@ -183,7 +183,7 @@ export default function Schedule() {
                 <WatchLaterIcon />
               </Avatar>
               <Typography className={styles.mainTitle} component="h2" variant="h3" align="center" gutterBottom>
-                Minha agenda
+                Minhas consultas
           </Typography>
               <Typography component="h5" variant="h6" align="center" color="textSecondary" gutterBottom>
                 Visualize e confirme os dados de todas as suas consultas marcadas.

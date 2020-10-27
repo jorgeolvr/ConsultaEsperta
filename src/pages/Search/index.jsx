@@ -188,10 +188,10 @@ export default function Search({ history }) {
             <Container>
               <Typography className={styles.mainTitle} component="h2" variant="h3" align="center" gutterBottom>
                 Lista de médicos
-            </Typography>
+              </Typography>
               <Typography component="h5" variant="h6" align="center" color="textSecondary" gutterBottom>
                 Aqui você pode encontrar todos os profissionais de acordo com a sua pesquisa.
-            </Typography>
+              </Typography>
             </Container>
           </Container>
           <Grid container>

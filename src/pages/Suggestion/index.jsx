@@ -1,28 +1,64 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
+import { Context } from '../../Context'
+import axios from 'axios'
 
 import {
-  Grid, Container, CssBaseline, Typography, Avatar, Accordion, AccordionSummary,
-  AccordionDetails, Chip, CircularProgress, AccordionActions, Button, Divider,
-  Snackbar
+  Grid, Container, CssBaseline, Typography, Avatar, CircularProgress, Button,
+  Paper, Stepper, Step, StepLabel, TextField, StepContent, Slide, Dialog,
+  DialogTitle, DialogContent, DialogContentText, DialogActions
 } from '@material-ui/core'
-import { Alert } from '@material-ui/lab'
+import { Autocomplete } from '@material-ui/lab'
 
 import firebase from '../../config/Firebase'
 
-import { Bookmarks, ExpandMore } from '@material-ui/icons'
+import { Bookmarks, CheckCircle, Search } from '@material-ui/icons'
 
 import Header from '../../components/Header'
 import Footer from '../../components/Footer'
 
 import { makeStyles } from '@material-ui/core/styles'
 
+function getSteps() {
+  return ['Selecione o seu estado', 'Selecione a sua cidade', 'Escolha os sintomas']
+}
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+})
+
 export default function Suggestion({ history }) {
   const styles = useStyles()
+  const steps = getSteps()
 
+  const {
+    globalLocation, setGlobalLocation, selectedSymptoms, setSelectedSymptoms
+  } = useContext(Context)
+
+  const [ufs, setUfs] = useState([])
   const [fetchData, setFetchData] = useState(false)
   const [open, setOpen] = useState(false)
+  const [selectedHomeUf, setSelectedHomeUf] = useState([])
+  const [cities, setCities] = useState([])
   const [symptoms, setSymptoms] = useState([])
-  const [selectedSymptoms, setSelectedSymptoms] = useState([])
+  const [activeStep, setActiveStep] = useState(0)
+
+  useEffect(() => {
+    axios.get('https://servicodados.ibge.gov.br/api/v1/localidades/estados').then(res => {
+      const states = res.data.map(uf => uf = { 'initial': `${uf.sigla}`, 'name': `${uf.nome}` })
+      setUfs(states)
+    })
+  }, [])
+
+  useEffect(() => {
+    if (selectedHomeUf !== null) {
+      axios.get(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${selectedHomeUf.initial}/municipios`).then(res => {
+        const cityNames = res.data.map(city => city.nome)
+        setCities(cityNames)
+      })
+    } else {
+      setCities([])
+    }
+  }, [selectedHomeUf])
 
   useEffect(() => {
     firebase.db.collection('symptoms').orderBy("name").get().then(snapshot => {
@@ -34,54 +70,122 @@ export default function Suggestion({ history }) {
             ...symptom.data()
           })
         })
-        setSymptoms(symptoms)
+        const symptomsNames = symptoms.map(symptom => symptom.name)
+        setSymptoms(symptomsNames)
         setFetchData(true)
       }
     })
-  })
+  }, [])
 
-  const handleSymptom = (name) => {
-    let selected = selectedSymptoms
-
-    if (selectedSymptoms.length < 6 && !selected.includes(name)) {
-      selected.push(name)
-      setSelectedSymptoms(selected)
-      setOpen(true)
-    }
+  const handleNext = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
   }
 
-
-  const handleDeleteSymptom = (name) => {
-    setSelectedSymptoms((symptoms) => selectedSymptoms.filter((symptom) => symptom !== name))
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
   }
 
-  const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
+  const handleClose = () => {
     setOpen(false)
   }
 
-  function handleResult() {
+  const handleReset = () => {
+    setGlobalLocation("")
+    setSelectedSymptoms([])
+    setActiveStep(0);
+  }
 
+
+  function handleResult() {
+    if (selectedSymptoms.length < 3 || globalLocation === "") {
+      setOpen(true)
+    } else {
+      history.push("/result")
+    }
+  }
+
+  function getStepContent(step) {
+    switch (step) {
+      case 0:
+        return (
+          <React.Fragment>
+            <Autocomplete
+              fullWidth
+              options={ufs}
+              getOptionLabel={uf => uf.name}
+              renderOption={(option) => (
+                <React.Fragment>
+                  {option.name}
+                </React.Fragment>
+              )}
+              value={selectedHomeUf}
+              onChange={(event, newValue) => {
+                setSelectedHomeUf(newValue)
+                setGlobalLocation("")
+              }}
+              renderInput={(params) => <TextField {...params} label="Estados" variant="standard" />}
+            />
+          </React.Fragment>
+        )
+      case 1:
+        return (
+          <React.Fragment>
+            <Autocomplete
+              fullWidth
+              options={cities}
+              getOptionLabel={cities => cities}
+              value={globalLocation}
+              disabled={selectedHomeUf === null || selectedHomeUf.length === 0}
+              onChange={(event, newValue) => {
+                setGlobalLocation(newValue)
+              }}
+              renderInput={(params) => <TextField {...params} label="Cidades" variant="standard" />}
+            />
+          </React.Fragment>
+        )
+      case 2:
+        return (
+          <React.Fragment>
+            <Autocomplete
+              fullWidth
+              multiple
+              filterSelectedOptions
+              limitTags={3}
+              options={symptoms}
+              getOptionLabel={symptoms => symptoms}
+              value={selectedSymptoms}
+              onChange={(event, newValue) => {
+                if (selectedSymptoms.length < 6) {
+                  setSelectedSymptoms(newValue)
+                }
+              }}
+
+              renderInput={(params) => <TextField {...params} label="Sintomas" variant="standard" />}
+            />
+          </React.Fragment>
+        )
+
+      default:
+        return 'Unknown step';
+    }
   }
 
   return fetchData === true ? (
     <React.Fragment>
-      <Snackbar
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'center'
-        }}
-        open={open}
-        onClose={handleClose}
-        autoHideDuration={1000}
-      >
-        <Alert severity="info" onClose={handleClose} elevation={3}>
-          Sintoma adicionado na sua lista
-        </Alert>
-      </Snackbar>
+      <div>
+        <Dialog open={open} onClose={handleClose} keepMounted TransitionComponent={Transition}>
+          <DialogTitle>Atenção</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Para utilizar e continuar a busca recomendada você precisa selecionar seu estado, sua cidade,
+              pelo menos três e no máximo seis sintomas.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="primary" autoFocus>Ok</Button>
+          </DialogActions>
+        </Dialog>
+      </div>
       <Grid container className={styles.mainGrid} direction="column">
         <Grid container direction="column">
           <CssBaseline />
@@ -101,8 +205,8 @@ export default function Suggestion({ history }) {
                 color="textPrimary"
                 gutterBottom
               >
-                Minhas sugestões
-            </Typography>
+                Recomendação baseada em sintomas
+              </Typography>
               <Typography
                 component="h5"
                 variant="h6"
@@ -110,57 +214,62 @@ export default function Suggestion({ history }) {
                 color="textSecondary"
                 gutterBottom
               >
-                Encontre a especialidade médica ideal para você baseado no relato dos seus sintomas.
+                Encontre o médico e a especialidade ideal para você por meio do relato dos seus sintomas.
               </Typography>
             </Container>
           </Container>
-          <Container className={styles.cardGrid} maxWidth="md">
-            <Accordion elevation={3}>
-              <AccordionSummary
-                expandIcon={<ExpandMore />}
-                aria-controls="panel1c-content"
-                id="panel1c-header"
-              >
-                <Typography className={styles.heading}>Lista de sintomas</Typography>
-                <Typography className={styles.secondaryHeading}>Selecione de três a seis sintomas</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Grid container>
-                  {symptoms.map(symptom => (
-                    <Grid item key={symptom.key} className={styles.chip} sm={3} xs={12}>
-                      <Chip label={symptom.name} variant="outlined" onClick={() => handleSymptom(symptom.name)} />
-                    </Grid>
-                  ))}
-                </Grid>
-              </AccordionDetails>
-            </Accordion>
-            <Accordion elevation={3}>
-              <AccordionSummary
-                expandIcon={<ExpandMore />}
-                aria-controls="panel1c-content"
-                id="panel1c-header"
-              >
-                <Typography className={styles.heading}>Meus sintomas</Typography>
-                <Typography className={styles.secondaryHeading}>Confira os sintomas selecionados</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Grid container>
-                  {selectedSymptoms.map((symptom) => (
-                    <Grid item key={symptom.key} className={styles.chip} sm={3} xs={12}>
-                      <Chip
-                        label={symptom}
-                        onDelete={() => handleDeleteSymptom(symptom)}
-                      />
-                    </Grid>
-                  ))}
-                </Grid>
-              </AccordionDetails>
-              <Divider />
-              <AccordionActions>
-                <Button color="primary" onClick={handleResult}>Ver sugestão</Button>
-              </AccordionActions>
-            </Accordion>
-          </Container>
+          <main className={styles.layout}>
+            <Paper elevation={3} className={styles.paper}>
+              <Stepper activeStep={activeStep} orientation="vertical">
+                {steps.map((label, index) => (
+                  <Step key={label}>
+                    <StepLabel>{label}</StepLabel>
+                    <StepContent>
+                      <Typography>{getStepContent(index)}</Typography>
+                      <div className={styles.actionsContainer}>
+                        <div className={styles.buttons}>
+                          <Button
+                            disabled={activeStep === 0}
+                            onClick={handleBack}
+                            className={styles.firstButton}
+                          >
+                            Voltar
+                        </Button>
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={handleNext}
+                            className={styles.secondButton}
+                            startIcon={<CheckCircle />}
+                          >
+                            Continuar
+                        </Button>
+                        </div>
+                      </div>
+                    </StepContent>
+                  </Step>
+                ))}
+              </Stepper>
+              {activeStep === steps.length && (
+                <Paper square elevation={0} className={styles.resetContainer}>
+                  <div className={styles.buttons}>
+                    <Button onClick={handleReset} className={styles.firstButton}>
+                      Recomeçar
+                  </Button>
+                    <Button
+                      onClick={handleResult}
+                      color="primary"
+                      variant="contained"
+                      className={styles.secondButton}
+                      startIcon={<Search />}
+                    >
+                      Buscar
+                  </Button>
+                  </div>
+                </Paper>
+              )}
+            </Paper>
+          </main>
         </Grid>
       </Grid>
       <Footer />
@@ -171,7 +280,43 @@ export default function Suggestion({ history }) {
 const useStyles = makeStyles(theme => ({
   mainGrid: {
     backgroundColor: '#F5FFFA',
-    minHeight: '100vh'
+    minHeight: '100vh',
+  },
+  mainTitle: {
+    fontWeight: 'bold',
+    color: '#322153',
+    fontFamily: 'Ubuntu',
+  },
+  secondaryTitle: {
+    paddingTop: theme.spacing(3),
+    paddingLeft: theme.spacing(3)
+  },
+  layout: {
+    width: 'auto',
+    marginLeft: theme.spacing(2),
+    marginRight: theme.spacing(2),
+    [theme.breakpoints.up(600 + theme.spacing(2) * 2)]: {
+      width: 600,
+      marginLeft: 'auto',
+      marginRight: 'auto',
+    },
+  },
+  paper: {
+    marginBottom: theme.spacing(8),
+  },
+  firstButton: {
+    marginRight: theme.spacing(1),
+    marginTop: theme.spacing(1),
+  },
+  secondButton: {
+    marginTop: theme.spacing(1),
+  },
+  actionsContainer: {
+    marginBottom: theme.spacing(2),
+  },
+  resetContainer: {
+    paddingRight: theme.spacing(3),
+    paddingBottom: theme.spacing(3),
   },
   mainContainer: {
     padding: theme.spacing(6, 0, 6),
@@ -179,65 +324,28 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
   },
-  resultTypography: {
-    paddingTop: 20,
-    paddingBottom: 20,
-    paddingLeft: 20,
-    paddingRight: 20,
-    fontWeight: 'bold'
-  },
-  mainTitle: {
-    fontWeight: 'bold',
-    color: '#322153',
-    fontFamily: 'Ubuntu',
-  },
-  cardGrid: {
-    paddingTop: theme.spacing(1),
-    paddingBottom: theme.spacing(8),
-  },
-  alert: {
-    marginBottom: theme.spacing(4)
-  },
-  title: {
-    fontSize: 14,
-  },
-  information: {
-    marginBottom: 12,
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.primary.main,
-  },
-  heading: {
-    fontSize: theme.typography.pxToRem(15),
-    flexBasis: '33.33%',
-    flexShrink: 0,
-  },
-  secondaryHeading: {
-    fontSize: theme.typography.pxToRem(15),
-    color: theme.palette.text.secondary,
-  },
   buttons: {
     display: 'flex',
     justifyContent: 'flex-end',
   },
   button: {
     marginTop: theme.spacing(2),
+    marginRight: theme.spacing(2),
     marginBottom: theme.spacing(2),
   },
-  gridChip: {
-    display: 'flex',
-    justifyContent: 'center'
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.primary.main,
   },
-  chip: {
-    marginBottom: 10
+  typography: {
+    fontWeight: 'bold',
+    marginRight: 5
   },
-  selection: {
-    display: 'flex',
-    justifyContent: 'center',
-    flexWrap: 'wrap',
-    listStyle: 'none',
-    padding: theme.spacing(0.5),
-    margin: 0,
+  title: {
+    marginTop: theme.spacing(2),
+    fontWeight: 'bold'
+  },
+  userAlert: {
+    marginBottom: 20
   }
 }))

@@ -20,6 +20,7 @@ import Service from './pages/Service'
 import Rating from './pages/Rating'
 import Form from './pages/Form'
 import Suggestion from './pages/Suggestion'
+import Result from './pages/Result'
 
 import { Context } from './Context'
 
@@ -55,6 +56,7 @@ export default function Routes() {
   const [duration, setDuration] = useState(0)
   const [interval, setInterval] = useState(0)
   const [checked, setChecked] = React.useState(false)
+  const [selectedSymptoms, setSelectedSymptoms] = useState([])
 
   const context = {
     cpf, setCpf, crm, setCrm, description, setDescription, city, setCity, streetNumber,
@@ -65,7 +67,7 @@ export default function Routes() {
     setPrice, rating, setRating, date, setDate, selectedUf, setSelectedUf, street,
     setStreet, name, setName, email, setEmail, doctors, setDoctors, day, setDay,
     beginHour, setBeginHour, endHour, setEndHour, checked, setChecked,
-    duration, setDuration, interval, setInterval
+    duration, setDuration, interval, setInterval, selectedSymptoms, setSelectedSymptoms
   }
 
   return (
@@ -88,6 +90,7 @@ export default function Routes() {
           <Route path="/rating" component={Rating} />
           <Route path="/form" component={Form} />
           <Route path="/suggestion" component={Suggestion} />
+          <Route path="/result" component={Result} />
         </Context.Provider>
       </Switch>
     </BrowserRouter>

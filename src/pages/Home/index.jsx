@@ -10,7 +10,7 @@ import Footer from '../../components/Footer'
 import {
   Grid, Container, CssBaseline, Typography, Button, TextField, Avatar, Divider, IconButton, List,
   Paper, Stepper, Step, StepLabel, StepContent, Dialog, DialogTitle, ListItem, ListItemText,
-  DialogContent, DialogContentText, DialogActions, Slide, CircularProgress, ListItemSecondaryAction,
+  DialogContent, DialogContentText, DialogActions, Slide, CircularProgress, ListItemSecondaryAction
 } from '@material-ui/core'
 import { Autocomplete, Alert, AlertTitle } from '@material-ui/lab'
 
@@ -66,6 +66,10 @@ export default function Home({ history }) {
 
   function handleService() {
     history.push('/service')
+  }
+
+  function handleSymptom() {
+    history.push('/suggestion')
   }
 
   function handleCloseAlert() {
@@ -287,6 +291,14 @@ export default function Home({ history }) {
                   perfil de médico ou paciente acessando a opção no menu superior.
             </Alert>
           )}
+          <Alert severity="info" variant="standard" action={
+            <Button color="inherit" size="small" onClick={handleSymptom}>
+              Ir
+              </Button>
+          } elevation={3} className={styles.userAlert}>
+            <AlertTitle>Busca baseada em sintomas</AlertTitle>
+                  Clique no botão ao lado para encontrar um especialista recomendado por meio dos seus sintomas médicos.
+              </Alert>
           <Paper elevation={3} className={styles.paper}>
             <Stepper activeStep={activeStep} orientation="vertical">
               {steps.map((label, index) => (
@@ -541,5 +553,16 @@ const useStyles = makeStyles(theme => ({
   },
   userAlert: {
     marginBottom: 20
-  }
+  },
+  link: {
+    color: '#8A8F9E',
+    fontSize: '12px',
+    margin: theme.spacing(2, 2, 2, 2)
+  },
+  label: {
+    color: '#8A8F9E',
+    textAlign: 'center',
+    textTransform: 'uppercase',
+    fontSize: '12px'
+  },
 }))
