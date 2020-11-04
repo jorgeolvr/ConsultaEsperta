@@ -27,7 +27,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 })
 
 function getSteps() {
-  return ['Selecione o seu estado', 'Selecione a sua cidade', 'Escolha a especialidade']
+  return ['Selecione o seu estado', 'Selecione a sua cidade', 'Selecione os sintomas', 'Selecione a especialidade']
 }
 
 export default function Home({ history }) {
@@ -38,21 +38,23 @@ export default function Home({ history }) {
     globalLocation, setGlobalLocation, globalSpeciality, setGlobalSpeciality,
     setCpf, setPhone, setCardName, setCardNumber, setExpireDate, setSecurityCode,
     setCrm, setDescription, setCity, setSpeciality, setStreet, setStreetNumber,
-    setNeighbour, setSelectedUf
+    setNeighbour, setSelectedUf, selectedSymptoms, setSelectedSymptoms
   } = useContext(Context)
-
-
 
   const [openDialog, setOpenDialog] = useState(false)
   const [openAlert, setOpenAlert] = useState(false)
   const [activeStep, setActiveStep] = useState(0)
   const [fetchData, setFetchData] = useState(false)
 
+  const [diseases, setDiseases] = useState([])
+  const [globalDiseaseName, setGlobalDiseaseName] = useState('')
   const [userType, setUserType] = useState('')
   const [ufs, setUfs] = useState([])
   const [selectedHomeUf, setSelectedHomeUf] = useState([])
   const [cities, setCities] = useState([])
   const [specialities, setSpecialities] = useState([])
+  const [symptoms, setSymptoms] = useState([])
+  const [specialitiesOptions, setSpecialitiesOptions] = useState([])
   const [schedules, setSchedules] = useState([])
   const [doctorPrice, setDoctorPrice] = useState('')
 
@@ -66,10 +68,6 @@ export default function Home({ history }) {
 
   function handleService() {
     history.push('/service')
-  }
-
-  function handleSymptom() {
-    history.push('/suggestion')
   }
 
   function handleCloseAlert() {
@@ -108,6 +106,10 @@ export default function Home({ history }) {
     setActiveStep(0);
   }
 
+  const isStepOptional = (step) => {
+    return step === 2;
+  };
+
   useEffect(() => {
     axios.get('https://servicodados.ibge.gov.br/api/v1/localidades/estados').then(res => {
       const states = res.data.map(uf => uf = { 'initial': `${uf.sigla}`, 'name': `${uf.nome}` })
@@ -127,6 +129,20 @@ export default function Home({ history }) {
   }, [selectedHomeUf])
 
   useEffect(() => {
+    firebase.db.collection('symptoms').orderBy("name").get().then(snapshot => {
+      if (snapshot) {
+        let symptoms = []
+        snapshot.forEach(symptom => {
+          symptoms.push({
+            key: symptom.id,
+            ...symptom.data()
+          })
+        })
+        const symptomsNames = symptoms.map(symptom => symptom.name)
+        setSymptoms(symptomsNames)
+      }
+    })
+
     firebase.db.collection("specialities").orderBy("name")
       .get().then(snapshot => {
         if (snapshot) {
@@ -137,10 +153,72 @@ export default function Home({ history }) {
             })
           })
           const specialityNames = specialities.map(speciality => speciality.name)
-          setSpecialities(specialityNames)
+          setSpecialitiesOptions(specialityNames)
         }
       })
-  }, [])
+  })
+
+  useEffect(() => {
+    firebase.db.collection('diseases').orderBy('name').get().then(snapshot => {
+      if (snapshot) {
+        let diseases = []
+        snapshot.forEach(disease => {
+          diseases.push({
+            key: disease.id,
+            ...disease.data()
+          })
+        })
+        setDiseases(diseases)
+      }
+    })
+
+    var sum = 0
+    var globalSum = 0
+
+    diseases.forEach(disease => {
+      disease.symptom.forEach(sym => {
+
+        for (var i = 0;i < selectedSymptoms.length;i++) {
+          if (sym.name === selectedSymptoms[i]) {
+            sum += sym.weight
+
+            if (sum >= globalSum) {
+              setGlobalDiseaseName(disease.name)
+            }
+          }
+
+        }
+      })
+
+      if (sum >= globalSum) {
+        globalSum = sum
+      }
+
+      sum = 0
+    })
+
+    if (selectedSymptoms.length !== 0 && globalSpeciality === "") {
+      firebase.db.collection('specialities').get().then(snapshot => {
+        if (snapshot) {
+          let specialities = []
+
+          snapshot.forEach(speciality => {
+            specialities.push({
+              key: speciality.id,
+              ...speciality.data()
+            })
+          })
+          setSpecialities(specialities)
+        }
+      })
+
+      specialities.forEach(speciality => {
+        if (speciality.disease.includes(globalDiseaseName)) {
+          setGlobalSpeciality(speciality.name)
+        }
+      })
+    }
+  }, [selectedSymptoms, setSelectedSymptoms, diseases, globalDiseaseName, specialities, globalSpeciality, setGlobalSpeciality])
 
   useEffect(() => {
     if (firebase.getId() !== null) {
@@ -250,8 +328,29 @@ export default function Home({ history }) {
           <React.Fragment>
             <Autocomplete
               fullWidth
-              options={specialities}
-              getOptionLabel={specialities => specialities}
+              multiple
+              filterSelectedOptions
+              limitTags={3}
+              options={symptoms}
+              getOptionLabel={symptoms => symptoms}
+              value={selectedSymptoms}
+              onChange={(event, newValue) => {
+                if (selectedSymptoms.length < 6) {
+                  setSelectedSymptoms(newValue)
+                }
+              }}
+
+              renderInput={(params) => <TextField {...params} label="Sintomas" variant="standard" />}
+            />
+          </React.Fragment>
+        )
+      case 3:
+        return (
+          <React.Fragment>
+            <Autocomplete
+              fullWidth
+              options={specialitiesOptions}
+              getOptionLabel={specialitiesOptions => specialitiesOptions}
               value={globalSpeciality}
               onChange={(event, newValue) => {
                 setGlobalSpeciality(newValue)
@@ -291,44 +390,43 @@ export default function Home({ history }) {
                   perfil de médico ou paciente acessando a opção no menu superior.
             </Alert>
           )}
-          <Alert severity="info" variant="standard" action={
-            <Button color="inherit" size="small" onClick={handleSymptom}>
-              Ir
-              </Button>
-          } elevation={3} className={styles.userAlert}>
-            <AlertTitle>Busca baseada em sintomas</AlertTitle>
-                  Clique no botão ao lado para encontrar um especialista recomendado por meio dos seus sintomas médicos.
-              </Alert>
           <Paper elevation={3} className={styles.paper}>
             <Stepper activeStep={activeStep} orientation="vertical">
-              {steps.map((label, index) => (
-                <Step key={label}>
-                  <StepLabel>{label}</StepLabel>
-                  <StepContent>
-                    <Typography>{getStepContent(index)}</Typography>
-                    <div className={styles.actionsContainer}>
-                      <div className={styles.buttons}>
-                        <Button
-                          disabled={activeStep === 0}
-                          onClick={handleBack}
-                          className={styles.firstButton}
-                        >
-                          Voltar
+              {steps.map((label, index) => {
+                const labelProps = {};
+                if (isStepOptional(index)) {
+                  labelProps.optional = <Typography variant="caption">Opcional</Typography>;
+                }
+
+                return (
+                  <Step key={label}>
+                    <StepLabel {...labelProps}>{label}</StepLabel>
+                    <StepContent>
+                      <Typography>{getStepContent(index)}</Typography>
+                      <div className={styles.actionsContainer}>
+                        <div className={styles.buttons}>
+                          <Button
+                            disabled={activeStep === 0}
+                            onClick={handleBack}
+                            className={styles.firstButton}
+                          >
+                            Voltar
                         </Button>
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          onClick={handleNext}
-                          className={styles.secondButton}
-                          startIcon={<CheckCircleIcon />}
-                        >
-                          Continuar
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={handleNext}
+                            className={styles.secondButton}
+                            startIcon={<CheckCircleIcon />}
+                          >
+                            Continuar
                         </Button>
+                        </div>
                       </div>
-                    </div>
-                  </StepContent>
-                </Step>
-              ))}
+                    </StepContent>
+                  </Step>
+                )
+              })}
             </Stepper>
             {activeStep === steps.length && (
               <Paper square elevation={0} className={styles.resetContainer}>
