@@ -19,6 +19,8 @@ import Schedule from './pages/Schedule'
 import Service from './pages/Service'
 import Rating from './pages/Rating'
 import Form from './pages/Form'
+import Symptom from './pages/Symptom'
+import Result from './pages/Result'
 
 import { Context } from './Context'
 
@@ -87,6 +89,8 @@ export default function Routes() {
           <Route path="/profile" component={Profile} />
           <Route path="/rating" component={Rating} />
           <Route path="/form" component={Form} />
+          <Route path="/symptom" component={Symptom} />
+          <Route path="/result" component={Result} />
         </Context.Provider>
       </Switch>
     </BrowserRouter>
