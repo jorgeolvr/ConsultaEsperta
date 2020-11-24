@@ -57,6 +57,7 @@ export default function Routes() {
   const [interval, setInterval] = useState(0)
   const [checked, setChecked] = React.useState(false)
   const [selectedSymptoms, setSelectedSymptoms] = useState([])
+  const [selectedHomeUf, setSelectedHomeUf] = useState([])
 
   const context = {
     cpf, setCpf, crm, setCrm, description, setDescription, city, setCity, streetNumber,
@@ -67,7 +68,8 @@ export default function Routes() {
     setPrice, rating, setRating, date, setDate, selectedUf, setSelectedUf, street,
     setStreet, name, setName, email, setEmail, doctors, setDoctors, day, setDay,
     beginHour, setBeginHour, endHour, setEndHour, checked, setChecked,
-    duration, setDuration, interval, setInterval, selectedSymptoms, setSelectedSymptoms
+    duration, setDuration, interval, setInterval, selectedSymptoms, setSelectedSymptoms,
+    selectedHomeUf, setSelectedHomeUf
   }
 
   return (

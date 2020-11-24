@@ -1,36 +1,91 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { Context } from '../../Context'
+import axios from 'axios'
 
 import firebase from '../../config/Firebase'
 
 import {
   Grid, Container, CssBaseline, Typography, Avatar, Card, CardMedia,
-  CardContent, Chip, CircularProgress, CardActions, Button, Divider
+  CardContent, Chip, CircularProgress, CardActions, Button, Divider,
+  ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails,
+  TextField, Slide, Dialog, DialogActions, DialogContent, DialogTitle,
+  DialogContentText
 } from '@material-ui/core'
-import { Alert, AlertTitle } from '@material-ui/lab'
-import { StarRate, LocalHospital } from '@material-ui/icons'
+import { Alert, AlertTitle, Autocomplete } from '@material-ui/lab'
+import { StarRate, LocalHospital, ExpandMore, Search } from '@material-ui/icons'
 
 import Header from '../../components/Header'
 import Footer from '../../components/Footer'
 
 import { makeStyles } from '@material-ui/core/styles'
 
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+})
+
 export default function Result({ history }) {
   const styles = useStyles()
 
-  const [fetchData, setFetchData] = useState(true)
+  const [ufs, setUfs] = useState([])
+  const [symptoms, setSymptoms] = useState([])
+  const [cities, setCities] = useState([])
+  const [fetchData, setFetchData] = useState(false)
   const [diseases, setDiseases] = useState([])
   const [globalDiseaseName, setGlobalDiseaseName] = useState('')
   const [specialities, setSpecialities] = useState([])
   const [doctors, setDoctors] = useState([])
+  const [open, setOpen] = useState(false)
 
   const {
-    globalLocation, selectedSymptoms
+    globalLocation, selectedSymptoms, setGlobalLocation, setSelectedSymptoms,
+    selectedHomeUf, setSelectedHomeUf
   } = useContext(Context)
 
-  function handleSearch() {
-    history.push("/symptom")
+  const handleAdvancedSearch = () => {
+    if (globalLocation === "" || selectedSymptoms.length < 3) {
+      setOpen(true)
+    } else {
+      setFetchData(false)
+    }
   }
+
+  const handleClose = () => {
+    setOpen(false)
+  }
+
+  useEffect(() => {
+    axios.get('https://servicodados.ibge.gov.br/api/v1/localidades/estados').then(res => {
+      const states = res.data.map(uf => uf = { 'initial': `${uf.sigla}`, 'name': `${uf.nome}` })
+      setUfs(states)
+    })
+  }, [])
+
+  useEffect(() => {
+    if (selectedHomeUf !== null) {
+      axios.get(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${selectedHomeUf.initial}/municipios`).then(res => {
+        const cityNames = res.data.map(city => city.nome)
+        setCities(cityNames)
+      })
+    } else {
+      setCities([])
+    }
+  }, [selectedHomeUf])
+
+  useEffect(() => {
+    firebase.db.collection('symptoms').orderBy("name").get().then(snapshot => {
+      if (snapshot) {
+        let symptoms = []
+        snapshot.forEach(symptom => {
+          symptoms.push({
+            key: symptom.id,
+            ...symptom.data()
+          })
+        })
+        const symptomsNames = symptoms.map(symptom => symptom.name)
+        setSymptoms(symptomsNames)
+      }
+    })
+  }, [])
 
   useEffect(() => {
     if (localStorage.getItem("diseaseName") === null) {
@@ -51,18 +106,22 @@ export default function Result({ history }) {
 
       var sum = 0
       var globalSum = 0
+      //var quantity = 0
+      //var globalQuantity = 0
 
       diseases.forEach(disease => {
         disease.symptom.forEach(sym => {
-
           for (var i = 0;i < selectedSymptoms.length;i++) {
             if (sym.name === selectedSymptoms[i]) {
               sum += sym.weight
+              //quantity = disease.quantitySymptoms - selectedSymptoms.length
 
-              if (sum >= globalSum) {
+              //console.log("Doença: " + disease.name + " quantidade: " + disease.quantitySymptoms + " diferença: " + quantity + " diferença anterior: " + globalQuantity)
+              if (sum >= globalSum) { // && quantity <= globalQuantity
                 setGlobalDiseaseName(disease.name)
                 localStorage.setItem("diseaseName", disease.name)
               }
+              //globalQuantity = quantity
             }
           }
         })
@@ -112,15 +171,32 @@ export default function Result({ history }) {
             })
           })
           setDoctors(doctors)
-          setFetchData(true)
+
+          // Leve atraso para renderização dos elementos em tela
+          setTimeout(function () {
+            setFetchData(true)
+          }, 3000);
         }
       })
-
   }, [globalLocation, diseases, specialities, selectedSymptoms, globalDiseaseName, doctors])
 
 
   return fetchData === true ? (
     <React.Fragment>
+      <div>
+        <Dialog open={open} onClose={handleClose} keepMounted TransitionComponent={Transition}>
+          <DialogTitle>Atenção</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Para utilizar e continuar a busca recomendada você precisa selecionar seu estado, sua cidade,
+              pelo menos três e no máximo dez sintomas.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="primary" autoFocus>Ok</Button>
+          </DialogActions>
+        </Dialog>
+      </div>
       <Grid container className={styles.mainGrid}>
         <Grid container direction="column">
           <CssBaseline />
@@ -136,24 +212,90 @@ export default function Result({ history }) {
                 {localStorage.getItem("localSpeciality")}
               </Typography>
               <Typography component="h5" variant="h6" align="center" color="textSecondary" gutterBottom>
-                Lista dos médicos ideais encontrados por meio dos seus sintomas selecionados.
+                Baseado na análise dos sintomas selecionados diagnosticamos que talvez você possua {localStorage.getItem("diseaseName")}.
               </Typography>
             </Container>
-
           </Container>
           <Grid container>
             <Container className={styles.cardGrid} maxWidth="md">
-              <Grid container className={styles.bar}>
-                <Grid>
-                  <Typography variant="subtitle1" component="p" gutterBottom>
-                    Médicos encontrados ({doctors.length})
-                    </Typography>
-                </Grid>
-                <Grid>
-                  <Button size="small" color="primary" onClick={handleSearch}>
-                    Realizar nova busca
+              <ExpansionPanel elevation={3} style={{ marginBottom: 20 }}>
+                <ExpansionPanelSummary
+                  expandIcon={<ExpandMore />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                >
+                  <Typography className={styles.heading}>Busca avançada</Typography>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails>
+                  <Grid container spacing={2} >
+                    <Grid item xs={12} sm={4}>
+                      <Autocomplete
+                        fullWidth
+                        options={ufs}
+                        getOptionLabel={uf => uf.name}
+                        renderOption={(option) => (
+                          <React.Fragment>
+                            {option.name}
+                          </React.Fragment>
+                        )}
+                        value={selectedHomeUf}
+                        onChange={(event, newValue) => {
+                          setSelectedHomeUf(newValue)
+                          setGlobalLocation("")
+                        }}
+                        renderInput={(params) => <TextField {...params} label="Estados" variant="standard" />}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={4}>
+                      <Autocomplete
+                        fullWidth
+                        options={cities}
+                        getOptionLabel={cities => cities}
+                        value={globalLocation}
+                        disabled={selectedHomeUf === null || selectedHomeUf.length === 0}
+                        onChange={(event, newValue) => {
+                          setGlobalLocation(newValue)
+                        }}
+                        renderInput={(params) => <TextField {...params} label="Cidades" variant="standard" />}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={4}>
+                      <Autocomplete
+                        fullWidth
+                        multiple
+                        filterSelectedOptions
+                        limitTags={1}
+                        size="small"
+                        options={symptoms}
+                        getOptionLabel={symptoms => symptoms}
+                        value={selectedSymptoms}
+                        onChange={(event, newValue) => {
+                          if (selectedSymptoms.length < 10) {
+                            setSelectedSymptoms(newValue)
+                          }
+                        }}
+
+                        renderInput={(params) => <TextField {...params} label="Sintomas" variant="standard" />}
+                      />
+                    </Grid>
+                  </Grid>
+                </ExpansionPanelDetails>
+                <div className={styles.buttons}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleAdvancedSearch}
+                    className={styles.button}
+                    startIcon={<Search />}
+                  >
+                    Buscar
                   </Button>
-                </Grid>
+                </div>
+              </ExpansionPanel>
+              <Grid container className={styles.bar}>
+                <Typography variant="subtitle1" component="p" gutterBottom>
+                  Médicos encontrados ({doctors.length})
+                    </Typography>
               </Grid>
               <Divider />
               {doctors.length === 0 && (

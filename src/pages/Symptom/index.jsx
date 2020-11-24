@@ -31,13 +31,13 @@ export default function Symptom({ history }) {
   const steps = getSteps()
 
   const {
-    globalLocation, setGlobalLocation, selectedSymptoms, setSelectedSymptoms
+    globalLocation, setGlobalLocation, selectedSymptoms, setSelectedSymptoms,
+    selectedHomeUf, setSelectedHomeUf
   } = useContext(Context)
 
   const [ufs, setUfs] = useState([])
   const [fetchData, setFetchData] = useState(false)
   const [open, setOpen] = useState(false)
-  const [selectedHomeUf, setSelectedHomeUf] = useState([])
   const [cities, setCities] = useState([])
   const [symptoms, setSymptoms] = useState([])
   const [activeStep, setActiveStep] = useState(0)
@@ -154,11 +154,12 @@ export default function Symptom({ history }) {
               multiple
               filterSelectedOptions
               limitTags={3}
+              size="small"
               options={symptoms}
               getOptionLabel={symptoms => symptoms}
               value={selectedSymptoms}
               onChange={(event, newValue) => {
-                if (selectedSymptoms.length < 6) {
+                if (selectedSymptoms.length < 10) {
                   setSelectedSymptoms(newValue)
                 }
               }}
@@ -181,7 +182,7 @@ export default function Symptom({ history }) {
           <DialogContent>
             <DialogContentText>
               Para utilizar e continuar a busca recomendada você precisa selecionar seu estado, sua cidade,
-              pelo menos três e no máximo seis sintomas.
+              pelo menos três e no máximo dez sintomas.
             </DialogContentText>
           </DialogContent>
           <DialogActions>
@@ -217,7 +218,7 @@ export default function Symptom({ history }) {
                 color="textSecondary"
                 gutterBottom
               >
-                Encontre o médico e a especialidade ideal para você por meio do relato dos seus sintomas.
+                Encontre o médico ideal e um diagnóstico prévio por meio do relato dos seus sintomas.
               </Typography>
             </Container>
           </Container>

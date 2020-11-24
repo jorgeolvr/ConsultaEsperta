@@ -296,8 +296,12 @@ export default function Home({ history }) {
               </Button>
           } elevation={3} className={styles.userAlert}>
             <AlertTitle>Busca baseada em sintomas</AlertTitle>
-                  Clique no botão ao lado para encontrar um especialista recomendado por meio dos seus sintomas médicos.
+                  Encontre um médico recomendado ao selecionar seus sintomas.
               </Alert>
+          <Grid container direction="column" alignItems="center" justify="center">
+            <label className={styles.label}>• ou •</label>
+          </Grid>
+
           <Paper elevation={3} className={styles.paper}>
             <Stepper activeStep={activeStep} orientation="vertical">
               {steps.map((label, index) => (
@@ -562,6 +566,7 @@ const useStyles = makeStyles(theme => ({
     color: '#8A8F9E',
     textAlign: 'center',
     textTransform: 'uppercase',
-    fontSize: '12px'
+    fontSize: '12px',
+    marginBottom: 15
   },
 }))
