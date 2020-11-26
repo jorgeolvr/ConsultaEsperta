@@ -106,22 +106,24 @@ export default function Result({ history }) {
 
       var sum = 0
       var globalSum = 0
-      //var quantity = 0
-      //var globalQuantity = 0
+      var quantity = 0
+      var globalQuantity = 10
 
       diseases.forEach(disease => {
         disease.symptom.forEach(sym => {
+          quantity = disease.quantitySymptoms
           for (var i = 0;i < selectedSymptoms.length;i++) {
             if (sym.name === selectedSymptoms[i]) {
               sum += sym.weight
-              //quantity = disease.quantitySymptoms - selectedSymptoms.length
-
-              //console.log("Doença: " + disease.name + " quantidade: " + disease.quantitySymptoms + " diferença: " + quantity + " diferença anterior: " + globalQuantity)
-              if (sum >= globalSum) { // && quantity <= globalQuantity
+              console.log("Doença: " + disease.name + " quantidade: " + quantity)
+              if (sum > globalSum) { // if (sum >= globalSum)
                 setGlobalDiseaseName(disease.name)
                 localStorage.setItem("diseaseName", disease.name)
               }
-              //globalQuantity = quantity
+              else if (sum === globalSum && quantity <= globalQuantity) {
+                setGlobalDiseaseName(disease.name)
+                localStorage.setItem("diseaseName", disease.name)
+              }
             }
           }
         })
@@ -130,7 +132,12 @@ export default function Result({ history }) {
           globalSum = sum
         }
 
+        if (quantity <= globalQuantity) {
+          globalQuantity = quantity
+        }
+
         sum = 0
+        quantity = 0
       })
     }
   }, [globalLocation, diseases, specialities, selectedSymptoms, globalDiseaseName, doctors])
