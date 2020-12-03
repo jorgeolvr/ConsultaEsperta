@@ -1,5 +1,5 @@
 <p>
-  <img src="https://github.com/wladbrandao/ConsultaEsperta/raw/master/web/src/assets/logo-cropped.png" width="30% height="30%">
+  <img src="https://github.com/jorgeolvr/ConsultaEsperta/raw/master/web/src/assets/logo-cropped.png" width="30% height="30%">
 </p> 
 
 # Descrição do projeto  
