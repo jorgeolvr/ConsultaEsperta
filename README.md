@@ -2,6 +2,10 @@
   <img src="https://github.com/jorgeolvr/ConsultaEsperta/raw/master/src/assets/logo-cropped.png" width="30% height="30%">
 </p> 
 
+# Acesso ao projeto
+                                                                                                                        
+https://consulta-esperta.vercel.app/
+                                                                                                                        
 # Descrição do projeto  
 
 O aplicativo Consulta Esperta é um *Marketplace* na área da saúde, provendo um ambiente para que profissionais de saúde possam difundir e cobrar por seus serviços, gerenciar suas agendas de atendimento e prontuários de pacientes e para que pacientes possam encontrar profissionais de saúde de acordo com sua demanda de especialidade, localização, horário, preço e qualidade de atendimento. Abaixo a descrição dos principais requisitos do aplicativo:
